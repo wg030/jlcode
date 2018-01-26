@@ -9,6 +9,9 @@ To make use of it, copy the _jlcode.sty_ file to same folder of your latex file
 and add the following line to your latex document header:
 
     \usepackage{jlcode}
+
+Check out the latex example _example.tex_, which imports some Julia code from
+_testfile.jl_ and produces the pdf-file _example.pdf_ as output.
   
   
 ## Current State
@@ -19,15 +22,12 @@ Date of last modification: 2018/01/26
 ### Keywords
 All keywords, literals and built-ins for this language definition were taken
 from the file
-[https://github.com/isagalaev/highlight.js/blob/master/src/languages/julia.js]
-(https://github.com/isagalaev/highlight.js/blob/master/src/languages/julia.js).
+[https://github.com/isagalaev/highlight.js/blob/master/src/languages/julia.js](https://github.com/isagalaev/highlight.js/blob/master/src/languages/julia.js).
 
 ### Colors
 All colors for this language definition were taken from
-[https://docs.julialang.org/en/stable/assets/highlightjs/default.css]
-(https://docs.julialang.org/en/stable/assets/highlightjs/default.css) and
-[https://docs.julialang.org/en/stable/assets/documenter.css]
-(https://docs.julialang.org/en/stable/assets/documenter.css).  
+[https://docs.julialang.org/en/stable/assets/highlightjs/default.css](https://docs.julialang.org/en/stable/assets/highlightjs/default.css) and
+[https://docs.julialang.org/en/stable/assets/documenter.css](https://docs.julialang.org/en/stable/assets/documenter.css).  
 
 ### No Support for Special Unicode Characters Yet
 Right now your Julia code will create an error when compling your latex document
