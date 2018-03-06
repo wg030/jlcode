@@ -37,15 +37,5 @@ function Style_3rd_Test(x, y)
         println( String( "Error in ", myver, "!"))
         return false;
     end
-
-    # KNOWN ISSUES:
-    # identifier name with number that follows
-    # directly behind a special unicode character:
-    myβ2ndvar = 2 * 0.12E-2 * βᵅ
-    # identifier name, which contains a π, γ or φ:
-    myφvar = sqrt(2)
-    # numbers in E-notation without using a + sign:
-    evar = 3.99e400
-    evar₂ = 3.99E400
-
+    
 end

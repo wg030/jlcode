@@ -16,8 +16,8 @@
 
 
 % defining the jlcode package
-\def\fileversion{2.0}
-\def\filedate{2018/03/05}
+\def\fileversion{2.1}
+\def\filedate{2018/03/06}
 
 \typeout{-- Package: `jlcode' \fileversion\space <\filedate> --}
 \NeedsTeXFormat{LaTeX2e}
@@ -145,7 +145,6 @@ morestring=[s]{L"}{"},%
 
 % defining the ucc and the ucclit command
 % for literating special unicode characters
-\makeatletter
 \newcommand{\ucc}[1]{%
 \ifnum\lst@mode=\lst@Pmode\relax%
 {\color{jlbase}#1}%
@@ -154,7 +153,6 @@ morestring=[s]{L"}{"},%
 \fi%
 }
 
-\makeatletter
 \newcommand{\ucclit}[1]{%
 \ifnum\lst@mode=\lst@Pmode\relax%
 {\color{jlliteral}#1}%
@@ -165,7 +163,6 @@ morestring=[s]{L"}{"},%
 
 
 % defining a new opliterate key
-\makeatletter
 \def\lst@OpLiteratekey#1\@nil@{\let\lst@ifxopliterate\lst@if
                              \def\lst@opliterate{#1}}
 \lst@Key{opliterate}{}{\@ifstar{\lst@true \lst@OpLiteratekey}
@@ -194,6 +191,18 @@ morestring=[s]{L"}{"},%
             \@empty
         \expandafter\lst@OpLiterate
     \fi}
+
+
+% defining the \addlitjlbase and \addlitjlstring commands,
+% which help a user to fix some of the known managable issues
+\def\addToLiterate#1{%
+\protected@edef\lst@literate{%
+\unexpanded\expandafter{\lst@literate}\unexpanded{#1}}}
+\lst@Key{expandliterate}{}{\addToLiterate{#1}}
+\newcommand{\addlitjlbase}[3]{%
+\lstset{expandliterate={#1}{{{\color{jlbase}#2}}}{#3}}}
+\newcommand{\addlitjlstring}[3]{%
+\lstset{expandliterate={#1}{{{\color{jlstring}#2}}}{#3}}}
 
 
 
