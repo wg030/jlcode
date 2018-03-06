@@ -48,12 +48,14 @@ Most of them have to do with the fact that the listings package does not seem to
 offer an option, that makes it possible to force a special unicode character,
 for example a small greek beta, to be treated like a normal letter. Having said
 this the command
+
     \lstdefinelanguage{julia}
     {
       % ...
       alsoletter={β},
       % ...
     }
+
 of the listings package unfortunately causes an error.  
 However the problems that can occur due to this circumstance can be repaired
 manually. For that purpose two commands have been implemented in the jlcode
@@ -64,31 +66,31 @@ are the known managable issues and how to fix them with the jlcode package:
 character:  
 example:
 
-    myβ2ndvar = 2 * 0.12E-2 * xʸ
+        myβ2ndvar = 2 * 0.12E-2 * xʸ
 
 latex command for fixing it:
 
-    \addlitjlbase{myβ2ndvar}{my$\beta$2ndvar}{9}
+        \addlitjlbase{myβ2ndvar}{my$\beta$2ndvar}{9}
 
 * identifier name, which contains a γ, π or φ:  
 exmple:
 
-    myφvar₊ = sqrt(2)
+        myφvar₊ = sqrt(2)
 
 latex command for fixing it:
 
-    \addlitjlbase{myφvar₊}{my$\phi$var${\scriptstyle {}_{+}}$}{7}
+        \addlitjlbase{myφvar₊}{my$\phi$var${\scriptstyle {}_{+}}$}{7}
 
 * numbers in E-notation wihtout using a + sign:  
 example:
 
-    evar = 3.99e400
-    evar₂ = 3.99E400
+        evar = 3.99e400
+        evar₂ = 3.99E400
 
 latex commands for fixing it:
 
-    \addlitjlstring{e400}{e400}{4}
-    \addlitjlstring{E400}{E400}{4}
+        \addlitjlstring{e400}{e400}{4}
+        \addlitjlstring{E400}{E400}{4}
 
 
 ## Feel Free to Contribute
