@@ -60,33 +60,26 @@ of the listings package unfortunately causes an error.
 However the problems that can occur due to this circumstance can be repaired
 manually. For that purpose two commands have been implemented in the jlcode
 package. The easiest way to show how they work is giving some examples. So here
-are the known managable issues and how to fix them with the jlcode package:
+are the known managable issues and how to fix them with the jlcode package:  
 (See the provided example files).
 * identifier name with a number that follows directly behind a special unicode
 character:  
 example:
 
         myβ2ndvar = 2 * 0.12E-2 * xʸ
-
 latex command for fixing it:
-
         \addlitjlbase{myβ2ndvar}{my$\beta$2ndvar}{9}
 
 * identifier name, which contains a γ, π or φ:  
 exmple:
-
         myφvar₊ = sqrt(2)
-
 latex command for fixing it:
-
         \addlitjlbase{myφvar₊}{my$\phi$var${\scriptstyle {}_{+}}$}{7}
 
 * numbers in E-notation wihtout using a + sign:  
 example:
-
         evar = 3.99e400
         evar₂ = 3.99E400
-
 latex commands for fixing it:
 
         \addlitjlstring{e400}{e400}{4}
