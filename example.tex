@@ -1,0 +1,48 @@
+
+
+\documentclass[11pt, a4paper]{scrartcl}
+
+
+\usepackage[utf8]{inputenc}
+\usepackage{courier}
+\usepackage{jlcode}
+
+
+
+
+\begin{document}
+
+
+\section*{The Output of a Quite General Code Example}
+The following Julia code contains all operators, some strings and some comments.
+Moreover a few names of variables consist of greek letters, superscripts or
+subscripts. However the code itself is rather useless unless you want to test
+how Julia code is displayed by the jlcode package.
+\lstinputlisting{testfile.jl}
+\newpage
+
+\section*{Known Managable Issues}
+\noindent
+The following Julia code presents the known issues that can appear due to the
+nature of the listings package. Right now the jlcode package is not able to
+handle theses cases. However the issues can be fixed by the user himself.
+
+\vspace{2\baselineskip}\noindent
+Without fixing the issues one gets the following output:
+\lstinputlisting{testfile2.jl}
+
+\newpage
+After fixing the issues the output looks as follows:
+\addlitjlbase{myβ2ndvar}{my$\beta$2ndvar}{9}
+\addlitjlbase{myφvar₊}{my$\phi$var${\scriptstyle {}_{+}}$}{7}
+\addlitjlbase{approx4π}{approx4$\pi$}{8}
+\addlitjlbase{löwe}{l{\"o}we}{4}
+\addlitjlbase{checkin€}{checkin\euro}{8}
+\addlitjlstring{e400}{e400}{4}
+\addlitjlstring{E400}{E400}{4}
+\addlitjlstring{'W'}{\textquotesingle W\textquotesingle}{3}
+\addlitjlstring{'€'}{\textquotesingle \euro\textquotesingle}{3}
+\addlitjlstring{'ϰ'}{\textquotesingle $\varkappa$\textquotesingle}{3}
+\lstinputlisting{testfile2.jl}
+
+\end{document}

@@ -1,0 +1,869 @@
+%%%
+%%% jlcode.sty
+%%% Copyright 2018 GitHub user wg030
+%%
+%% This work may be distributed and/or modified under the
+%% conditions of the LaTeX Project Public License, either
+%% version 1.3 of this license or (at your option) any
+%% later version.
+%% The latest version of this license is in
+%% http://www.latex-project.org/lppl.txt
+%% and version 1.3 or later is part of all distributions of
+%% LaTeX version 2005/12/01 or later.
+%%
+%% This work has the LPPL maintenance status 'maintained'.
+%% 
+%% The Current Maintainer of this work is GitHub user wg030.
+%%
+%% This work consists of the files jlcode.sty, testfile1.jl,
+%% testfile2.jl, example.tex and the derived file
+%% example.pdf.
+%%
+%%
+%%
+% keywords, literals and built-ins from:
+% https://github.com/isagalaev/highlight.js/blob/master/src/languages/julia.js
+% colors from:
+% https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css
+% https://docs.julialang.org/en/latest/assets/documenter.css
+% special unicode characters from:
+% https://docs.julialang.org/en/latest/manual/unicode-input/
+
+
+
+
+
+% defining the jlcode package
+\def\fileversion{3.0}
+\def\filedate{2019/08/15}
+
+\typeout{-- Package: `jlcode' \fileversion\space <\filedate> --}
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{jlcode}[\filedate\space\fileversion]
+
+
+
+
+
+% loading required packages
+\RequirePackage{listings}
+\RequirePackage{xcolor}              % for coloring
+\RequirePackage{textcomp}            % for upright single quotes
+\RequirePackage{amssymb}             % for the ϰ symbol
+\RequirePackage{eurosym}             % for the € symbol
+\PassOptionsToPackage{T1}{fontenc}
+\RequirePackage{fontenc}             % for the « and » symbols
+\RequirePackage{calc}                % for the creation of the code box
+
+
+
+
+
+% julia language definition
+\lstdefinelanguage{julia}
+{%
+%
+% julia's keywords:
+%
+morekeywords=[1]
+{%
+in,isa,where,baremodule,begin,break,catch,ccall,const,continue,do,else,elseif,%
+end,export,finally,for,function,global,if,import,importall,let,local,macro,%
+module,quote,return,try,using,while,struct,mutable,primitive,%
+% legacy, to be deprecated in the next release
+type,immutable,abstract,bitstype,typealias%
+},%
+%
+% julia's literals:
+%
+morekeywords=[2]
+{%
+true,false,ARGS,C_NULL,DevNull,ENDIAN_BOM,ENV,I,Inf,Inf16,Inf32,Inf64,%
+InsertionSort,JULIA_HOME,LOAD_PATH,MergeSort,NaN,NaN16,NaN32,NaN64,%
+PROGRAM_FILE,QuickSort,RoundDown,RoundFromZero,RoundNearest,%
+RoundNearestTiesAway,RoundNearestTiesUp,RoundToZero,RoundUp,STDERR,STDIN,%
+STDOUT,VERSION,catalan,e,eu,eulergamma,golden,im,nothing,pi,γ,π,φ%
+},%
+%
+% julia's built-ins:
+%
+morekeywords=[3]
+{%
+ANY,AbstractArray,AbstractChannel,AbstractFloat,AbstractMatrix,AbstractRNG,%
+AbstractSerializer,AbstractSet,AbstractSparseArray,AbstractSparseMatrix,%
+AbstractSparseVector,AbstractString,AbstractUnitRange,AbstractVecOrMat,%
+AbstractVector,Any,ArgumentError,Array,AssertionError,Associative,%
+Base64DecodePipe,Base64EncodePipe,Bidiagonal,BigFloat,BigInt,BitArray,%
+BitMatrix,BitVector,Bool,BoundsError,BufferStream,CachingPool,%
+CapturedException,CartesianIndex,CartesianRange,Cchar,Cdouble,Cfloat,Channel,%
+Char,Cint,Cintmax_t,Clong,Clonglong,ClusterManager,Cmd,CodeInfo,Colon,Complex,%
+Complex128,Complex32,Complex64,CompositeException,Condition,ConjArray,%
+ConjMatrix,ConjVector,Cptrdiff_t,Cshort,Csize_t,Cssize_t,Cstring,Cuchar,Cuint,%
+Cuintmax_t,Culong,Culonglong,Cushort,Cwchar_t,Cwstring,DataType,Date,%
+DateFormat,DateTime,DenseArray,DenseMatrix,DenseVecOrMat,DenseVector,Diagonal,%
+Dict,DimensionMismatch,Dims,DirectIndexString,Display,DivideError,DomainError,%
+EOFError,EachLine,Enum,Enumerate,ErrorException,Exception,ExponentialBackOff,%
+Expr,Factorization,FileMonitor,Float16,Float32,Float64,Function,Future,%
+GlobalRef,GotoNode,HTML,Hermitian,IO,IOBuffer,IOContext,IOStream,IPAddr,IPv4,%
+IPv6,IndexCartesian,IndexLinear,IndexStyle,InexactError,InitError,Int,Int128,%
+Int16,Int32,Int64,Int8,IntSet,Integer,InterruptException,InvalidStateException,%
+Irrational,KeyError,LabelNode,LinSpace,LineNumberNode,LoadError,%
+LowerTriangular,MIME,Matrix,MersenneTwister,Method,MethodError,MethodTable,%
+Module,NTuple,NewvarNode,NullException,Nullable,Number,ObjectIdDict,%
+OrdinalRange,OutOfMemoryError,OverflowError,Pair,ParseError,PartialQuickSort,%
+PermutedDimsArray,Pipe,PollingFileWatcher,ProcessExitedException,Ptr,QuoteNode,%
+RandomDevice,Range,RangeIndex,Rational,RawFD,ReadOnlyMemoryError,Real,%
+ReentrantLock,Ref,Regex,RegexMatch,RemoteChannel,RemoteException,RevString,%
+RoundingMode,RowVector,SSAValue,SegmentationFault,SerializationState,Set,%
+SharedArray,SharedMatrix,SharedVector,Signed,SimpleVector,Slot,SlotNumber,%
+SparseMatrixCSC,SparseVector,StackFrame,StackOverflowError,StackTrace,%
+StepRange,StepRangeLen,StridedArray,StridedMatrix,StridedVecOrMat,%
+StridedVector,String,SubArray,SubString,SymTridiagonal,Symbol,Symmetric,%
+SystemError,TCPSocket,Task,Text,TextDisplay,Timer,Tridiagonal,Tuple,Type,%
+TypeError,TypeMapEntry,TypeMapLevel,TypeName,TypeVar,TypedSlot,UDPSocket,UInt,%
+UInt128,UInt16,UInt32,UInt64,UInt8,UndefRefError,UndefVarError,UnicodeError,%
+UniformScaling,Union,UnionAll,UnitRange,Unsigned,UpperTriangular,Val,Vararg,%
+VecElement,VecOrMat,Vector,VersionNumber,Void,WeakKeyDict,WeakRef,WorkerConfig,%
+WorkerPool%
+},%
+%
+%
+sensitive=true,%
+%
+alsoother={$},%$
+%
+morecomment=[l]{\#},%
+morecomment=[n]{\#=}{=\#},%
+%
+morestring=[b]{"},%
+% just activate the next command if you dont use ' as the transposition
+% operator! comment out line 832 in that case, too!
+%morestring=[m]{'},
+morestring=[s]{"""}{"""},%
+morestring=[s]{r"}{"},%
+morestring=[s]{b"}{"},%
+morestring=[s]{v"}{"},%
+morestring=[s]{raw"}{"},%
+morestring=[s]{L"}{"},%
+%
+}[keywords,comments,strings]
+
+
+
+
+
+% defining the colors for
+\definecolor{jlbase}{HTML}{444444}            % julia's base color
+\definecolor{jlkeyword}{HTML}{444444}         % julia's keywords
+\definecolor{jlliteral}{HTML}{78A960}         % julia's literals
+\definecolor{jlbuiltin}{HTML}{397300}         % julia's built-ins
+\definecolor{jlcomment}{HTML}{888888}         % julia's comments
+\definecolor{jlstring}{HTML}{880000}          % julia's strings
+\definecolor{jlbackground}{HTML}{F5F5F5}      % the background of the code block
+\definecolor{jlrule}{HTML}{DDDDDD}            % the rule of the code block
+
+
+% defining the ucc and the ucclit command
+% for literating special unicode characters
+\newcommand{\ucc}[1]{%
+\ifnum\lst@mode=\lst@Pmode\relax%
+{\color{jlbase}#1}%
+\else%
+#1%
+\fi%
+}
+
+\newcommand{\ucclit}[1]{%
+\ifnum\lst@mode=\lst@Pmode\relax%
+{\color{jlliteral}#1}%
+\else%
+#1%
+\fi%
+}
+
+
+% defining a new opliterate key
+\def\lst@OpLiteratekey#1\@nil@{\let\lst@ifxopliterate\lst@if
+                             \def\lst@opliterate{#1}}
+\lst@Key{opliterate}{}{\@ifstar{\lst@true \lst@OpLiteratekey}
+                             {\lst@false\lst@OpLiteratekey}#1\@nil@}
+\lst@AddToHook{SelectCharTable}
+    {\ifx\lst@opliterate\@empty\else
+         \expandafter\lst@OpLiterate\lst@opliterate{}\relax\z@
+     \fi}
+\def\lst@OpLiterate#1#2#3{%
+    \ifx\relax#2\@empty\else
+        \lst@CArgX #1\relax\lst@CDef
+            {}
+            {\let\lst@next\@empty
+             \lst@ifxopliterate
+                \lst@ifmode \let\lst@next\lst@CArgEmpty \fi
+             \fi
+             \ifx\lst@next\@empty
+                 \ifx\lst@OutputBox\@gobble\else
+                   \lst@XPrintToken \let\lst@scanmode\lst@scan@m
+                   \lst@token{#2}\lst@length#3\relax
+                   \lst@XPrintToken
+                 \fi
+                 \let\lst@next\lst@CArgEmptyGobble
+             \fi
+             \lst@next}%
+            \@empty
+        \expandafter\lst@OpLiterate
+    \fi}
+
+
+% defining the \addlitjlbase and \addlitjlstring commands,
+% which help a user to fix some of the known managable issues
+\def\addToLiterate#1{%
+\protected@edef\lst@literate{%
+\unexpanded\expandafter{\lst@literate}\unexpanded{#1}}}
+\lst@Key{expandliterate}{}{\addToLiterate{#1}}
+\newcommand{\addlitjlbase}[3]{%
+\lstset{expandliterate={#1}{{{\color{jlbase}#2}}}{#3}}}
+\newcommand{\addlitjlstring}[3]{%
+\lstset{expandliterate={#1}{{{\color{jlstring}#2}}}{#3}}}
+
+
+
+
+
+% defining the styles for
+\lstset{keywordstyle={[1]\color{jlkeyword}\bfseries}}      % julia's keywords
+\lstset{keywordstyle={[2]\color{jlliteral}}}               % julia's literals
+\lstset{keywordstyle={[3]\color{jlbuiltin}}}               % julia's built-ins
+\lstset{commentstyle={\color{jlcomment}}}                  % julia's comments
+\lstset{stringstyle={\color{jlstring}}}                    % julia's strings
+\lstset{identifierstyle={\color{jlbase}}}                  % julia's identifiers
+
+
+\lstset{opliterate=*
+%
+% julia's operators
+%
+{.}{{{\color{jlbase}.}}}{1} {:}{{{\color{jlbase}:}}}{1}
+{(}{{{\color{jlbase}(}}}{1} {)}{{{\color{jlbase})}}}{1}
+{[}{{{\color{jlbase}[}}}{1} {]}{{{\color{jlbase}]}}}{1}
+{\{}{{{\color{jlbase}\{}}}{1} {\}}{{{\color{jlbase}\}}}}{1}
+{^}{{{\color{jlbase}\^{}}}}{1} %{'}{{{\color{jlbase}\textquotesingle}}}{1}
+{+}{{{\color{jlbase}+}}}{1} {-}{{{\color{jlbase}-}}}{1}
+{√}{{{\color{jlbase}$\surd$}}}{1}
+{∛}{{{\color{jlbase}$\sqrt[3]{\vphantom{x}}$}}}{1}
+{~}{{{\color{jlbase}\textasciitilde{}}}}{1} {!}{{{\color{jlbase}!}}}{1}
+{<}{{{\color{jlbase}<}}}{1} {>}{{{\color{jlbase}>}}}{1}
+{/}{{{\color{jlbase}/}}}{1} {*}{{{\color{jlbase}*}}}{1}
+{\%}{{{\color{jlbase}\%}}}{1} {&}{{{\color{jlbase}\&}}}{1}
+{\\}{{{\color{jlbase}\lstum@backslash}}}{1} {÷}{{{\color{jlbase}$\div$}}}{1}
+{|}{{{\color{jlbase}|}}}{1} {⊻}{{{\color{jlbase}${\scriptstyle \veebar}$}}}{1}
+{≠}{{{\color{jlbase}${\scriptstyle \neq}$}}}{1}
+{≤}{{{\color{jlbase}${\scriptstyle \leq}$}}}{1}
+{≥}{{{\color{jlbase}${\scriptstyle \geq}$}}}{1} {?}{{{\color{jlbase}?}}}{1}
+{=}{{{\color{jlbase}=}}}{1} {,}{{{\color{jlbase},}}}{1}
+{;}{{{\color{jlbase};}}}{1}
+%
+% julia's numbers
+%
+{.0}{{{\color{jlstring}.0}}}{2} {.1}{{{\color{jlstring}.1}}}{2}
+{.2}{{{\color{jlstring}.2}}}{2} {.3}{{{\color{jlstring}.3}}}{2}
+{.4}{{{\color{jlstring}.4}}}{2} {.5}{{{\color{jlstring}.5}}}{2}
+{.6}{{{\color{jlstring}.6}}}{2} {.7}{{{\color{jlstring}.7}}}{2}
+{.8}{{{\color{jlstring}.8}}}{2} {.9}{{{\color{jlstring}.9}}}{2}
+%
+{e+0}{{{\color{jlstring}e+0}}}{3} {e+1}{{{\color{jlstring}e+1}}}{3}
+{e+2}{{{\color{jlstring}e+2}}}{3} {e+3}{{{\color{jlstring}e+3}}}{3}
+{e+4}{{{\color{jlstring}e+4}}}{3} {e+5}{{{\color{jlstring}e+5}}}{3}
+{e+6}{{{\color{jlstring}e+6}}}{3} {e+7}{{{\color{jlstring}e+7}}}{3}
+{e+8}{{{\color{jlstring}e+8}}}{3} {e+9}{{{\color{jlstring}e+9}}}{3}
+%
+{0E+}{{{\color{jlstring}0E+}}}{3} {1E+}{{{\color{jlstring}1E+}}}{3}
+{2E+}{{{\color{jlstring}2E+}}}{3} {3E+}{{{\color{jlstring}3E+}}}{3}
+{4E+}{{{\color{jlstring}4E+}}}{3} {5E+}{{{\color{jlstring}5E+}}}{3}
+{6E+}{{{\color{jlstring}6E+}}}{3} {7E+}{{{\color{jlstring}7E+}}}{3}
+{8E+}{{{\color{jlstring}8E+}}}{3} {9E+}{{{\color{jlstring}9E+}}}{3}
+%
+{e-0}{{{\color{jlstring}e-0}}}{3} {e-1}{{{\color{jlstring}e-1}}}{3}
+{e-2}{{{\color{jlstring}e-2}}}{3} {e-3}{{{\color{jlstring}e-3}}}{3}
+{e-4}{{{\color{jlstring}e-4}}}{3} {e-5}{{{\color{jlstring}e-5}}}{3}
+{e-6}{{{\color{jlstring}e-6}}}{3} {e-7}{{{\color{jlstring}e-7}}}{3}
+{e-8}{{{\color{jlstring}e-8}}}{3} {e-9}{{{\color{jlstring}e-9}}}{3}
+%
+{0E-}{{{\color{jlstring}0E-}}}{3} {1E-}{{{\color{jlstring}1E-}}}{3}
+{2E-}{{{\color{jlstring}2E-}}}{3} {3E-}{{{\color{jlstring}3E-}}}{3}
+{4E-}{{{\color{jlstring}4E-}}}{3} {5E-}{{{\color{jlstring}5E-}}}{3}
+{6E-}{{{\color{jlstring}6E-}}}{3} {7E-}{{{\color{jlstring}7E-}}}{3}
+{8E-}{{{\color{jlstring}8E-}}}{3} {9E-}{{{\color{jlstring}9E-}}}{3}
+}
+
+
+% special unicode characters
+%\lstset{inputencoding=utf8}
+%\DeclareUnicodeCharacter{0391}{A}
+\lstset{extendedchars=true}
+\lstset{literate=
+%
+% special characters that appear in latin languages
+%
+{á}{{\ucc{\'a}}}{1} {é}{{\ucc{\'e}}}{1} {í}{{\ucc{\'i}}}{1} {ó}{{\ucc{\'o}}}{1}
+{ú}{{\ucc{\'u}}}{1} {Á}{{\ucc{\'A}}}{1} {É}{{\ucc{\'E}}}{1} {Í}{{\ucc{\'I}}}{1}
+{Ó}{{\ucc{\'O}}}{1} {Ú}{{\ucc{\'U}}}{1}
+{à}{{\ucc{\`a}}}{1} {è}{{\ucc{\`e}}}{1} {ì}{{\ucc{\`i}}}{1} {ò}{{\ucc{\`o}}}{1}
+{ù}{{\ucc{\`u}}}{1} {À}{{\ucc{\`A}}}{1} {È}{{\ucc{\'E}}}{1} {Ì}{{\ucc{\`I}}}{1}
+{Ò}{{\ucc{\`O}}}{1} {Ù}{{\ucc{\`U}}}{1}
+{ä}{{\ucc{\"a}}}{1} {ë}{{\ucc{\"e}}}{1} {ï}{{\ucc{\"i}}}{1} {ö}{{\ucc{\"o}}}{1}
+{ü}{{\ucc{\"u}}}{1} {Ä}{{\ucc{\"A}}}{1} {Ë}{{\ucc{\"E}}}{1} {Ï}{{\ucc{\"I}}}{1}
+{Ö}{{\ucc{\"O}}}{1} {Ü}{{\ucc{\"U}}}{1}
+{â}{{\ucc{\^a}}}{1} {ê}{{\ucc{\^e}}}{1} {î}{{\ucc{\^i}}}{1} {ô}{{\ucc{\^o}}}{1}
+{û}{{\ucc{\^u}}}{1} {Â}{{\ucc{\^A}}}{1} {Ê}{{\ucc{\^E}}}{1} {Î}{{\ucc{\^I}}}{1}
+{Ô}{{\ucc{\^O}}}{1} {Û}{{\ucc{\^U}}}{1}
+{œ}{{\ucc{\oe}}}{1} {Œ}{{\ucc{\OE}}}{1} {æ}{{\ucc{\ae}}}{1} {Æ}{{\ucc{\AE}}}{1}
+{ß}{\ucc{{\ss}}}{1}
+{ű}{{\ucc{\H{u}}}}{1} {Ű}{{\ucc{\H{U}}}}{1} {ő}{{\ucc{\H{o}}}}{1}
+{Ő}{{\ucc{\H{O}}}}{1} {ç}{{\ucc{\c c}}}{1} {Ç}{{\ucc{\c C}}}{1}
+{ø}{{\ucc{\o}}}{1} {å}{{\ucc{\r a}}}{1} {Å}{{\ucc{\r A}}}{1}
+{€}{{\ucc{\euro}}}{1} {£}{{\ucc{\pounds}}}{1} {«}{{\ucc{\guillemotleft}}}{1}
+{»}{{\ucc{\guillemotright}}}{1} {ñ}{{\ucc{\~n}}}{1} {Ñ}{{\ucc{\~N}}}{1}
+{¿}{{\ucc{?`}}}{1}
+%
+% greek capital letters
+%
+{Α}{{\ucc{A}}}{1} {Β}{{\ucc{B}}}{1} {Γ}{{\ucc{$\Gamma$}}}{1}
+{Δ}{{\ucc{$\Delta$}}}{1} {Ε}{{\ucc{E}}}{1} {Ζ}{{\ucc{Z}}}{1}
+{Η}{{\ucc{H}}}{1} {Θ}{{\ucc{$\Theta$}}}{1} {Ι}{{\ucc{I}}}{1}
+{Κ}{{\ucc{K}}}{1} {Λ}{{\ucc{$\Lambda$}}}{1} {Μ}{{\ucc{M}}}{1}
+{Ν}{{\ucc{N}}}{1} {Ξ}{{\ucc{$\Xi$}}}{1} {Ο}{{\ucc{O}}}{1}
+{Π}{{\ucc{$\Pi$}}}{1} {Ρ}{{\ucc{P}}}{1} {Σ}{{\ucc{$\Sigma$}}}{1}
+{Τ}{{\ucc{T}}}{1} {Υ}{{\ucc{$\Upsilon$}}}{1} {Φ}{{\ucc{$\Phi$}}}{1}
+{Χ}{{\ucc{X}}}{1} {Ψ}{{\ucc{$\Psi$}}}{1} {Ω}{{\ucc{$\Omega$}}}{1}
+%
+% mircro sign + latin small letter open e
+%
+{µ}{{\ucc{$\mu$}}}{1} {ɛ}{{\ucc{$\varepsilon$}}}{1}
+%
+% greek small letters
+%
+{α}{{\ucc{$\alpha$}}}{1} {β}{{\ucc{$\beta$}}}{1} {γ}{{\ucclit{$\gamma$}}}{1}
+{δ}{{\ucc{$\delta$}}}{1} {ε}{{\ucc{$\varepsilon$}}}{1}
+{ϵ}{{\ucc{$\epsilon$}}}{1} {ζ}{{\ucc{$\zeta$}}}{1} {η}{{\ucc{$\eta$}}}{1}
+{θ}{{\ucc{$\theta$}}}{1} {ϑ}{{\ucc{$\vartheta$}}}{1} {ι}{{\ucc{$\iota$}}}{1}
+{κ}{{\ucc{$\kappa$}}}{1} {ϰ}{{\ucc{$\varkappa$}}}{1} {λ}{{\ucc{$\lambda$}}}{1}
+{μ}{{\ucc{$\mu$}}}{1} {ν}{{\ucc{$\nu$}}}{1} {ξ}{{\ucc{$\xi$}}}{1}
+{ο}{{\ucc{o}}}{1} {π}{{\ucclit{$\pi$}}}{1} {ϖ}{{\ucc{$\varpi$}}}{1}
+{ρ}{{\ucc{$\rho$}}}{1} {ϱ}{{\ucc{$\varrho$}}}{1} {σ}{{\ucc{$\sigma$}}}{1}
+{ς}{{\ucc{$\varsigma$}}}{1} {τ}{{\ucc{$\tau$}}}{1} {υ}{{\ucc{$\upsilon$}}}{1}
+{φ}{{\ucclit{$\phi$}}}{1} {ϕ}{{\ucc{$\varphi$}}}{1} {χ}{{\ucc{$\chi$}}}{1}
+{ψ}{{\ucc{$\psi$}}}{1} {ω}{{\ucc{$\omega$}}}{1}
+%
+% latin capital letters with dot above
+%
+{Ȧ}{{\ucc{\.A}}}{1} {Ḃ}{{\ucc{\.B}}}{1} {Ċ}{{\ucc{\.C}}}{1} {Ḋ}{{\ucc{\.D}}}{1}
+{Ė}{{\ucc{\.E}}}{1} {Ḟ}{{\ucc{\.F}}}{1} {Ġ}{{\ucc{\.G}}}{1} {Ḣ}{{\ucc{\.H}}}{1}
+{İ}{{\ucc{\.I}}}{1} {J̇}{{\ucc{\.J}}}{1} {K̇}{{\ucc{\.K}}}{1} {L̇}{{\ucc{\.L}}}{1}
+{Ṁ}{{\ucc{\.M}}}{1} {Ṅ}{{\ucc{\.N}}}{1} {Ȯ}{{\ucc{\.O}}}{1} {Ṗ}{{\ucc{\.P}}}{1}
+{Q̇}{{\ucc{\.Q}}}{1} {Ṙ}{{\ucc{\.R}}}{1} {Ṡ}{{\ucc{\.S}}}{1} {Ṫ}{{\ucc{\.T}}}{1}
+{U̇}{{\ucc{\.U}}}{1} {V̇}{{\ucc{\.V}}}{1} {Ẇ}{{\ucc{\.W}}}{1} {Ẋ}{{\ucc{\.X}}}{1}
+{Ẏ}{{\ucc{\.Y}}}{1} {Ż}{{\ucc{\.Z}}}{1}
+%
+% latin small letters with dot above
+%
+{ȧ}{{\ucc{\.a}}}{1} {ḃ}{{\ucc{\.b}}}{1} {ċ}{{\ucc{\.c}}}{1} {ḋ}{{\ucc{\.d}}}{1}
+{ė}{{\ucc{\.e}}}{1} {ḟ}{{\ucc{\.f}}}{1} {ġ}{{\ucc{\.g}}}{1} {ḣ}{{\ucc{\.h}}}{1}
+{i̇}{{\ucc{\.i}}}{1} {j̇}{{\ucc{\.j}}}{1} {k̇}{{\ucc{\.k}}}{1} {l̇}{{\ucc{\.l}}}{1}
+{ṁ}{{\ucc{\.m}}}{1} {ṅ}{{\ucc{\.n}}}{1} {ȯ}{{\ucc{\.o}}}{1} {ṗ}{{\ucc{\.p}}}{1}
+{q̇}{{\ucc{\.q}}}{1} {ṙ}{{\ucc{\.r}}}{1} {ṡ}{{\ucc{\.s}}}{1} {ṫ}{{\ucc{\.t}}}{1}
+{u̇}{{\ucc{\.u}}}{1} {v̇}{{\ucc{\.v}}}{1} {ẇ}{{\ucc{\.w}}}{1} {ẋ}{{\ucc{\.x}}}{1}
+{ẏ}{{\ucc{\.y}}}{1} {ż}{{\ucc{\.z}}}{1}
+%
+% greek capital letters with dot above
+%
+{Α̇}{{\ucc{${\scriptstyle \dot{A}}$}}}{1}
+{Β̇}{{\ucc{${\scriptstyle \dot{B}}$}}}{1}
+{Γ̇}{{\ucc{${\scriptstyle \dot{\Gamma}}$}}}{1}
+{Δ̇}{{\ucc{${\scriptstyle \dot{\Delta}}$}}}{1}
+{Ε̇}{{\ucc{${\scriptstyle \dot{E}}$}}}{1}
+{Ζ̇}{{\ucc{${\scriptstyle \dot{Z}}$}}}{1}
+{Η̇}{{\ucc{${\scriptstyle \dot{H}}$}}}{1}
+{Θ̇}{{\ucc{${\scriptstyle \dot{\Theta}}$}}}{1}
+{Ι̇}{{\ucc{${\scriptstyle \dot{I}}$}}}{1}
+{Κ̇}{{\ucc{${\scriptstyle \dot{K}}$}}}{1}
+{Λ̇}{{\ucc{${\scriptstyle \dot{\Lambda}}$}}}{1}
+{Μ̇}{{\ucc{${\scriptstyle \dot{M}}$}}}{1}
+{Ν̇}{{\ucc{${\scriptstyle \dot{N}}$}}}{1}
+{Ξ̇}{{\ucc{${\scriptstyle \dot{\Xi}}$}}}{1}
+{Ο̇}{{\ucc{${\scriptstyle \dot{O}}$}}}{1}
+{Π̇}{{\ucc{${\scriptstyle \dot{\Pi}}$}}}{1}
+{Ρ̇}{{\ucc{${\scriptstyle \dot{P}}$}}}{1}
+{Σ̇}{{\ucc{${\scriptstyle \dot{\Sigma}}$}}}{1}
+{Τ̇}{{\ucc{${\scriptstyle \dot{T}}$}}}{1}
+{Υ̇}{{\ucc{${\scriptstyle \dot{\Upsilon}}$}}}{1}
+{Φ̇}{{\ucc{${\scriptstyle \dot{\Phi}}$}}}{1}
+{Χ̇}{{\ucc{${\scriptstyle \dot{X}}$}}}{1}
+{Ψ̇}{{\ucc{${\scriptstyle \dot{\Psi}}$}}}{1}
+{Ω̇}{{\ucc{${\scriptstyle \dot{\Omega}}$}}}{1}
+%
+% greek small letters with dot above
+%
+{α̇}{{\ucc{${\scriptstyle \dot{\alpha}}$}}}{1}
+{β̇}{{\ucc{${\scriptstyle \dot{\beta}}$}}}{1}
+{γ̇}{{\ucc{${\scriptstyle \dot{\gamma}}$}}}{1}
+{δ̇}{{\ucc{${\scriptstyle \dot{\delta}}$}}}{1}
+{ε̇}{{\ucc{${\scriptstyle \dot{\varepsilon}}$}}}{1}
+{ϵ̇}{{\ucc{${\scriptstyle \dot{\epsilon}}$}}}{1}
+{ζ̇}{{\ucc{${\scriptstyle \dot{\zeta}}$}}}{1}
+{η̇}{{\ucc{${\scriptstyle \dot{\eta}}$}}}{1}
+{θ̇}{{\ucc{${\scriptstyle \dot{\theta}}$}}}{1}
+{ϑ̇}{{\ucc{${\scriptstyle \dot{\vartheta}}$}}}{1}
+{ι̇}{{\ucc{${\scriptstyle \dot{\iota}}$}}}{1}
+{κ̇}{{\ucc{${\scriptstyle \dot{\kappa}}$}}}{1}
+{ϰ̇}{{\ucc{${\scriptstyle \dot{\varkappa}}$}}}{1}
+{λ̇}{{\ucc{${\scriptstyle \dot{\lambda}}$}}}{1}
+{μ̇}{{\ucc{${\scriptstyle \dot{\mu}}$}}}{1}
+{ν̇}{{\ucc{${\scriptstyle \dot{\nu}}$}}}{1}
+{ξ̇}{{\ucc{${\scriptstyle \dot{\xi}}$}}}{1}
+{ο̇}{{\ucc{${\scriptstyle \dot{o}}$}}}{1}
+{π̇}{{\ucc{${\scriptstyle \dot{\pi}}$}}}{1}
+{ϖ̇}{{\ucc{${\scriptstyle \dot{\varpi}}$}}}{1}
+{ρ̇}{{\ucc{${\scriptstyle \dot{\rho}}$}}}{1}
+{ϱ̇}{{\ucc{${\scriptstyle \dot{\varrho}}$}}}{1}
+{σ̇}{{\ucc{${\scriptstyle \dot{\sigma}}$}}}{1}
+{ς̇}{{\ucc{${\scriptstyle \dot{\varsigma}}$}}}{1}
+{τ̇}{{\ucc{${\scriptstyle \dot{\tau}}$}}}{1}
+{υ̇}{{\ucc{${\scriptstyle \dot{\upsilon}}$}}}{1}
+{ϕ̇}{{\ucc{${\scriptstyle \dot{\phi}}$}}}{1}
+{φ̇}{{\ucc{${\scriptstyle \dot{\varphi}}$}}}{1}
+{χ̇}{{\ucc{${\scriptstyle \dot{\chi}}$}}}{1}
+{ψ̇}{{\ucc{${\scriptstyle \dot{\psi}}$}}}{1}
+{ω̇}{{\ucc{${\scriptstyle \dot{\omega}}$}}}{1}
+%
+% latin capital letters with double dot above
+%
+{Ä}{{\ucc{\"A}}}{1} {B̈}{{\ucc{\"B}}}{1} {C̈}{{\ucc{\"C}}}{1} {D̈}{{\ucc{\"D}}}{1}
+{Ë}{{\ucc{\"E}}}{1} {F̈}{{\ucc{\"F}}}{1} {G̈}{{\ucc{\"G}}}{1} {Ḧ}{{\ucc{\"H}}}{1}
+{Ï}{{\ucc{\"I}}}{1} {J̈}{{\ucc{\"J}}}{1} {K̈}{{\ucc{\"K}}}{1} {L̈}{{\ucc{\"L}}}{1}
+{M̈}{{\ucc{\"M}}}{1} {N̈}{{\ucc{\"N}}}{1} {Ö}{{\ucc{\"O}}}{1} {P̈}{{\ucc{\"P}}}{1}
+{Q̈}{{\ucc{\"Q}}}{1} {R̈}{{\ucc{\"R}}}{1} {S̈}{{\ucc{\"S}}}{1} {T̈}{{\ucc{\"T}}}{1}
+{Ü}{{\ucc{\"U}}}{1} {V̈}{{\ucc{\"V}}}{1} {Ẅ}{{\ucc{\"W}}}{1} {Ẍ}{{\ucc{\"X}}}{1}
+{Ÿ}{{\ucc{\"Y}}}{1} {Z̈}{{\ucc{\"Z}}}{1}
+%
+% latin small letters with double dot above
+%
+{ä}{{\ucc{\"a}}}{1} {b̈}{{\ucc{\"b}}}{1} {c̈}{{\ucc{\"c}}}{1} {d̈}{{\ucc{\"d}}}{1}
+{ë}{{\ucc{\"e}}}{1} {f̈}{{\ucc{\"f}}}{1} {g̈}{{\ucc{\"g}}}{1} {ḧ}{{\ucc{\"h}}}{1}
+{ï}{{\ucc{\"i}}}{1} {j̈}{{\ucc{\"j}}}{1} {k̈}{{\ucc{\"k}}}{1} {l̈}{{\ucc{\"l}}}{1}
+{m̈}{{\ucc{\"m}}}{1} {n̈}{{\ucc{\"n}}}{1} {ö}{{\ucc{\"o}}}{1} {p̈}{{\ucc{\"p}}}{1}
+{q̈}{{\ucc{\"q}}}{1} {r̈}{{\ucc{\"r}}}{1} {s̈}{{\ucc{\"s}}}{1} {ẗ}{{\ucc{\"t}}}{1}
+{ü}{{\ucc{\"u}}}{1} {v̈}{{\ucc{\"v}}}{1} {ẅ}{{\ucc{\"w}}}{1} {ẍ}{{\ucc{\"x}}}{1}
+{ÿ}{{\ucc{\"y}}}{1} {z̈}{{\ucc{\"z}}}{1}
+%
+% greek capital letters with double dot above
+%
+{Α̈}{{\ucc{${\scriptstyle \ddot{A}}$}}}{1}
+{Β̈}{{\ucc{${\scriptstyle \ddot{B}}$}}}{1}
+{Γ̈}{{\ucc{${\scriptstyle \ddot{\Gamma}}$}}}{1}
+{Δ̈}{{\ucc{${\scriptstyle \ddot{\Delta}}$}}}{1}
+{Ε̈}{{\ucc{${\scriptstyle \ddot{E}}$}}}{1}
+{Ζ̈}{{\ucc{${\scriptstyle \ddot{Z}}$}}}{1}
+{Η̈}{{\ucc{${\scriptstyle \ddot{H}}$}}}{1}
+{Θ̈}{{\ucc{${\scriptstyle \ddot{\Theta}}$}}}{1}
+{Ϊ}{{\ucc{${\scriptstyle \ddot{I}}$}}}{1}
+{Κ̈}{{\ucc{${\scriptstyle \ddot{K}}$}}}{1}
+{Λ̈}{{\ucc{${\scriptstyle \ddot{\Lambda}}$}}}{1}
+{Μ̈}{{\ucc{${\scriptstyle \ddot{M}}$}}}{1}
+{Ν̈}{{\ucc{${\scriptstyle \ddot{N}}$}}}{1}
+{Ξ̈}{{\ucc{${\scriptstyle \ddot{\Xi}}$}}}{1}
+{Ο̈}{{\ucc{${\scriptstyle \ddot{O}}$}}}{1}
+{Π̈}{{\ucc{${\scriptstyle \ddot{\Pi}}$}}}{1}
+{Ρ̈}{{\ucc{${\scriptstyle \ddot{P}}$}}}{1}
+{Σ̈}{{\ucc{${\scriptstyle \ddot{\Sigma}}$}}}{1}
+{Τ̈}{{\ucc{${\scriptstyle \ddot{T}}$}}}{1}
+{Ϋ}{{\ucc{${\scriptstyle \ddot{\Upsilon}}$}}}{1}
+{Φ̈}{{\ucc{${\scriptstyle \ddot{\Phi}}$}}}{1}
+{Χ̈}{{\ucc{${\scriptstyle \ddot{X}}$}}}{1}
+{Ψ̈}{{\ucc{${\scriptstyle \ddot{\Psi}}$}}}{1}
+{Ω̈}{{\ucc{${\scriptstyle \ddot{\Omega}}$}}}{1}
+%
+% greek small letters with double dot above
+%
+{α̈}{{\ucc{${\scriptstyle \ddot{\alpha}}$}}}{1}
+{β̈}{{\ucc{${\scriptstyle \ddot{\beta}}$}}}{1}
+{γ̈}{{\ucc{${\scriptstyle \ddot{\gamma}}$}}}{1}
+{δ̈}{{\ucc{${\scriptstyle \ddot{\delta}}$}}}{1}
+{ε̈}{{\ucc{${\scriptstyle \ddot{\varepsilon}}$}}}{1}
+{ϵ̈}{{\ucc{${\scriptstyle \ddot{\epsilon}}$}}}{1}
+{ζ̈}{{\ucc{${\scriptstyle \ddot{\zeta}}$}}}{1}
+{η̈}{{\ucc{${\scriptstyle \ddot{\eta}}$}}}{1}
+{θ̈}{{\ucc{${\scriptstyle \ddot{\theta}}$}}}{1}
+{ϑ̈}{{\ucc{${\scriptstyle \ddot{\vartheta}}$}}}{1}
+{ϊ}{{\ucc{${\scriptstyle \ddot{\iota}}$}}}{1}
+{κ̈}{{\ucc{${\scriptstyle \ddot{\kappa}}$}}}{1}
+{ϰ̈}{{\ucc{${\scriptstyle \ddot{\varkappa}}$}}}{1}
+{λ̈}{{\ucc{${\scriptstyle \ddot{\lambda}}$}}}{1}
+{μ̈}{{\ucc{${\scriptstyle \ddot{\mu}}$}}}{1}
+{ν̈}{{\ucc{${\scriptstyle \ddot{\nu}}$}}}{1}
+{ξ̈}{{\ucc{${\scriptstyle \ddot{\xi}}$}}}{1}
+{ο̈}{{\ucc{${\scriptstyle \ddot{o}}$}}}{1}
+{π̈}{{\ucc{${\scriptstyle \ddot{\pi}}$}}}{1}
+{ϖ̈}{{\ucc{${\scriptstyle \ddot{\varpi}}$}}}{1}
+{ρ̈}{{\ucc{${\scriptstyle \ddot{\rho}}$}}}{1}
+{ϱ̈}{{\ucc{${\scriptstyle \ddot{\varrho}}$}}}{1}
+{σ̈}{{\ucc{${\scriptstyle \ddot{\sigma}}$}}}{1}
+{ς̈}{{\ucc{${\scriptstyle \ddot{\varsigma}}$}}}{1}
+{τ̈}{{\ucc{${\scriptstyle \ddot{\tau}}$}}}{1}
+{ϋ}{{\ucc{${\scriptstyle \ddot{\upsilon}}$}}}{1}
+{φ̈}{{\ucc{${\scriptstyle \ddot{\phi}}$}}}{1}
+{ϕ̈}{{\ucc{${\scriptstyle \ddot{\varphi}}$}}}{1}
+{χ̈}{{\ucc{${\scriptstyle \ddot{\chi}}$}}}{1}
+{ψ̈}{{\ucc{${\scriptstyle \ddot{\psi}}$}}}{1}
+{ω̈}{{\ucc{${\scriptstyle \dot{\omega}}$}}}{1}
+%
+% latin capital letters with tilde above
+%
+{Ã}{{\ucc{\~A}}}{1} {B̃}{{\ucc{\~B}}}{1} {C̃}{{\ucc{\~C}}}{1} {D̃}{{\ucc{\~D}}}{1}
+{Ẽ}{{\ucc{\~E}}}{1} {F̃}{{\ucc{\~F}}}{1} {G̃}{{\ucc{\~G}}}{1} {H̃}{{\ucc{\~H}}}{1}
+{Ĩ}{{\ucc{\~I}}}{1} {J̃}{{\ucc{\~J}}}{1} {K̃}{{\ucc{\~K}}}{1} {L̃}{{\ucc{\~L}}}{1}
+{M̃}{{\ucc{\~M}}}{1} {Ñ}{{\ucc{\~N}}}{1} {Õ}{{\ucc{\~O}}}{1} {P̃}{{\ucc{\~P}}}{1}
+{Q̃}{{\ucc{\~Q}}}{1} {R̃}{{\ucc{\~R}}}{1} {S̃}{{\ucc{\~S}}}{1} {T̃}{{\ucc{\~T}}}{1}
+{Ũ}{{\ucc{\~U}}}{1} {Ṽ}{{\ucc{\~V}}}{1} {W̃}{{\ucc{\~W}}}{1} {X̃}{{\ucc{\~X}}}{1}
+{Ỹ}{{\ucc{\~Y}}}{1} {Z̃}{{\ucc{\~Z}}}{1}
+%
+% latin small letters with tilde above
+%
+{ã}{{\ucc{\~a}}}{1} {b̃}{{\ucc{\~b}}}{1} {c̃}{{\ucc{\~c}}}{1} {d̃}{{\ucc{\~d}}}{1}
+{ẽ}{{\ucc{\~e}}}{1} {f̃}{{\ucc{\~f}}}{1} {g̃}{{\ucc{\~g}}}{1} {h̃}{{\ucc{\~h}}}{1}
+{ĩ}{{\ucc{\~i}}}{1} {j̃}{{\ucc{\~j}}}{1} {k̃}{{\ucc{\~k}}}{1} {l̃}{{\ucc{\~l}}}{1}
+{m̃}{{\ucc{\~m}}}{1} {ñ}{{\ucc{\~n}}}{1} {õ}{{\ucc{\~o}}}{1} {p̃}{{\ucc{\~p}}}{1}
+{q̃}{{\ucc{\~q}}}{1} {r̃}{{\ucc{\~r}}}{1} {s̃}{{\ucc{\~s}}}{1} {t̃}{{\ucc{\~t}}}{1}
+{ũ}{{\ucc{\~u}}}{1} {ṽ}{{\ucc{\~v}}}{1} {w̃}{{\ucc{\~w}}}{1} {x̃}{{\ucc{\~x}}}{1}
+{ỹ}{{\ucc{\~y}}}{1} {z̃}{{\ucc{\~z}}}{1}
+%
+% greek capital letters with tilde above
+%
+{Α̃}{{\ucc{${\scriptstyle \tilde{A}}$}}}{1}
+{Β̃}{{\ucc{${\scriptstyle \tilde{B}}$}}}{1}
+{Γ̃}{{\ucc{${\scriptstyle \tilde{\Gamma}}$}}}{1}
+{Δ̃}{{\ucc{${\scriptstyle \tilde{\Delta}}$}}}{1}
+{Ε̃}{{\ucc{${\scriptstyle \tilde{E}}$}}}{1}
+{Ζ̃}{{\ucc{${\scriptstyle \tilde{Z}}$}}}{1}
+{Η̃}{{\ucc{${\scriptstyle \tilde{H}}$}}}{1}
+{Θ̃}{{\ucc{${\scriptstyle \tilde{\Theta}}$}}}{1}
+{Ι̃}{{\ucc{${\scriptstyle \tilde{I}}$}}}{1}
+{Κ̃}{{\ucc{${\scriptstyle \tilde{K}}$}}}{1}
+{Λ̃}{{\ucc{${\scriptstyle \tilde{\Lambda}}$}}}{1}
+{Μ̃}{{\ucc{${\scriptstyle \tilde{M}}$}}}{1}
+{Ν̃}{{\ucc{${\scriptstyle \tilde{N}}$}}}{1}
+{Ξ̃}{{\ucc{${\scriptstyle \tilde{\Xi}}$}}}{1}
+{Ο̃}{{\ucc{${\scriptstyle \tilde{O}}$}}}{1}
+{Π̃}{{\ucc{${\scriptstyle \tilde{\Pi}}$}}}{1}
+{Ρ̃}{{\ucc{${\scriptstyle \tilde{P}}$}}}{1}
+{Σ̃}{{\ucc{${\scriptstyle \tilde{\Sigma}}$}}}{1}
+{Τ̃}{{\ucc{${\scriptstyle \tilde{T}}$}}}{1}
+{Υ̃}{{\ucc{${\scriptstyle \tilde{\Upsilon}}$}}}{1}
+{Φ̃}{{\ucc{${\scriptstyle \tilde{\Phi}}$}}}{1}
+{Χ̃}{{\ucc{${\scriptstyle \tilde{X}}$}}}{1}
+{Ψ̃}{{\ucc{${\scriptstyle \tilde{\Psi}}$}}}{1}
+{Ω̃}{{\ucc{${\scriptstyle \tilde{\Omega}}$}}}{1}
+%
+% greek small letters with tilde above
+%
+{α̃}{{\ucc{${\scriptstyle \tilde{\alpha}}$}}}{1}
+{β̃}{{\ucc{${\scriptstyle \tilde{\beta}}$}}}{1}
+{γ̃}{{\ucc{${\scriptstyle \tilde{\gamma}}$}}}{1}
+{δ̃}{{\ucc{${\scriptstyle \tilde{\delta}}$}}}{1}
+{ε̃}{{\ucc{${\scriptstyle \tilde{\varepsilon}}$}}}{1}
+{ϵ̃}{{\ucc{${\scriptstyle \tilde{\epsilon}}$}}}{1}
+{ζ̃}{{\ucc{${\scriptstyle \tilde{\zeta}}$}}}{1}
+{η̃}{{\ucc{${\scriptstyle \tilde{\eta}}$}}}{1}
+{θ̃}{{\ucc{${\scriptstyle \tilde{\theta}}$}}}{1}
+{ϑ̃}{{\ucc{${\scriptstyle \tilde{\vartheta}}$}}}{1}
+{ι̃}{{\ucc{${\scriptstyle \tilde{\iota}}$}}}{1}
+{κ̃}{{\ucc{${\scriptstyle \tilde{\kappa}}$}}}{1}
+{ϰ̃}{{\ucc{${\scriptstyle \tilde{\varkappa}}$}}}{1}
+{λ̃}{{\ucc{${\scriptstyle \tilde{\lambda}}$}}}{1}
+{μ̃}{{\ucc{${\scriptstyle \tilde{\mu}}$}}}{1}
+{ν̃}{{\ucc{${\scriptstyle \tilde{\nu}}$}}}{1}
+{ξ̃}{{\ucc{${\scriptstyle \tilde{\xi}}$}}}{1}
+{ο̃}{{\ucc{${\scriptstyle \tilde{o}}$}}}{1}
+{π̃}{{\ucc{${\scriptstyle \tilde{\pi}}$}}}{1}
+{ϖ̃}{{\ucc{${\scriptstyle \tilde{\varpi}}$}}}{1}
+{ρ̃}{{\ucc{${\scriptstyle \tilde{\rho}}$}}}{1}
+{ϱ̃}{{\ucc{${\scriptstyle \tilde{\varrho}}$}}}{1}
+{σ̃}{{\ucc{${\scriptstyle \tilde{\sigma}}$}}}{1}
+{ς̃}{{\ucc{${\scriptstyle \tilde{\varsigma}}$}}}{1}
+{τ̃}{{\ucc{${\scriptstyle \tilde{\tau}}$}}}{1}
+{υ̃}{{\ucc{${\scriptstyle \tilde{\upsilon}}$}}}{1}
+{φ̃}{{\ucc{${\scriptstyle \tilde{\phi}}$}}}{1}
+{ϕ̃}{{\ucc{${\scriptstyle \tilde{\varphi}}$}}}{1}
+{χ̃}{{\ucc{${\scriptstyle \tilde{\chi}}$}}}{1}
+{ψ̃}{{\ucc{${\scriptstyle \tilde{\psi}}$}}}{1}
+{ω̃}{{\ucc{${\scriptstyle \tilde{\omega}}$}}}{1}
+%
+% latin capital letters with hat above
+%
+{Â}{{\ucc{\^A}}}{1} {B̂}{{\ucc{\^B}}}{1} {Ĉ}{{\ucc{\^C}}}{1} {D̂}{{\ucc{\^D}}}{1}
+{Ê}{{\ucc{\^E}}}{1} {F̂}{{\ucc{\^F}}}{1} {Ĝ}{{\ucc{\^G}}}{1} {Ĥ}{{\ucc{\^H}}}{1}
+{Î}{{\ucc{\^I}}}{1} {Ĵ}{{\ucc{\^J}}}{1} {K̂}{{\ucc{\^K}}}{1} {L̂}{{\ucc{\^L}}}{1}
+{M̂}{{\ucc{\^M}}}{1} {N̂}{{\ucc{\^N}}}{1} {Ô}{{\ucc{\^O}}}{1} {P̂}{{\ucc{\^P}}}{1}
+{Q̂}{{\ucc{\^Q}}}{1} {R̂}{{\ucc{\^R}}}{1} {Ŝ}{{\ucc{\^S}}}{1} {T̂}{{\ucc{\^T}}}{1}
+{Û}{{\ucc{\^U}}}{1} {V̂}{{\ucc{\^V}}}{1} {Ŵ}{{\ucc{\^W}}}{1} {X̂}{{\ucc{\^X}}}{1}
+{Ŷ}{{\ucc{\^Y}}}{1} {Ẑ}{{\ucc{\^Z}}}{1}
+%
+% latin small letters with hat above
+%
+{â}{{\ucc{\^a}}}{1} {b̂}{{\ucc{\^b}}}{1} {ĉ}{{\ucc{\^c}}}{1} {d̂}{{\ucc{\^d}}}{1}
+{ê}{{\ucc{\^e}}}{1} {f̂}{{\ucc{\^f}}}{1} {ĝ}{{\ucc{\^g}}}{1} {ĥ}{{\ucc{\^h}}}{1}
+{î}{{\ucc{\^i}}}{1} {ĵ}{{\ucc{\^j}}}{1} {k̂}{{\ucc{\^k}}}{1} {l̂}{{\ucc{\^l}}}{1}
+{m̂}{{\ucc{\^m}}}{1} {n̂}{{\ucc{\^n}}}{1} {ô}{{\ucc{\^o}}}{1} {p̂}{{\ucc{\^p}}}{1}
+{q̂}{{\ucc{\^q}}}{1} {r̂}{{\ucc{\^r}}}{1} {ŝ}{{\ucc{\^s}}}{1} {t̂}{{\ucc{\^t}}}{1}
+{û}{{\ucc{\^u}}}{1} {v̂}{{\ucc{\^v}}}{1} {ŵ}{{\ucc{\^w}}}{1} {x̂}{{\ucc{\^x}}}{1}
+{ŷ}{{\ucc{\^y}}}{1} {ẑ}{{\ucc{\^z}}}{1}
+%
+% greek capital letters with hat above
+%
+{Α̂}{{\ucc{${\scriptstyle \hat{A}}$}}}{1}
+{Β̂}{{\ucc{${\scriptstyle \hat{B}}$}}}{1}
+{Γ̂}{{\ucc{${\scriptstyle \hat{\Gamma}}$}}}{1}
+{Δ̂}{{\ucc{${\scriptstyle \hat{\Delta}}$}}}{1}
+{Ε̂}{{\ucc{${\scriptstyle \hat{E}}$}}}{1}
+{Ζ̂}{{\ucc{${\scriptstyle \hat{Z}}$}}}{1}
+{Η̂}{{\ucc{${\scriptstyle \hat{H}}$}}}{1}
+{Θ̂}{{\ucc{${\scriptstyle \hat{\Theta}}$}}}{1}
+{Ι̂}{{\ucc{${\scriptstyle \hat{I}}$}}}{1}
+{Κ̂}{{\ucc{${\scriptstyle \hat{K}}$}}}{1}
+{Λ̂}{{\ucc{${\scriptstyle \hat{\Lambda}}$}}}{1}
+{Μ̂}{{\ucc{${\scriptstyle \hat{M}}$}}}{1}
+{Ν̂}{{\ucc{${\scriptstyle \hat{N}}$}}}{1}
+{Ξ̂}{{\ucc{${\scriptstyle \hat{\Xi}}$}}}{1}
+{Ο̂}{{\ucc{${\scriptstyle \hat{O}}$}}}{1}
+{Π̂}{{\ucc{${\scriptstyle \hat{\Pi}}$}}}{1}
+{Ρ̂}{{\ucc{${\scriptstyle \hat{P}}$}}}{1}
+{Σ̂}{{\ucc{${\scriptstyle \hat{\Sigma}}$}}}{1}
+{Τ̂}{{\ucc{${\scriptstyle \hat{T}}$}}}{1}
+{Υ̂}{{\ucc{${\scriptstyle \hat{\Upsilon}}$}}}{1}
+{Φ̂}{{\ucc{${\scriptstyle \hat{\Phi}}$}}}{1}
+{Χ̂}{{\ucc{${\scriptstyle \hat{X}}$}}}{1}
+{Ψ̂}{{\ucc{${\scriptstyle \hat{\Psi}}$}}}{1}
+{Ω̂}{{\ucc{${\scriptstyle \hat{\Omega}}$}}}{1}
+%
+% greek small letters with hat above
+%
+{α̂}{{\ucc{${\scriptstyle \hat{\alpha}}$}}}{1}
+{β̂}{{\ucc{${\scriptstyle \hat{\beta}}$}}}{1}
+{γ̂}{{\ucc{${\scriptstyle \hat{\gamma}}$}}}{1}
+{δ̂}{{\ucc{${\scriptstyle \hat{\delta}}$}}}{1}
+{ε̂}{{\ucc{${\scriptstyle \hat{\varepsilon}}$}}}{1}
+{ϵ̂}{{\ucc{${\scriptstyle \hat{\epsilon}}$}}}{1}
+{ζ̂}{{\ucc{${\scriptstyle \hat{\zeta}}$}}}{1}
+{η̂}{{\ucc{${\scriptstyle \hat{\eta}}$}}}{1}
+{θ̂}{{\ucc{${\scriptstyle \hat{\theta}}$}}}{1}
+{ϑ̂}{{\ucc{${\scriptstyle \hat{\vartheta}}$}}}{1}
+{ι̂}{{\ucc{${\scriptstyle \hat{\iota}}$}}}{1}
+{κ̂}{{\ucc{${\scriptstyle \hat{\kappa}}$}}}{1}
+{ϰ̂}{{\ucc{${\scriptstyle \hat{\varkappa}}$}}}{1}
+{λ̂}{{\ucc{${\scriptstyle \hat{\lambda}}$}}}{1}
+{μ̂}{{\ucc{${\scriptstyle \hat{\mu}}$}}}{1}
+{ν̂}{{\ucc{${\scriptstyle \hat{\nu}}$}}}{1}
+{ξ̂}{{\ucc{${\scriptstyle \hat{\xi}}$}}}{1}
+{ο̂}{{\ucc{${\scriptstyle \hat{o}}$}}}{1}
+{π̂}{{\ucc{${\scriptstyle \hat{\pi}}$}}}{1}
+{ϖ̂}{{\ucc{${\scriptstyle \hat{\varpi}}$}}}{1}
+{ρ̂}{{\ucc{${\scriptstyle \hat{\rho}}$}}}{1}
+{ϱ̂}{{\ucc{${\scriptstyle \hat{\varrho}}$}}}{1}
+{σ̂}{{\ucc{${\scriptstyle \hat{\sigma}}$}}}{1}
+{ς̂}{{\ucc{${\scriptstyle \hat{\varsigma}}$}}}{1}
+{τ̂}{{\ucc{${\scriptstyle \hat{\tau}}$}}}{1}
+{υ̂}{{\ucc{${\scriptstyle \hat{\upsilon}}$}}}{1}
+{φ̂}{{\ucc{${\scriptstyle \hat{\phi}}$}}}{1}
+{ϕ̂}{{\ucc{${\scriptstyle \hat{\varphi}}$}}}{1}
+{χ̂}{{\ucc{${\scriptstyle \hat{\chi}}$}}}{1}
+{ψ̂}{{\ucc{${\scriptstyle \hat{\psi}}$}}}{1}
+{ω̂}{{\ucc{${\scriptstyle \hat{\omega}}$}}}{1}
+%
+% latin capital letters with bar above
+%
+{Ā}{{\ucc{\=A}}}{1} {B̄}{{\ucc{\=B}}}{1} {C̄}{{\ucc{\=C}}}{1} {D̄}{{\ucc{\=D}}}{1}
+{Ē}{{\ucc{\=E}}}{1} {F̄}{{\ucc{\=F}}}{1} {Ḡ}{{\ucc{\=G}}}{1} {H̄}{{\ucc{\=H}}}{1}
+{Ī}{{\ucc{\=I}}}{1} {J̄}{{\ucc{\=J}}}{1} {K̄}{{\ucc{\=K}}}{1} {L̄}{{\ucc{\=L}}}{1}
+{M̄}{{\ucc{\=M}}}{1} {N̄}{{\ucc{\=N}}}{1} {Ō}{{\ucc{\=O}}}{1} {P̄}{{\ucc{\=P}}}{1}
+{Q̄}{{\ucc{\=Q}}}{1} {R̄}{{\ucc{\=R}}}{1} {S̄}{{\ucc{\=S}}}{1} {T̄}{{\ucc{\=T}}}{1}
+{Ū}{{\ucc{\=U}}}{1} {V̄}{{\ucc{\=V}}}{1} {W̄}{{\ucc{\=W}}}{1} {X̄}{{\ucc{\=X}}}{1}
+{Ȳ}{{\ucc{\=Y}}}{1} {Z̄}{{\ucc{\=Z}}}{1}
+%
+% latin small letters with bar above
+%
+{ā}{{\ucc{\=a}}}{1} {b̄}{{\ucc{\=b}}}{1} {c̄}{{\ucc{\=c}}}{1} {d̄}{{\ucc{\=d}}}{1}
+{ē}{{\ucc{\=e}}}{1} {f̄}{{\ucc{\=f}}}{1} {ḡ}{{\ucc{\=g}}}{1} {h̄}{{\ucc{\=h}}}{1}
+{ī}{{\ucc{\=i}}}{1} {j̄}{{\ucc{\=j}}}{1} {k̄}{{\ucc{\=k}}}{1} {l̄}{{\ucc{\=l}}}{1}
+{m̄}{{\ucc{\=m}}}{1} {n̄}{{\ucc{\=n}}}{1} {ō}{{\ucc{\=o}}}{1} {p̄}{{\ucc{\=p}}}{1}
+{q̄}{{\ucc{\=q}}}{1} {r̄}{{\ucc{\=r}}}{1} {s̄}{{\ucc{\=s}}}{1} {t̄}{{\ucc{\=t}}}{1}
+{ū}{{\ucc{\=u}}}{1} {v̄}{{\ucc{\=v}}}{1} {w̄}{{\ucc{\=w}}}{1} {x̄}{{\ucc{\=x}}}{1}
+{ȳ}{{\ucc{\=y}}}{1} {z̄}{{\ucc{\=z}}}{1}
+%
+% greek capital letters with bar above
+%
+{Ᾱ}{{\ucc{${\scriptstyle \bar{A}}$}}}{1}
+{Β̄}{{\ucc{${\scriptstyle \bar{B}}$}}}{1}
+{Γ̄}{{\ucc{${\scriptstyle \bar{\Gamma}}$}}}{1}
+{Δ̄}{{\ucc{${\scriptstyle \bar{\Delta}}$}}}{1}
+{Ε̄}{{\ucc{${\scriptstyle \bar{E}}$}}}{1}
+{Ζ̄}{{\ucc{${\scriptstyle \bar{Z}}$}}}{1}
+{Η̄}{{\ucc{${\scriptstyle \bar{H}}$}}}{1}
+{Θ̄}{{\ucc{${\scriptstyle \bar{\Theta}}$}}}{1}
+{Ῑ}{{\ucc{${\scriptstyle \bar{I}}$}}}{1}
+{Κ̄}{{\ucc{${\scriptstyle \bar{K}}$}}}{1}
+{Λ̄}{{\ucc{${\scriptstyle \bar{\Lambda}}$}}}{1}
+{Μ̄}{{\ucc{${\scriptstyle \bar{M}}$}}}{1}
+{Ν̄}{{\ucc{${\scriptstyle \bar{N}}$}}}{1}
+{Ξ̄}{{\ucc{${\scriptstyle \bar{\Xi}}$}}}{1}
+{Ο̄}{{\ucc{${\scriptstyle \bar{O}}$}}}{1}
+{Π̄}{{\ucc{${\scriptstyle \bar{\Pi}}$}}}{1}
+{Ρ̄}{{\ucc{${\scriptstyle \bar{P}}$}}}{1}
+{Σ̄}{{\ucc{${\scriptstyle \bar{\Sigma}}$}}}{1}
+{Τ̄}{{\ucc{${\scriptstyle \bar{T}}$}}}{1}
+{Ῡ}{{\ucc{${\scriptstyle \bar{\Upsilon}}$}}}{1}
+{Φ̄}{{\ucc{${\scriptstyle \bar{\Phi}}$}}}{1}
+{Χ̄}{{\ucc{${\scriptstyle \bar{X}}$}}}{1}
+{Ψ̄}{{\ucc{${\scriptstyle \bar{\Psi}}$}}}{1}
+{Ω̄}{{\ucc{${\scriptstyle \bar{\Omega}}$}}}{1}
+%
+% greek small letters with bar above
+%
+{ᾱ}{{\ucc{${\scriptstyle \bar{\alpha}}$}}}{1}
+{β̄}{{\ucc{${\scriptstyle \bar{\beta}}$}}}{1}
+{γ̄}{{\ucc{${\scriptstyle \bar{\gamma}}$}}}{1}
+{δ̄}{{\ucc{${\scriptstyle \bar{\delta}}$}}}{1}
+{ε̄}{{\ucc{${\scriptstyle \bar{\varepsilon}}$}}}{1}
+{ϵ̄}{{\ucc{${\scriptstyle \bar{\epsilon}}$}}}{1}
+{ζ̄}{{\ucc{${\scriptstyle \bar{\zeta}}$}}}{1}
+{η̄}{{\ucc{${\scriptstyle \bar{\eta}}$}}}{1}
+{θ̄}{{\ucc{${\scriptstyle \bar{\theta}}$}}}{1}
+{ϑ̄}{{\ucc{${\scriptstyle \bar{\vartheta}}$}}}{1}
+{ῑ}{{\ucc{${\scriptstyle \bar{\iota}}$}}}{1}
+{κ̄}{{\ucc{${\scriptstyle \bar{\kappa}}$}}}{1}
+{ϰ̄}{{\ucc{${\scriptstyle \bar{\varkappa}}$}}}{1}
+{λ̄}{{\ucc{${\scriptstyle \bar{\lambda}}$}}}{1}
+{μ̄}{{\ucc{${\scriptstyle \bar{\mu}}$}}}{1}
+{ν̄}{{\ucc{${\scriptstyle \bar{\nu}}$}}}{1}
+{ξ̄}{{\ucc{${\scriptstyle \bar{\xi}}$}}}{1}
+{ο̄}{{\ucc{${\scriptstyle \bar{o}}$}}}{1}
+{π̄}{{\ucc{${\scriptstyle \bar{\pi}}$}}}{1}
+{ϖ̄}{{\ucc{${\scriptstyle \bar{\varpi}}$}}}{1}
+{ρ̄}{{\ucc{${\scriptstyle \bar{\rho}}$}}}{1}
+{ϱ̄}{{\ucc{${\scriptstyle \bar{\varrho}}$}}}{1}
+{σ̄}{{\ucc{${\scriptstyle \bar{\sigma}}$}}}{1}
+{ς̄}{{\ucc{${\scriptstyle \bar{\varsigma}}$}}}{1}
+{τ̄}{{\ucc{${\scriptstyle \bar{\tau}}$}}}{1}
+{ῡ}{{\ucc{${\scriptstyle \bar{\upsilon}}$}}}{1}
+{φ̄}{{\ucc{${\scriptstyle \bar{\phi}}$}}}{1}
+{ϕ̄}{{\ucc{${\scriptstyle \bar{\varphi}}$}}}{1}
+{χ̄}{{\ucc{${\scriptstyle \bar{\chi}}$}}}{1}
+{ψ̄}{{\ucc{${\scriptstyle \bar{\psi}}$}}}{1}
+{ω̄}{{\ucc{${\scriptstyle \bar{\omega}}$}}}{1}
+%
+% superscripts
+%
+{⁽}{{\ucc{${\scriptstyle {}^{(}}$}}}{1} {⁾}{{\ucc{${\scriptstyle {}^{)}}$}}}{1}
+{⁺}{{\ucc{${\scriptstyle {}^{+}}$}}}{1} {⁻}{{\ucc{${\scriptstyle {}^{-}}$}}}{1}
+{⁰}{{\ucc{${\scriptstyle {}^{0}}$}}}{1} {¹}{{\ucc{${\scriptstyle {}^{1}}$}}}{1}
+{²}{{\ucc{${\scriptstyle {}^{2}}$}}}{1} {³}{{\ucc{${\scriptstyle {}^{3}}$}}}{1}
+{⁴}{{\ucc{${\scriptstyle {}^{4}}$}}}{1} {⁵}{{\ucc{${\scriptstyle {}^{5}}$}}}{1}
+{⁶}{{\ucc{${\scriptstyle {}^{6}}$}}}{1} {⁷}{{\ucc{${\scriptstyle {}^{7}}$}}}{1}
+{⁸}{{\ucc{${\scriptstyle {}^{8}}$}}}{1} {⁹}{{\ucc{${\scriptstyle {}^{9}}$}}}{1}
+{⁼}{{\ucc{${\scriptstyle {}^{=}}$}}}{1} {ᴬ}{{\ucc{${\scriptstyle {}^{A}}$}}}{1}
+{ᴮ}{{\ucc{${\scriptstyle {}^{B}}$}}}{1} {ᴰ}{{\ucc{${\scriptstyle {}^{D}}$}}}{1}
+{ᴱ}{{\ucc{${\scriptstyle {}^{E}}$}}}{1} {ᴳ}{{\ucc{${\scriptstyle {}^{G}}$}}}{1}
+{ᴴ}{{\ucc{${\scriptstyle {}^{H}}$}}}{1} {ᴵ}{{\ucc{${\scriptstyle {}^{I}}$}}}{1}
+{ᴶ}{{\ucc{${\scriptstyle {}^{J}}$}}}{1} {ᴷ}{{\ucc{${\scriptstyle {}^{K}}$}}}{1}
+{ᴸ}{{\ucc{${\scriptstyle {}^{L}}$}}}{1} {ᴹ}{{\ucc{${\scriptstyle {}^{M}}$}}}{1}
+{ᴺ}{{\ucc{${\scriptstyle {}^{N}}$}}}{1} {ᴼ}{{\ucc{${\scriptstyle {}^{O}}$}}}{1}
+{ᴾ}{{\ucc{${\scriptstyle {}^{P}}$}}}{1} {ᴿ}{{\ucc{${\scriptstyle {}^{R}}$}}}{1}
+{ᵀ}{{\ucc{${\scriptstyle {}^{T}}$}}}{1} {ᵁ}{{\ucc{${\scriptstyle {}^{U}}$}}}{1}
+{ⱽ}{{\ucc{${\scriptstyle {}^{V}}$}}}{1} {ᵂ}{{\ucc{${\scriptstyle {}^{W}}$}}}{1}
+{ᵃ}{{\ucc{${\scriptstyle {}^{a}}$}}}{1} {ᵇ}{{\ucc{${\scriptstyle {}^{b}}$}}}{1}
+{ᶜ}{{\ucc{${\scriptstyle {}^{c}}$}}}{1} {ᵈ}{{\ucc{${\scriptstyle {}^{d}}$}}}{1}
+{ᵉ}{{\ucc{${\scriptstyle {}^{e}}$}}}{1} {ᶠ}{{\ucc{${\scriptstyle {}^{f}}$}}}{1}
+{ᵍ}{{\ucc{${\scriptstyle {}^{g}}$}}}{1} {ʰ}{{\ucc{${\scriptstyle {}^{h}}$}}}{1}
+{ⁱ}{{\ucc{${\scriptstyle {}^{i}}$}}}{1} {ʲ}{{\ucc{${\scriptstyle {}^{j}}$}}}{1}
+{ᵏ}{{\ucc{${\scriptstyle {}^{k}}$}}}{1} {ˡ}{{\ucc{${\scriptstyle {}^{l}}$}}}{1}
+{ᵐ}{{\ucc{${\scriptstyle {}^{m}}$}}}{1} {ⁿ}{{\ucc{${\scriptstyle {}^{n}}$}}}{1}
+{ᵒ}{{\ucc{${\scriptstyle {}^{o}}$}}}{1} {ᵖ}{{\ucc{${\scriptstyle {}^{p}}$}}}{1}
+{ʳ}{{\ucc{${\scriptstyle {}^{r}}$}}}{1} {ˢ}{{\ucc{${\scriptstyle {}^{s}}$}}}{1}
+{ᵗ}{{\ucc{${\scriptstyle {}^{t}}$}}}{1} {ᵘ}{{\ucc{${\scriptstyle {}^{u}}$}}}{1}
+{ᵛ}{{\ucc{${\scriptstyle {}^{v}}$}}}{1} {ʷ}{{\ucc{${\scriptstyle {}^{w}}$}}}{1}
+{ˣ}{{\ucc{${\scriptstyle {}^{x}}$}}}{1} {ʸ}{{\ucc{${\scriptstyle {}^{y}}$}}}{1}
+{ᶻ}{{\ucc{${\scriptstyle {}^{z}}$}}}{1}
+{ᵅ}{{\ucc{${\scriptstyle {}^{\alpha}}$}}}{1}
+{ᵝ}{{\ucc{${\scriptstyle {}^{\beta}}$}}}{1}
+{ᵞ}{{\ucc{${\scriptstyle {}^{\gamma}}$}}}{1}
+{ᵟ}{{\ucc{${\scriptstyle {}^{\delta}}$}}}{1}
+{ᵋ}{{\ucc{${\scriptstyle {}^{\varepsilon}}$}}}{1}
+{ᶿ}{{\ucc{${\scriptstyle {}^{\theta}}$}}}{1}
+{ᶥ}{{\ucc{${\scriptstyle {}^{\iota}}$}}}{1}
+{ᶲ}{{\ucc{${\scriptstyle {}^{\phi}}$}}}{1}
+{ᵡ}{{\ucc{${\scriptstyle {}^{\chi}}$}}}{1}
+{ᵠ}{{\ucc{${\scriptstyle {}^{\psi}}$}}}{1}
+%
+% subscripts
+%
+{₍}{{\ucc{${\scriptstyle {}_{(}}$}}}{1} {₎}{{\ucc{${\scriptstyle {}_{)}}$}}}{1}
+{₊}{{\ucc{${\scriptstyle {}_{+}}$}}}{1} {₋}{{\ucc{${\scriptstyle {}_{-}}$}}}{1}
+{₀}{{\ucc{${\scriptstyle {}_{0}}$}}}{1} {₁}{{\ucc{${\scriptstyle {}_{1}}$}}}{1}
+{₂}{{\ucc{${\scriptstyle {}_{2}}$}}}{1} {₃}{{\ucc{${\scriptstyle {}_{3}}$}}}{1}
+{₄}{{\ucc{${\scriptstyle {}_{4}}$}}}{1} {₅}{{\ucc{${\scriptstyle {}_{5}}$}}}{1}
+{₆}{{\ucc{${\scriptstyle {}_{6}}$}}}{1} {₇}{{\ucc{${\scriptstyle {}_{7}}$}}}{1}
+{₈}{{\ucc{${\scriptstyle {}_{8}}$}}}{1} {₉}{{\ucc{${\scriptstyle {}_{9}}$}}}{1}
+{₌}{{\ucc{${\scriptstyle {}_{=}}$}}}{1} {ₐ}{{\ucc{${\scriptstyle {}_{a}}$}}}{1}
+{ₑ}{{\ucc{${\scriptstyle {}_{e}}$}}}{1} {ₕ}{{\ucc{${\scriptstyle {}_{h}}$}}}{1}
+{ᵢ}{{\ucc{${\scriptstyle {}_{i}}$}}}{1} {ⱼ}{{\ucc{${\scriptstyle {}_{j}}$}}}{1}
+{ₖ}{{\ucc{${\scriptstyle {}_{k}}$}}}{1} {ₗ}{{\ucc{${\scriptstyle {}_{l}}$}}}{1}
+{ₘ}{{\ucc{${\scriptstyle {}_{m}}$}}}{1} {ₙ}{{\ucc{${\scriptstyle {}_{n}}$}}}{1}
+{ₒ}{{\ucc{${\scriptstyle {}_{o}}$}}}{1} {ₚ}{{\ucc{${\scriptstyle {}_{p}}$}}}{1}
+{ᵣ}{{\ucc{${\scriptstyle {}_{r}}$}}}{1} {ₛ}{{\ucc{${\scriptstyle {}_{s}}$}}}{1}
+{ₜ}{{\ucc{${\scriptstyle {}_{t}}$}}}{1} {ᵤ}{{\ucc{${\scriptstyle {}_{u}}$}}}{1}
+{ᵥ}{{\ucc{${\scriptstyle {}_{v}}$}}}{1} {ₓ}{{\ucc{${\scriptstyle {}_{x}}$}}}{1}
+{ᵦ}{{\ucc{${\scriptstyle {}_{\beta}}$}}}{1}
+{ᵧ}{{\ucc{${\scriptstyle {}_{\gamma}}$}}}{1}
+{ᵨ}{{\ucc{${\scriptstyle {}_{\rho}}$}}}{1}
+{ᵪ}{{\ucc{${\scriptstyle {}_{\chi}}$}}}{1}
+{ᵩ}{{\ucc{${\scriptstyle {}_{\psi}}$}}}{1}
+%
+% mathematical symbols
+%
+% comment out the next command if you dont use ' as the transposition
+% operator! activate the command in line 141 in that case, too!
+{'}{{\ucc{\textquotesingle}}}{1}
+{∈}{{\ucc{$\in$}}}{1} {∪}{{\ucc{$\cup$}}}{1} {∩}{{\ucc{$\cap$}}}{1}
+%
+}
+
+
+
+
+
+% basic font
+\def\lstbasicfont{\color{jlstring}\ttfamily\scriptsize\selectfont}
+
+% gerneral style of the code block
+\lstset{basicstyle={\lstbasicfont}}
+\lstset{showstringspaces=false}
+\lstset{upquote=true}
+\lstset{tabsize=4}
+\lstset{aboveskip={1.5\baselineskip},belowskip={1.5\baselineskip}}
+
+% creating the code box
+\lstset{backgroundcolor=\color{jlbackground}, rulecolor=\color{jlrule}}
+\lstset{frame=single, frameround=tttt}
+\lstset{columns=fixed}
+\newlength{\bfem}
+\settowidth{\bfem}{\lstbasicfont{m}}
+\newlength{\xmrgn}
+\setlength{\xmrgn}{(\textwidth - 80\bfem)*\real{0.5}}
+\lstset{basewidth=\bfem}
+\lstset{linewidth=\textwidth}
+\lstset{xleftmargin=\xmrgn, xrightmargin=\xmrgn}
+\lstset{framexleftmargin=0.5\bfem, framexrightmargin=0.5\bfem}
+
+
+
+
+
+% activating the julia style
+\lstset{language=julia}
