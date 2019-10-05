@@ -1,4 +1,4 @@
-#= A comment that consits of several lines.
+#= A comment that consists of several lines.
 Hence it has to be a little longer, of course.
 Otherwise it would be silly as it could fit in one line. =#
 
