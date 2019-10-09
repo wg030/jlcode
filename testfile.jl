@@ -1,4 +1,4 @@
-#= A comment that consits of several lines.
+#= A comment that consists of several lines.
 Hence it has to be a little longer, of course.
 Otherwise it would be silly as it could fit in one line. =#
 
@@ -6,7 +6,8 @@ Otherwise it would be silly as it could fit in one line. =#
 
 # This line is a comment containing operators like &, - and %
 # A comment with the German word "Übergrößengeschäft" (store for oversizes)
-# This line contains some special unicode characters: €, α, γ, w², Δₓ, ∩, Ϋ, x̃
+# This line contains some special unicode characters: €, α, γ, w², Δₓ, Ϋ, x̃
+# Mathematical characters: ∈, ∪, ∩, ∇, ⊗, ⊕, ≈, ‖, …, ⋯, ⋮, ⋱, ⋰
 # A comment with some numbers: 424, 1.23, 0.2E-5, -9.9e+9
 
 

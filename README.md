@@ -32,9 +32,9 @@ _testfile.jl_ and produces the pdf-file _example.pdf_ as output.
 
 
 ## Current State
-**Current version** of the jlcode package: **3.0**.  
+**Current version** of the jlcode package: **3.1**.  
 Date of creation: 2018/01/25  
-Date of last modification: 2019/08/15  
+Date of last modification: 2019/10/09  
 
 ### Keywords
 All keywords, literals and built-ins for this language definition were taken
@@ -61,7 +61,7 @@ Right now the following of them have already been added to jlcode package, too:
 * all latin and greek letters with bar above
 * all superscripts
 * all subscripts (except for the latin small letter schwa)
-* some mathematical operators
+* some mathematical operators and symbols
 
 ### Known Managable Issues
 Since it is rather difficult to handle special unicode characters with the

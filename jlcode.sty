@@ -12,7 +12,7 @@
 %% LaTeX version 2005/12/01 or later.
 %%
 %% This work has the LPPL maintenance status 'maintained'.
-%% 
+%%
 %% The Current Maintainer of this work is GitHub user wg030.
 %%
 %% This work consists of the files jlcode.sty, testfile1.jl,
@@ -34,8 +34,8 @@
 
 
 % defining the jlcode package
-\def\fileversion{3.0}
-\def\filedate{2019/08/15}
+\def\fileversion{3.1}
+\def\filedate{2019/10/09}
 
 \typeout{-- Package: `jlcode' \fileversion\space <\filedate> --}
 \NeedsTeXFormat{LaTeX2e}
@@ -54,6 +54,44 @@
 \PassOptionsToPackage{T1}{fontenc}
 \RequirePackage{fontenc}             % for the « and » symbols
 \RequirePackage{calc}                % for the creation of the code box
+
+
+
+
+
+% defining some symbols in such a way that they can be displayed correctly
+% \rvdots, \rddots, \riddots
+% (slightly modified versions of the commands of the mathdots package):
+
+\def\MDo@us#1{\@nameuse{#1style}}%
+ \def\MDo@uf#1{\@nameuse{#1font}0}%
+ \def\MDo@t{text}\def\MDo@s{script}\def\MDo@ss{scriptscript}%
+ \newdimen\MDo@unit \MDo@unit\p@
+  
+\def\MDo@changestyle#1{\relax\MDo@unit0.1\fontdimen6\MDo@uf{#1}%
+ \everymath\expandafter{\the\everymath\MDo@us{#1}}}%
+\def\MDo@dot{$\m@th\ldotp$}%
+\def\MDo@palette#1{\mathchoice{#1\MDo@t}{#1\MDo@t}{#1\MDo@s}{#1\MDo@ss}}%
+
+
+\def\MDo@vdots#1{\vbox{\MDo@changestyle{#1}%
+ \baselineskip4\MDo@unit\lineskiplimit\z@
+ \kern-\MDo@unit\hbox{\MDo@dot}\hbox{\MDo@dot}\hbox{\MDo@dot}}}%
+  
+\def\MDo@ddots#1{{\MDo@changestyle{#1}%
+ \mkern1mu\raise7\MDo@unit\vbox{\kern-\MDo@unit\hbox{\MDo@dot}}%
+ \mkern2mu\raise4\MDo@unit\hbox{\MDo@dot}%
+ \mkern2mu\raise \MDo@unit\hbox{\MDo@dot}\mkern1mu}}%
+  
+\def\MDo@iddots#1{{\MDo@changestyle{#1}%
+ \mkern1mu\raise \MDo@unit\hbox{\MDo@dot}%
+ \mkern2mu\raise4\MDo@unit\hbox{\MDo@dot}%
+ \mkern2mu\raise7\MDo@unit\vbox{\kern-\MDo@unit\hbox{\MDo@dot}}}}%
+
+
+\DeclareRobustCommand\rvdots{\mathinner{\MDo@palette\MDo@vdots}}%
+\DeclareRobustCommand\rddots{\mathinner{\MDo@palette\MDo@ddots}}%
+\DeclareRobustCommand\riddots{\mathinner{\MDo@palette\MDo@iddots}}%
 
 
 
@@ -137,7 +175,7 @@ morecomment=[n]{\#=}{=\#},%
 %
 morestring=[b]{"},%
 % just activate the next command if you dont use ' as the transposition
-% operator! comment out line 832 in that case, too!
+% operator! comment out line 870 in that case, too!
 %morestring=[m]{'},
 morestring=[s]{"""}{"""},%
 morestring=[s]{r"}{"},%
@@ -828,9 +866,15 @@ morestring=[s]{L"}{"},%
 % mathematical symbols
 %
 % comment out the next command if you dont use ' as the transposition
-% operator! activate the command in line 141 in that case, too!
+% operator! activate the command in line 179 in that case, too!
 {'}{{\ucc{\textquotesingle}}}{1}
 {∈}{{\ucc{$\in$}}}{1} {∪}{{\ucc{$\cup$}}}{1} {∩}{{\ucc{$\cap$}}}{1}
+{∇}{{\ucc{$\nabla$}}}{1} {⊗}{{\ucc{$\otimes$}}}{1} {⊕}{{\ucc{$\oplus$}}}{1}
+{≈}{{\ucc{$\approx$}}}{1} {∘}{{\ucc{$\circ$}}}{1} {‖}{{\ucc{$\Vert$}}}{1}
+{…}{{\ucc{$\ldots$}}}{3} {⋯}{{\ucc{$\cdots$}}}{3}
+{⋮}{{\ucc{${\scriptstyle \rvdots}$}}}{1}
+{⋱}{{\ucc{${\scriptstyle \rddots}$}}}{3}
+{⋰}{{\ucc{${\scriptstyle \riddots}$}}}{3}
 %
 }
 
