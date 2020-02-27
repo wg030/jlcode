@@ -26,7 +26,7 @@ allmod, allmod2 = SortedSet{String}(), SortedSet{String}()
 
 
 
-# keywords # 36
+# keywords
 for kw in REPLCompletions.sorted_keywords
     push!( keywords, kw)
 end
@@ -36,7 +36,7 @@ union!(keywords, ["in", "isa", "where"])
 
 # literals, built-ins, macros
 for modstr ∈ modulelist
-    eval( Meta.parse( string( "using ", modstr))) # loading module
+    eval( Meta.parse( string( "using ", modstr))) # loading current module
 
     for nsymb in names( eval( Meta.parse(modstr)), all=false)
         #try
@@ -44,17 +44,17 @@ for modstr ∈ modulelist
         neval = eval( nsymb)
         push!( allmod2, nstr)
 
-        # literals # 37
+        # literals
         if !(neval isa Function || neval isa Type || neval isa Module)
             push!( literals, nstr)
-        # built-ins # 187
+        # built-ins
         elseif neval isa Type
             push!( builtins, nstr)
-        # macros # 57
+        # macros
         elseif neval isa Function && nstr[1] == '@'
             push!( macros, nstr)
-        # very unimportant rest # 699
-        else#if neval isa Module
+        # very unimportant rest
+        else
             push!( vurest, nstr)
         end
         #catch
