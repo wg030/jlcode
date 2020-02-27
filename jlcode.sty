@@ -1,3 +1,4 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%
 %%% jlcode.sty
 %%% Copyright 2018 GitHub user wg030
@@ -24,18 +25,21 @@
 % keywords, literals and built-ins from:
 % https://github.com/isagalaev/highlight.js/blob/master/src/languages/julia.js
 % colors from:
-% https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css
+% https://docs.julialang.org/en/latest/assets/themes/documenter-light.css
 % https://docs.julialang.org/en/latest/assets/documenter.css
 % special unicode characters from:
 % https://docs.julialang.org/en/latest/manual/unicode-input/
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % defining the jlcode package
-\def\fileversion{3.1}
-\def\filedate{2019/10/09}
+\def\fileversion{4.0}
+\def\filedate{2020/02/16}
 
 \typeout{-- Package: `jlcode' \fileversion\space <\filedate> --}
 \NeedsTeXFormat{LaTeX2e}
@@ -54,10 +58,365 @@
 \PassOptionsToPackage{T1}{fontenc}
 \RequirePackage{fontenc}             % for the « and » symbols
 \RequirePackage{calc}                % for the creation of the code box
+\RequirePackage{kvoptions}           % for adding options to this package
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 
 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% ption declarations
+\SetupKeyvalOptions{family=jlc, prefix=jlc@}
+
+% defining package options
+\DeclareBoolOption[true]{autoload}
+\DeclareBoolOption[true]{usecolors}
+\DeclareBoolOption[true]{usebox}
+\DeclareComplementaryOption{nocolors}{usecolors}
+\DeclareComplementaryOption{nobox}{usebox}
+\DeclareStringOption[80]{charsperline}
+
+% default option rule
+\DeclareDefaultOption{\@unknownoptionerror}
+
+% processing options
+\ProcessLocalKeyvalOptions*
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% julia language definition
+\lstdefinelanguage{julia}
+{%
+%
+% julia's keywords:
+%
+morekeywords=[1]
+{%
+abstract type,baremodule,begin,break,catch,ccall,const,continue,do,else,elseif,%
+end,export,finally,for,function,global,if,import,in,isa,let,local,macro,module,%
+mutable struct,primitive type,quote,return,struct,try,using,where,while%
+},%
+%
+% julia's literals:
+%
+morekeywords=[2]
+{%
+ARCH,ARGS,Apr,April,Aug,August,BINDIR,CPU_NAME,CPU_THREADS,C_NULL,DEPOT_PATH,%
+DL_LOAD_PATH,Dec,December,ENDIAN_BOM,ENV,Feb,February,Fri,Friday,I,%
+ISODateFormat,ISODateTimeFormat,ISOTimeFormat,Inf,Inf16,Inf32,Inf64,%
+InsertionSort,JIT,Jan,January,Jul,July,Jun,June,KERNEL,LOAD_PATH,MACHINE,Mar,%
+March,May,MergeSort,Mon,Monday,NaN,NaN16,NaN32,NaN64,Nov,November,Oct,October,%
+PROGRAM_FILE,QuickSort,RFC1123Format,RTLD_DEEPBIND,RTLD_FIRST,RTLD_GLOBAL,%
+RTLD_LAZY,RTLD_LOCAL,RTLD_NODELETE,RTLD_NOLOAD,RTLD_NOW,RoundDown,%
+RoundFromZero,RoundNearest,RoundNearestTiesAway,RoundNearestTiesUp,RoundToZero,%
+RoundUp,STDLIB,Sat,Saturday,Sep,September,Sun,Sunday,Thu,Thursday,Tue,Tuesday,%
+VERSION,WORD_SIZE,Wed,Wednesday,catalan,devnull,dlext,e,eulergamma,false,%
+golden,im,missing,nothing,pi,stderr,stdin,stdout,true,undef,γ,π,φ,ℯ%
+},%
+%
+% julia's built-ins:
+%
+morekeywords=[3]
+{%
+AbstractArray,AbstractChannel,AbstractChar,AbstractDict,AbstractDisplay,%
+AbstractFloat,AbstractIrrational,AbstractLogger,AbstractMatrix,AbstractREPL,%
+AbstractRNG,AbstractRange,AbstractSerializer,AbstractSet,AbstractSparseArray,%
+AbstractSparseMatrix,AbstractSparseVector,AbstractString,AbstractUnitRange,%
+AbstractVecOrMat,AbstractVector,AbstractWorkerPool,Adjoint,Any,ArgumentError,%
+Array,AssertionError,Atomic,Base64DecodePipe,Base64EncodePipe,BasicREPL,%
+Bidiagonal,BigFloat,BigInt,BitArray,BitMatrix,BitSet,BitVector,Bool,%
+BoundsError,BroadcastStyle,BunchKaufman,CachingPool,CapturedException,%
+CartesianIndex,CartesianIndices,Cchar,Cdouble,Cfloat,Channel,Char,Cholesky,%
+CholeskyPivoted,Cint,Cintmax_t,Clong,Clonglong,ClusterManager,Cmd,CodeInfo,%
+CodeInstance,Colon,Complex,ComplexF16,ComplexF32,ComplexF64,CompositeException,%
+Condition,ConsoleLogger,Cptrdiff_t,Cshort,Csize_t,Cssize_t,Cstring,Cuchar,%
+Cuint,Cuintmax_t,Culong,Culonglong,Cushort,Cvoid,Cwchar_t,Cwstring,DataType,%
+Date,DateFormat,DatePeriod,DateTime,Day,DenseArray,DenseMatrix,DenseVecOrMat,%
+DenseVector,Diagonal,Dict,DimensionMismatch,Dims,DivideError,DomainError,%
+EOFError,Eigen,Enum,ErrorException,Event,Exception,ExponentialBackOff,Expr,%
+FDWatcher,FILE,Factorization,FileMonitor,Float16,Float32,Float64,FolderMonitor,%
+Function,Future,GeneralizedEigen,GeneralizedSVD,GeneralizedSchur,GenericArray,%
+GenericDict,GenericOrder,GenericSet,GenericString,GitConfig,GitRepo,GlobalRef,%
+GotoNode,HMAC_CTX,HTML,Hermitian,Hessenberg,Hour,IO,IOBuffer,IOContext,%
+IOStream,IPAddr,IPv4,IPv6,IdDict,IndexCartesian,IndexLinear,IndexStyle,%
+InexactError,InitError,Int,Int128,Int16,Int32,Int64,Int8,Integer,%
+InterruptException,InvalidStateException,Irrational,KeyError,LAPACKException,%
+LDLt,LQ,LU,LinRange,LineEditREPL,LineInfoNode,LineNumberNode,LinearIndices,%
+LoadError,LogLevel,LowerTriangular,MIME,Matrix,MersenneTwister,Method,%
+MethodError,MethodInstance,Microsecond,Millisecond,Minute,Missing,%
+MissingException,Module,Month,NTuple,NamedTuple,Nanosecond,NewvarNode,Nothing,%
+NullLogger,Number,OrdinalRange,OutOfMemoryError,OverflowError,Pair,%
+PartialQuickSort,Period,PermutedDimsArray,PhiCNode,PhiNode,PiNode,Pipe,%
+PollingFileWatcher,PosDefException,ProcessExitedException,%
+ProcessFailedException,Ptr,QR,QRPivoted,QuoteNode,RandomDevice,%
+RankDeficientException,Rational,RawFD,ReadOnlyMemoryError,Real,ReentrantLock,%
+Ref,Regex,RegexMatch,RemoteChannel,RemoteException,RoundingMode,SHA1_CTX,%
+SHA224_CTX,SHA256_CTX,SHA2_224_CTX,SHA2_256_CTX,SHA2_384_CTX,SHA2_512_CTX,%
+SHA384_CTX,SHA3_224_CTX,SHA3_256_CTX,SHA3_384_CTX,SHA3_512_CTX,SHA512_CTX,%
+SSAValue,SVD,Schur,Second,SegmentationFault,Serializer,Set,SharedArray,%
+SharedMatrix,SharedVector,Signed,SimpleLogger,SingularException,Slot,%
+SlotNumber,Some,SparseMatrixCSC,SparseVector,SpinLock,StackFrame,%
+StackOverflowError,StackTrace,StepRange,StepRangeLen,StreamREPL,StridedArray,%
+StridedMatrix,StridedVecOrMat,StridedVector,String,StringIndexError,SubArray,%
+SubString,SubstitutionString,SymTridiagonal,Symbol,Symmetric,SystemError,%
+TCPSocket,Task,TaskFailedException,TestSetException,Text,TextDisplay,Time,%
+TimePeriod,TimeType,TimeZone,Timer,TmStruct,Transpose,Tridiagonal,Tuple,Type,%
+TypeError,TypeVar,TypedSlot,UDPSocket,UInt,UInt128,UInt16,UInt32,UInt64,UInt8,%
+UTC,UUID,UndefInitializer,UndefKeywordError,UndefRefError,UndefVarError,%
+UniformScaling,Union,UnionAll,UnitLowerTriangular,UnitRange,%
+UnitUpperTriangular,Unsigned,UpperHessenberg,UpperTriangular,UpsilonNode,Val,%
+Vararg,VecElement,VecOrMat,Vector,VersionNumber,WeakKeyDict,WeakRef,Week,%
+WorkerConfig,WorkerPool,Year%
+},%
+%
+% julia's macros:
+%
+morekeywords=[4]
+{%
+@MIME_str,@__DIR__,@__FILE__,@__LINE__,@__MODULE__,@__dot__,@allocated,@assert,%
+@async,@b_str,@big_str,@boundscheck,@cfunction,@cmd,@code_llvm,@code_lowered,%
+@code_native,@code_typed,@code_warntype,@dateformat_str,@debug,@deprecate,%
+@distributed,@doc,@doc_str,@dump,@edit,@elapsed,@enum,@error,@eval,@evalpoly,%
+@everywhere,@fastmath,@fetch,@fetchfrom,@functionloc,@generated,@gensym,@goto,%
+@html_str,@inbounds,@inferred,@info,@inline,@int128_str,@ip_str,@isdefined,%
+@label,@less,@logmsg,@macroexpand,@macroexpand1,@md_str,@noinline,%
+@nospecialize,@polly,@printf,@profile,@r_str,@raw_str,@s_str,@show,@simd,%
+@spawn,@spawnat,@specialize,@sprintf,@static,@sync,@task,@test,@test_broken,%
+@test_deprecated,@test_logs,@test_nowarn,@test_skip,@test_throws,@test_warn,%
+@testset,@text_str,@threadcall,@threads,@time,@timed,@timev,@uint128_str,%
+@v_str,@var,@view,@views,@warn,@which%
+},%
+%
+%
+sensitive=true,%
+%
+alsoother={$},%$
+alsodigit={_},
+%
+morecomment=[l]{\#},%
+morecomment=[n]{\#=}{=\#},%
+%
+morestring=[b]{"},%
+% just activate the next command if you dont use ' as the transposition
+% operator! comment out line 950 in that case, too!
+%morestring=[m]{'},
+morestring=[s]{"""}{"""},%
+morestring=[s]{L"}{"},%
+morestring=[s]{MIME"}{"},%
+morestring=[s]{b"}{"},%
+morestring=[s]{big"}{"},%
+morestring=[s]{dateformat"}{"},%
+morestring=[s]{doc"}{"},%
+morestring=[s]{html"}{"},%
+morestring=[s]{int128"}{"},%
+morestring=[s]{ip"}{"},%
+morestring=[s]{md"}{"},%
+morestring=[s]{pkg"}{"},%
+morestring=[s]{r"}{"},%
+morestring=[s]{raw"}{"},%
+morestring=[s]{s"}{"},%
+morestring=[s]{text"}{"},%
+morestring=[s]{uint128"}{"},%
+morestring=[s]{v"}{"},%
+%
+}[keywords,comments,strings]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% command for loading colors
+\newcommand{\loadcolors}{%
+\definecolor{jlbase}{HTML}{444444}%            % julia's base color
+\definecolor{jlkeyword}{HTML}{444444}%         % julia's keywords
+\definecolor{jlliteral}{HTML}{78A960}%         % julia's literals
+\definecolor{jlbuiltin}{HTML}{397300}%         % julia's built-ins
+\definecolor{jlmacros}{HTML}{1F7199}%          % julia's macros
+\definecolor{jlcomment}{HTML}{888888}%         % julia's comments
+\definecolor{jlstring}{HTML}{880000}%          % julia's strings
+}
+
+% basic font style
+\def\jlbasicfont{\ttfamily\scriptsize\selectfont}
+
+
+% color style for the julia language
+\lstdefinestyle{jlcodecolorstyle}{%
+basicstyle={\loadcolors\color{jlstring}\jlbasicfont},
+keywordstyle={[1]\color{jlkeyword}\bfseries},
+keywordstyle={[2]\color{jlliteral}},
+keywordstyle={[3]\color{jlbuiltin}},
+keywordstyle={[4]\color{jlmacros}},
+commentstyle={\color{jlcomment}},
+stringstyle={\color{jlstring}},
+identifierstyle={\color{jlbase}}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% command for loading black and white colors
+\newcommand{\loadbwcolors}{%
+\definecolor{jlbase}{HTML}{000000}%            % julia's base color
+\definecolor{jlkeyword}{HTML}{000000}%         % julia's keywords
+\definecolor{jlliteral}{HTML}{000000}%         % julia's literals
+\definecolor{jlbuiltin}{HTML}{000000}%         % julia's built-ins
+\definecolor{jlmacros}{HTML}{000000}%          % julia's macros
+\definecolor{jlcomment}{HTML}{000000}%         % julia's comments
+\definecolor{jlstring}{HTML}{000000}%          % julia's strings
+}
+
+
+% gerneral style for the code block
+\lstdefinestyle{jlcodeblockstyle}{%
+basicstyle={\loadbwcolors\jlbasicfont},
+keywordstyle={[1]\bfseries},
+keywordstyle={[2]},
+keywordstyle={[3]},
+keywordstyle={[4]},
+commentstyle={},
+showstringspaces=false,
+upquote=true,
+tabsize=4,
+aboveskip={1.5\baselineskip}, belowskip={1.5\baselineskip}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% style for the code box
+\definecolor{jlbackground}{HTML}{F5F5F5}      % the background of the code block
+\definecolor{jlrule}{HTML}{DDDDDD}            % the rule of the code block
+\newlength{\bfem}
+\settowidth{\bfem}{\jlbasicfont{m}}
+\newlength{\xmrgn}
+\setlength{\xmrgn}{(\textwidth - \jlc@charsperline\bfem)*\real{0.5}}
+
+\lstdefinestyle{jlcodeboxstyle}{%
+backgroundcolor=\color{jlbackground}, rulecolor=\color{jlrule},
+frame=single, frameround=tttt,
+columns=fixed,
+basewidth=\bfem,
+linewidth=\textwidth,
+xleftmargin=\xmrgn, xrightmargin=\xmrgn,
+framexleftmargin=0.5\bfem, framexrightmargin=0.5\bfem
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% defining a new opliterate key
+\def\lst@OpLiteratekey#1\@nil@{\let\lst@ifxopliterate\lst@if
+                             \def\lst@opliterate{#1}}
+\lst@Key{opliterate}{}{\@ifstar{\lst@true \lst@OpLiteratekey}
+                             {\lst@false\lst@OpLiteratekey}#1\@nil@}
+\lst@AddToHook{SelectCharTable}
+    {\ifx\lst@opliterate\@empty\else
+         \expandafter\lst@OpLiterate\lst@opliterate{}\relax\z@
+     \fi}
+\def\lst@OpLiterate#1#2#3{%
+    \ifx\relax#2\@empty\else
+        \lst@CArgX #1\relax\lst@CDef
+            {}
+            {\let\lst@next\@empty
+             \lst@ifxopliterate
+                \lst@ifmode \let\lst@next\lst@CArgEmpty \fi
+             \fi
+             \ifx\lst@next\@empty
+                 \ifx\lst@OutputBox\@gobble\else
+                   \lst@XPrintToken \let\lst@scanmode\lst@scan@m
+                   \lst@token{#2}\lst@length#3\relax
+                   \lst@XPrintToken
+                 \fi
+                 \let\lst@next\lst@CArgEmptyGobble
+             \fi
+             \lst@next}%
+            \@empty
+        \expandafter\lst@OpLiterate
+    \fi}
+
+
+% defining the opc and the numc commands
+% for literating operating and numbers
+\newcommand{\opc}[1]{{\color{jlbase}#1}}
+\newcommand{\numc}[1]{{\color{jlstring}#1}}
+
+
+
+\lstdefinestyle{jlcodeopstyle}{%
+opliterate=*
+%
+% julia's operators
+%
+{\$}{{\opc{\$}}}{1} {!}{{\opc{!}}}{1} {\%}{{\opc{\%}}}{1} {&}{{\opc{\&}}}{1}
+{’}{{\opc{’}}}{1} {(}{{\opc{(}}}{1} {)}{{\opc{)}}}{1} {*}{{\opc{*}}}{1}
+{+}{{\opc{+}}}{1} {,}{{\opc{,}}}{1} {-}{{\opc{-}}}{1} {.}{{\opc{.}}}{1}
+{/}{{\opc{/}}}{1} {:}{{\opc{:}}}{1} {;}{{\opc{;}}}{1} {<}{{\opc{<}}}{1}
+{=}{{\opc{=}}}{1} {>}{{\opc{>}}}{1} {?}{{\opc{?}}}{1} {[}{{\opc{[}}}{1}
+{\\}{{\opc{\lstum@backslash}}}{1} {]}{{\opc{]}}}{1} {^}{{\opc{\^{}}}}{1}
+{\{}{{\opc{\{}}}{1} {|}{{\opc{|}}}{1} {\}}{{\opc{\}}}}{1}
+{~}{{\opc{\textasciitilde{}}}}{1}
+%
+% julia's numbers
+%
+{.0}{{\numc{.0}}}{2} {.1}{{\numc{.1}}}{2} {.2}{{\numc{.2}}}{2}
+{.3}{{\numc{.3}}}{2} {.4}{{\numc{.4}}}{2} {.5}{{\numc{.5}}}{2}
+{.6}{{\numc{.6}}}{2} {.7}{{\numc{.7}}}{2} {.8}{{\numc{.8}}}{2}
+{.9}{{\numc{.9}}}{2}
+%
+{e+0}{{\numc{e+0}}}{3} {e+1}{{\numc{e+1}}}{3} {e+2}{{\numc{e+2}}}{3}
+{e+3}{{\numc{e+3}}}{3} {e+4}{{\numc{e+4}}}{3} {e+5}{{\numc{e+5}}}{3}
+{e+6}{{\numc{e+6}}}{3} {e+7}{{\numc{e+7}}}{3} {e+8}{{\numc{e+8}}}{3}
+{e+9}{{\numc{e+9}}}{3}
+%
+{0E+}{{\numc{0E+}}}{3} {1E+}{{\numc{1E+}}}{3} {2E+}{{\numc{2E+}}}{3}
+{3E+}{{\numc{3E+}}}{3} {4E+}{{\numc{4E+}}}{3} {5E+}{{\numc{5E+}}}{3}
+{6E+}{{\numc{6E+}}}{3} {7E+}{{\numc{7E+}}}{3} {8E+}{{\numc{8E+}}}{3} 
+{9E+}{{\numc{9E+}}}{3}
+%
+{e-0}{{\numc{e-0}}}{3} {e-1}{{\numc{e-1}}}{3} {e-2}{{\numc{e-2}}}{3}
+{e-3}{{\numc{e-3}}}{3} {e-4}{{\numc{e-4}}}{3} {e-5}{{\numc{e-5}}}{3}
+{e-6}{{\numc{e-6}}}{3} {e-7}{{\numc{e-7}}}{3} {e-8}{{\numc{e-8}}}{3}
+{e-9}{{\numc{e-9}}}{3}
+%
+{0E-}{{\numc{0E-}}}{3} {1E-}{{\numc{1E-}}}{3} {2E-}{{\numc{2E-}}}{3}
+{3E-}{{\numc{3E-}}}{3} {4E-}{{\numc{4E-}}}{3} {5E-}{{\numc{5E-}}}{3}
+{6E-}{{\numc{6E-}}}{3} {7E-}{{\numc{7E-}}}{3} {8E-}{{\numc{8E-}}}{3}
+{9E-}{{\numc{9E-}}}{3}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % defining some symbols in such a way that they can be displayed correctly
 % \rvdots, \rddots, \riddots
@@ -95,112 +454,6 @@
 
 
 
-
-
-% julia language definition
-\lstdefinelanguage{julia}
-{%
-%
-% julia's keywords:
-%
-morekeywords=[1]
-{%
-in,isa,where,baremodule,begin,break,catch,ccall,const,continue,do,else,elseif,%
-end,export,finally,for,function,global,if,import,importall,let,local,macro,%
-module,quote,return,try,using,while,struct,mutable,primitive,%
-% legacy, to be deprecated in the next release
-type,immutable,abstract,bitstype,typealias%
-},%
-%
-% julia's literals:
-%
-morekeywords=[2]
-{%
-true,false,ARGS,C_NULL,DevNull,ENDIAN_BOM,ENV,I,Inf,Inf16,Inf32,Inf64,%
-InsertionSort,JULIA_HOME,LOAD_PATH,MergeSort,NaN,NaN16,NaN32,NaN64,%
-PROGRAM_FILE,QuickSort,RoundDown,RoundFromZero,RoundNearest,%
-RoundNearestTiesAway,RoundNearestTiesUp,RoundToZero,RoundUp,STDERR,STDIN,%
-STDOUT,VERSION,catalan,e,eu,eulergamma,golden,im,nothing,pi,γ,π,φ%
-},%
-%
-% julia's built-ins:
-%
-morekeywords=[3]
-{%
-ANY,AbstractArray,AbstractChannel,AbstractFloat,AbstractMatrix,AbstractRNG,%
-AbstractSerializer,AbstractSet,AbstractSparseArray,AbstractSparseMatrix,%
-AbstractSparseVector,AbstractString,AbstractUnitRange,AbstractVecOrMat,%
-AbstractVector,Any,ArgumentError,Array,AssertionError,Associative,%
-Base64DecodePipe,Base64EncodePipe,Bidiagonal,BigFloat,BigInt,BitArray,%
-BitMatrix,BitVector,Bool,BoundsError,BufferStream,CachingPool,%
-CapturedException,CartesianIndex,CartesianRange,Cchar,Cdouble,Cfloat,Channel,%
-Char,Cint,Cintmax_t,Clong,Clonglong,ClusterManager,Cmd,CodeInfo,Colon,Complex,%
-Complex128,Complex32,Complex64,CompositeException,Condition,ConjArray,%
-ConjMatrix,ConjVector,Cptrdiff_t,Cshort,Csize_t,Cssize_t,Cstring,Cuchar,Cuint,%
-Cuintmax_t,Culong,Culonglong,Cushort,Cwchar_t,Cwstring,DataType,Date,%
-DateFormat,DateTime,DenseArray,DenseMatrix,DenseVecOrMat,DenseVector,Diagonal,%
-Dict,DimensionMismatch,Dims,DirectIndexString,Display,DivideError,DomainError,%
-EOFError,EachLine,Enum,Enumerate,ErrorException,Exception,ExponentialBackOff,%
-Expr,Factorization,FileMonitor,Float16,Float32,Float64,Function,Future,%
-GlobalRef,GotoNode,HTML,Hermitian,IO,IOBuffer,IOContext,IOStream,IPAddr,IPv4,%
-IPv6,IndexCartesian,IndexLinear,IndexStyle,InexactError,InitError,Int,Int128,%
-Int16,Int32,Int64,Int8,IntSet,Integer,InterruptException,InvalidStateException,%
-Irrational,KeyError,LabelNode,LinSpace,LineNumberNode,LoadError,%
-LowerTriangular,MIME,Matrix,MersenneTwister,Method,MethodError,MethodTable,%
-Module,NTuple,NewvarNode,NullException,Nullable,Number,ObjectIdDict,%
-OrdinalRange,OutOfMemoryError,OverflowError,Pair,ParseError,PartialQuickSort,%
-PermutedDimsArray,Pipe,PollingFileWatcher,ProcessExitedException,Ptr,QuoteNode,%
-RandomDevice,Range,RangeIndex,Rational,RawFD,ReadOnlyMemoryError,Real,%
-ReentrantLock,Ref,Regex,RegexMatch,RemoteChannel,RemoteException,RevString,%
-RoundingMode,RowVector,SSAValue,SegmentationFault,SerializationState,Set,%
-SharedArray,SharedMatrix,SharedVector,Signed,SimpleVector,Slot,SlotNumber,%
-SparseMatrixCSC,SparseVector,StackFrame,StackOverflowError,StackTrace,%
-StepRange,StepRangeLen,StridedArray,StridedMatrix,StridedVecOrMat,%
-StridedVector,String,SubArray,SubString,SymTridiagonal,Symbol,Symmetric,%
-SystemError,TCPSocket,Task,Text,TextDisplay,Timer,Tridiagonal,Tuple,Type,%
-TypeError,TypeMapEntry,TypeMapLevel,TypeName,TypeVar,TypedSlot,UDPSocket,UInt,%
-UInt128,UInt16,UInt32,UInt64,UInt8,UndefRefError,UndefVarError,UnicodeError,%
-UniformScaling,Union,UnionAll,UnitRange,Unsigned,UpperTriangular,Val,Vararg,%
-VecElement,VecOrMat,Vector,VersionNumber,Void,WeakKeyDict,WeakRef,WorkerConfig,%
-WorkerPool%
-},%
-%
-%
-sensitive=true,%
-%
-alsoother={$},%$
-%
-morecomment=[l]{\#},%
-morecomment=[n]{\#=}{=\#},%
-%
-morestring=[b]{"},%
-% just activate the next command if you dont use ' as the transposition
-% operator! comment out line 870 in that case, too!
-%morestring=[m]{'},
-morestring=[s]{"""}{"""},%
-morestring=[s]{r"}{"},%
-morestring=[s]{b"}{"},%
-morestring=[s]{v"}{"},%
-morestring=[s]{raw"}{"},%
-morestring=[s]{L"}{"},%
-%
-}[keywords,comments,strings]
-
-
-
-
-
-% defining the colors for
-\definecolor{jlbase}{HTML}{444444}            % julia's base color
-\definecolor{jlkeyword}{HTML}{444444}         % julia's keywords
-\definecolor{jlliteral}{HTML}{78A960}         % julia's literals
-\definecolor{jlbuiltin}{HTML}{397300}         % julia's built-ins
-\definecolor{jlcomment}{HTML}{888888}         % julia's comments
-\definecolor{jlstring}{HTML}{880000}          % julia's strings
-\definecolor{jlbackground}{HTML}{F5F5F5}      % the background of the code block
-\definecolor{jlrule}{HTML}{DDDDDD}            % the rule of the code block
-
-
 % defining the ucc and the ucclit command
 % for literating special unicode characters
 \newcommand{\ucc}[1]{%
@@ -220,124 +473,13 @@ morestring=[s]{L"}{"},%
 }
 
 
-% defining a new opliterate key
-\def\lst@OpLiteratekey#1\@nil@{\let\lst@ifxopliterate\lst@if
-                             \def\lst@opliterate{#1}}
-\lst@Key{opliterate}{}{\@ifstar{\lst@true \lst@OpLiteratekey}
-                             {\lst@false\lst@OpLiteratekey}#1\@nil@}
-\lst@AddToHook{SelectCharTable}
-    {\ifx\lst@opliterate\@empty\else
-         \expandafter\lst@OpLiterate\lst@opliterate{}\relax\z@
-     \fi}
-\def\lst@OpLiterate#1#2#3{%
-    \ifx\relax#2\@empty\else
-        \lst@CArgX #1\relax\lst@CDef
-            {}
-            {\let\lst@next\@empty
-             \lst@ifxopliterate
-                \lst@ifmode \let\lst@next\lst@CArgEmpty \fi
-             \fi
-             \ifx\lst@next\@empty
-                 \ifx\lst@OutputBox\@gobble\else
-                   \lst@XPrintToken \let\lst@scanmode\lst@scan@m
-                   \lst@token{#2}\lst@length#3\relax
-                   \lst@XPrintToken
-                 \fi
-                 \let\lst@next\lst@CArgEmptyGobble
-             \fi
-             \lst@next}%
-            \@empty
-        \expandafter\lst@OpLiterate
-    \fi}
-
-
-% defining the \addlitjlbase and \addlitjlstring commands,
-% which help a user to fix some of the known managable issues
-\def\addToLiterate#1{%
-\protected@edef\lst@literate{%
-\unexpanded\expandafter{\lst@literate}\unexpanded{#1}}}
-\lst@Key{expandliterate}{}{\addToLiterate{#1}}
-\newcommand{\addlitjlbase}[3]{%
-\lstset{expandliterate={#1}{{{\color{jlbase}#2}}}{#3}}}
-\newcommand{\addlitjlstring}[3]{%
-\lstset{expandliterate={#1}{{{\color{jlstring}#2}}}{#3}}}
-
-
-
-
-
-% defining the styles for
-\lstset{keywordstyle={[1]\color{jlkeyword}\bfseries}}      % julia's keywords
-\lstset{keywordstyle={[2]\color{jlliteral}}}               % julia's literals
-\lstset{keywordstyle={[3]\color{jlbuiltin}}}               % julia's built-ins
-\lstset{commentstyle={\color{jlcomment}}}                  % julia's comments
-\lstset{stringstyle={\color{jlstring}}}                    % julia's strings
-\lstset{identifierstyle={\color{jlbase}}}                  % julia's identifiers
-
-
-\lstset{opliterate=*
-%
-% julia's operators
-%
-{.}{{{\color{jlbase}.}}}{1} {:}{{{\color{jlbase}:}}}{1}
-{(}{{{\color{jlbase}(}}}{1} {)}{{{\color{jlbase})}}}{1}
-{[}{{{\color{jlbase}[}}}{1} {]}{{{\color{jlbase}]}}}{1}
-{\{}{{{\color{jlbase}\{}}}{1} {\}}{{{\color{jlbase}\}}}}{1}
-{^}{{{\color{jlbase}\^{}}}}{1} %{'}{{{\color{jlbase}\textquotesingle}}}{1}
-{+}{{{\color{jlbase}+}}}{1} {-}{{{\color{jlbase}-}}}{1}
-{√}{{{\color{jlbase}$\surd$}}}{1}
-{∛}{{{\color{jlbase}$\sqrt[3]{\vphantom{x}}$}}}{1}
-{~}{{{\color{jlbase}\textasciitilde{}}}}{1} {!}{{{\color{jlbase}!}}}{1}
-{<}{{{\color{jlbase}<}}}{1} {>}{{{\color{jlbase}>}}}{1}
-{/}{{{\color{jlbase}/}}}{1} {*}{{{\color{jlbase}*}}}{1}
-{\%}{{{\color{jlbase}\%}}}{1} {&}{{{\color{jlbase}\&}}}{1}
-{\\}{{{\color{jlbase}\lstum@backslash}}}{1} {÷}{{{\color{jlbase}$\div$}}}{1}
-{|}{{{\color{jlbase}|}}}{1} {⊻}{{{\color{jlbase}${\scriptstyle \veebar}$}}}{1}
-{≠}{{{\color{jlbase}${\scriptstyle \neq}$}}}{1}
-{≤}{{{\color{jlbase}${\scriptstyle \leq}$}}}{1}
-{≥}{{{\color{jlbase}${\scriptstyle \geq}$}}}{1} {?}{{{\color{jlbase}?}}}{1}
-{=}{{{\color{jlbase}=}}}{1} {,}{{{\color{jlbase},}}}{1}
-{;}{{{\color{jlbase};}}}{1}
-%
-% julia's numbers
-%
-{.0}{{{\color{jlstring}.0}}}{2} {.1}{{{\color{jlstring}.1}}}{2}
-{.2}{{{\color{jlstring}.2}}}{2} {.3}{{{\color{jlstring}.3}}}{2}
-{.4}{{{\color{jlstring}.4}}}{2} {.5}{{{\color{jlstring}.5}}}{2}
-{.6}{{{\color{jlstring}.6}}}{2} {.7}{{{\color{jlstring}.7}}}{2}
-{.8}{{{\color{jlstring}.8}}}{2} {.9}{{{\color{jlstring}.9}}}{2}
-%
-{e+0}{{{\color{jlstring}e+0}}}{3} {e+1}{{{\color{jlstring}e+1}}}{3}
-{e+2}{{{\color{jlstring}e+2}}}{3} {e+3}{{{\color{jlstring}e+3}}}{3}
-{e+4}{{{\color{jlstring}e+4}}}{3} {e+5}{{{\color{jlstring}e+5}}}{3}
-{e+6}{{{\color{jlstring}e+6}}}{3} {e+7}{{{\color{jlstring}e+7}}}{3}
-{e+8}{{{\color{jlstring}e+8}}}{3} {e+9}{{{\color{jlstring}e+9}}}{3}
-%
-{0E+}{{{\color{jlstring}0E+}}}{3} {1E+}{{{\color{jlstring}1E+}}}{3}
-{2E+}{{{\color{jlstring}2E+}}}{3} {3E+}{{{\color{jlstring}3E+}}}{3}
-{4E+}{{{\color{jlstring}4E+}}}{3} {5E+}{{{\color{jlstring}5E+}}}{3}
-{6E+}{{{\color{jlstring}6E+}}}{3} {7E+}{{{\color{jlstring}7E+}}}{3}
-{8E+}{{{\color{jlstring}8E+}}}{3} {9E+}{{{\color{jlstring}9E+}}}{3}
-%
-{e-0}{{{\color{jlstring}e-0}}}{3} {e-1}{{{\color{jlstring}e-1}}}{3}
-{e-2}{{{\color{jlstring}e-2}}}{3} {e-3}{{{\color{jlstring}e-3}}}{3}
-{e-4}{{{\color{jlstring}e-4}}}{3} {e-5}{{{\color{jlstring}e-5}}}{3}
-{e-6}{{{\color{jlstring}e-6}}}{3} {e-7}{{{\color{jlstring}e-7}}}{3}
-{e-8}{{{\color{jlstring}e-8}}}{3} {e-9}{{{\color{jlstring}e-9}}}{3}
-%
-{0E-}{{{\color{jlstring}0E-}}}{3} {1E-}{{{\color{jlstring}1E-}}}{3}
-{2E-}{{{\color{jlstring}2E-}}}{3} {3E-}{{{\color{jlstring}3E-}}}{3}
-{4E-}{{{\color{jlstring}4E-}}}{3} {5E-}{{{\color{jlstring}5E-}}}{3}
-{6E-}{{{\color{jlstring}6E-}}}{3} {7E-}{{{\color{jlstring}7E-}}}{3}
-{8E-}{{{\color{jlstring}8E-}}}{3} {9E-}{{{\color{jlstring}9E-}}}{3}
-}
-
 
 % special unicode characters
-%\lstset{inputencoding=utf8}
 %\DeclareUnicodeCharacter{0391}{A}
-\lstset{extendedchars=true}
-\lstset{literate=
+\lstdefinestyle{jlcodeuccstyle}{%
+%inputencoding=utf8,
+extendedchars=true,
+literate=
 %
 % special characters that appear in latin languages
 %
@@ -373,9 +515,10 @@ morestring=[s]{L"}{"},%
 {Τ}{{\ucc{T}}}{1} {Υ}{{\ucc{$\Upsilon$}}}{1} {Φ}{{\ucc{$\Phi$}}}{1}
 {Χ}{{\ucc{X}}}{1} {Ψ}{{\ucc{$\Psi$}}}{1} {Ω}{{\ucc{$\Omega$}}}{1}
 %
-% mircro sign + latin small letter open e
+% mircro sign + latin small letter open e + script small e
 %
 {µ}{{\ucc{$\mu$}}}{1} {ɛ}{{\ucc{$\varepsilon$}}}{1}
+{ℯ}{{\ucclit{$e$}}}{1}
 %
 % greek small letters
 %
@@ -863,14 +1006,34 @@ morestring=[s]{L"}{"},%
 {ᵪ}{{\ucc{${\scriptstyle {}_{\chi}}$}}}{1}
 {ᵩ}{{\ucc{${\scriptstyle {}_{\psi}}$}}}{1}
 %
-% mathematical symbols
+% mathematical operators (julia functions)
 %
 % comment out the next command if you dont use ' as the transposition
-% operator! activate the command in line 179 in that case, too!
+% operator! activate the command in line 171 in that case, too!
 {'}{{\ucc{\textquotesingle}}}{1}
-{∈}{{\ucc{$\in$}}}{1} {∪}{{\ucc{$\cup$}}}{1} {∩}{{\ucc{$\cap$}}}{1}
+{×}{{\ucc{${\scriptstyle \times}$}}}{1} {÷}{{\ucc{${\scriptstyle \div}$}}}{1}
+{∈}{{\ucc{${\scriptstyle \in}$}}}{1} {∉}{{\ucc{${\scriptstyle \notin}$}}}{1}
+{∋}{{\ucc{${\scriptstyle \ni}$}}}{1} {∌}{{\ucc{${\scriptstyle \not\ni}$}}}{1}
+{∘}{{\ucc{${\scriptstyle \circ}$}}}{1}
+{√}{{\ucc{$\surd$}}}{1} {∛}{{\ucc{$\sqrt[3]{\vphantom{x}}$}}}{1} 
+{∩}{{\ucc{${\scriptstyle \cap}$}}}{1} {∪}{{\ucc{${\scriptstyle \cup}$}}}{1}
+{≈}{{\ucc{${\scriptstyle \approx}$}}}{1}
+{≉}{{\ucc{${\scriptstyle \not\approx}$}}}{1}
+{≠}{{\ucc{${\scriptstyle \neq}$}}}{1} {≡}{{\ucc{${\scriptstyle \equiv}$}}}{1}
+{≢}{{\ucc{${\scriptstyle \not\equiv}$}}}{1}
+{≤}{{\ucc{${\scriptstyle \leq}$}}}{1} {≥}{{\ucc{${\scriptstyle \geq}$}}}{1}
+{⊆}{{\ucc{${\scriptstyle \subseteq}$}}}{1}
+{⊇}{{\ucc{${\scriptstyle \supseteq}$}}}{1}
+{⊈}{{\ucc{${\scriptstyle \not\subseteq}$}}}{1}
+{⊉}{{\ucc{${\scriptstyle \not\supseteq}$}}}{1}
+{⊊}{{\ucc{${\scriptstyle \subsetneq}$}}}{1}
+{⊋}{{\ucc{${\scriptstyle \supsetneq}$}}}{1}
+{⊻}{{\ucc{${\scriptstyle \veebar}$}}}{1}  {⋅}{{\ucc{${\scriptstyle \cdot}$}}}{1}
+%
+% other mathematical symbols
+%
 {∇}{{\ucc{$\nabla$}}}{1} {⊗}{{\ucc{$\otimes$}}}{1} {⊕}{{\ucc{$\oplus$}}}{1}
-{≈}{{\ucc{$\approx$}}}{1} {∘}{{\ucc{$\circ$}}}{1} {‖}{{\ucc{$\Vert$}}}{1}
+{‖}{{\ucc{$\Vert$}}}{1}
 {…}{{\ucc{$\ldots$}}}{3} {⋯}{{\ucc{$\cdots$}}}{3}
 {⋮}{{\ucc{${\scriptstyle \rvdots}$}}}{1}
 {⋱}{{\ucc{${\scriptstyle \rddots}$}}}{3}
@@ -878,36 +1041,107 @@ morestring=[s]{L"}{"},%
 %
 }
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 
 
-% basic font
-\def\lstbasicfont{\color{jlstring}\ttfamily\scriptsize\selectfont}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% gerneral style of the code block
-\lstset{basicstyle={\lstbasicfont}}
-\lstset{showstringspaces=false}
-\lstset{upquote=true}
-\lstset{tabsize=4}
-\lstset{aboveskip={1.5\baselineskip},belowskip={1.5\baselineskip}}
+% defining the \addlitjlbase and \addlitjlstring commands,
+% which help a user to fix some of the known managable issues
+\def\addToLiterate#1{%
+\protected@edef\lst@literate{%
+\unexpanded\expandafter{\lst@literate}\unexpanded{#1}}}
+\lst@Key{expandliterate}{}{\addToLiterate{#1}}
+\newcommand{\addlitjlbase}[3]{%
+\lstset{style=jlcodeuccstyle}
+\lstdefinestyle{jlcodeuccstyle}{expandliterate={#1}{{{\color{jlbase}#2}}}{#3}}
+\ifjlc@autoload
+  \lstset{language=julia, style=jlcodestyle}
+\fi
+}
+\newcommand{\addlitjlstring}[3]{%
+\lstset{style=jlcodeuccstyle}
+\lstdefinestyle{jlcodeuccstyle}{expandliterate={#1}{{{\color{jlstring}#2}}}{#3}}
+\ifjlc@autoload
+  \lstset{language=julia, style=jlcodestyle}
+\fi
+}
 
-% creating the code box
-\lstset{backgroundcolor=\color{jlbackground}, rulecolor=\color{jlrule}}
-\lstset{frame=single, frameround=tttt}
-\lstset{columns=fixed}
-\newlength{\bfem}
-\settowidth{\bfem}{\lstbasicfont{m}}
-\newlength{\xmrgn}
-\setlength{\xmrgn}{(\textwidth - 80\bfem)*\real{0.5}}
-\lstset{basewidth=\bfem}
-\lstset{linewidth=\textwidth}
-\lstset{xleftmargin=\xmrgn, xrightmargin=\xmrgn}
-\lstset{framexleftmargin=0.5\bfem, framexrightmargin=0.5\bfem}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 
 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% defining the \jlinl command, which can be used for dispalying inline code 
+% defining the font for inline code
+
+\ifjlc@usecolors
+\def\jlinlfont{\loadcolors\color{jlstring}\ttfamily\small\selectfont}
+\else
+\def\jlinlfont{\loadbwcolors\ttfamily\small\selectfont}
+\fi
+
+\newlength{\jlinlem}
+\settowidth{\jlinlem}{\jlinlfont{m}}
+
+\newcommand{\jlinl}[1]{%
+\lstinline[language=julia,style=jlcodestyle,
+basicstyle=\jlinlfont,basewidth=\jlinlem]^^a7#1^^a7}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % activating the julia style
-\lstset{language=julia}
+
+\ifjlc@usecolors
+\ifjlc@usebox
+  \lstdefinestyle{jlcodestyle}{%
+   style=jlcodeblockstyle,
+   style=jlcodeboxstyle,
+   style=jlcodecolorstyle,
+   style=jlcodeopstyle,
+   style=jlcodeuccstyle
+  }
+\else
+  \lstdefinestyle{jlcodestyle}{%
+   style=jlcodeblockstyle,
+   style=jlcodecolorstyle,
+   style=jlcodeopstyle,
+   style=jlcodeuccstyle
+  }
+\fi
+\else
+\ifjlc@usebox
+  \lstdefinestyle{jlcodestyle}{%
+   style=jlcodeblockstyle,
+   style=jlcodeboxstyle,
+   style=jlcodeopstyle,
+   style=jlcodeuccstyle,
+  }
+\else
+  \lstdefinestyle{jlcodestyle}{%
+   style=jlcodeblockstyle,
+   style=jlcodeopstyle,
+   style=jlcodeuccstyle
+  }
+\fi
+\fi
+
+
+\ifjlc@autoload
+  \lstset{language=julia, style=jlcodestyle}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
