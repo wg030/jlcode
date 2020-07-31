@@ -27,9 +27,9 @@ how the Julia code from _testfile.jl_ and _testfile2.jl_ looks when displayed.
 
 
 ## Current State
-**Current version** of the jlcode package: **4.0**.  
+**Current version** of the jlcode package: **4.1**.  
 Date of creation: 2018/01/25  
-Date of last modification: 2020/02/27
+Date of last modification: 2020/07/31
 
 ### Keywords
 The lists for the keywords, literals, built-ins, macros and string types for
@@ -54,15 +54,12 @@ Right now the following of them have already been added to jlcode package, too:
 * Some mathematical operators and symbols.
 
 
-## What's New in Version 4.0?
-* The package options _autoload_, _usecolors_, _usebox_, _nocolors_, _nobox_ and
-  _charsperline_ have been added.
-* The command `\jlinl` for in-line code snippets has been defined.
-* Keywords, literatls and built-ins have been refreshed according to Julia 1.3.1
-  and macros have been added.
-* String types have been refreshed according to Julia 1.3.1.
-* A few further mathematical symbols have been added.
-* The sourcecode has been rearranged.
+## What's New in Version 4.1?
+* The package option _courierasttdflt_ has been added.
+* Keywords, literals, built-ins and macros have been refreshed according to
+  Julia 1.4.2 and functions have been added.
+* The mathematical symbol for the partial derivative has been added.
+* A few typing erros have been corrected.
 
 
 ## How to Use the Package:
