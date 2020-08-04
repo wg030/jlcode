@@ -27,9 +27,9 @@ how the Julia code from _testfile.jl_ and _testfile2.jl_ looks when displayed.
 
 
 ## Current State
-**Current version** of the jlcode package: **4.1**.  
+**Current version** of the jlcode package: **4.1.1**.  
 Date of creation: 2018/01/25  
-Date of last modification: 2020/07/31
+Date of last modification: 2020/08/04
 
 ### Keywords
 The lists for the keywords, literals, built-ins, macros and string types for
@@ -54,12 +54,12 @@ Right now the following of them have already been added to jlcode package, too:
 * Some mathematical operators and symbols.
 
 
-## What's New in Version 4.1?
+## What's New in Version 4.1.1?
 * The package option _courierasttdflt_ has been added.
 * Keywords, literals, built-ins and macros have been refreshed according to
   Julia 1.4.2 and functions have been added.
 * The mathematical symbol for the partial derivative has been added.
-* A few typing erros have been corrected.
+* A few typing errors have been corrected.
 
 
 ## How to Use the Package:
