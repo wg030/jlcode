@@ -393,16 +393,23 @@ morestring=[s]{v"}{"},%
 
 % command for loading colors
 \newcommand{\loadcolors}{%
-\definecolor{jlbase}{RGB}{255,0,90}%         % julia's base color
+\definecolor{jlbase}{RGB}{102,255,204}%         % julia's base color
 \definecolor{jlkeyword}{RGB}{249,242,215}%         % julia's keywords
-\definecolor{jlliteral}{RGB}{102,255,204}%         % julia's literals
-\definecolor{jlbuiltin}{HTML}{F5AB35}%         % julia's built-ins
+\definecolor{jlliteral}{RGB}{155,155,155}%         % ??? not actual literals 
+\definecolor{jlbuiltin}{HTML}{F5AB35}%         % julia's types 
 \definecolor{jlmacros}{RGB}{155,155,155}%          % julia's macros
-\definecolor{jlfunctions}{RGB}{255,111,207}%       % julia's functions
-\definecolor{jlcomment}{RGB}{81,81,191}%         % julia's comments
+\definecolor{jlfunctions}{HTML}{9455AD}%       % julia's built in functions 
+\definecolor{jlcomment}{HTML}{455ED3}%         % julia's comments
 \definecolor{jlstring}{RGB}{107,174,214}%          % julia's strings
-\definecolor{jlnum}{RGB}{155,155,155}%          % julia's strings
+\definecolor{jlnum}{RGB}{255,0,90}%          % julia's strings
+\definecolor{jlop}{RGB}{255,0,90}%          % julia's operators 
+\definecolor{purplejl}{HTML}{9558B2}%       % purple from the logo 
+\definecolor{greenjl}{HTML}{389826}%        % green from the logo 
+\definecolor{redjl}{HTML}{CB3C33}%          % red from the logo 
+\definecolor{bluejl}{HTML}{455ED3}%         % blue from the logo 
+\definecolor{orangejl}{HTML}{F5AB35}	    % orange from dark docs
 }
+
 
 % use courier as typewriter font
 \ifjlc@courierasttdflt
@@ -526,7 +533,7 @@ framexleftmargin=0.5\bfem, framexrightmargin=0.5\bfem
 
 % defining the opc and the numc commands
 % for literating operating and numbers
-\newcommand{\opc}[1]{{\color{jlbase}#1}}
+\newcommand{\opc}[1]{{\color{jlop}#1}}
 \newcommand{\numc}[1]{{\color{jlnum}#1}} %TODO
 
 
