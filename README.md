@@ -1,6 +1,9 @@
 # jlcode.sty
 
+# Dark theme version.
 
+I modified and added a dark theme version which goes great with the [dark-beamer-theme](https://github.com/pblottiere/dark-beamer-theme) or [my fork](https://github.com/pblottiere/dark-beamer-theme) of it.
+![](example.png)
 
 ## License
 _jlcode.sty_
