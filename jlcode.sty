@@ -16,19 +16,20 @@
 %%
 %% The Current Maintainer of this work is GitHub user wg030.
 %%
-%% This work consists of the files jlcode.sty, testfile1.jl,
-%% testfile2.jl, example.tex and the derived file
+%% This work consists of the files jlcode.sty, createlists.jl,
+%% testfile1.jl, testfile2.jl, example.tex and the derived file
 %% example.pdf.
 %%
 %%
 %%
-% keywords, literals and built-ins from:
+% keywords, literals and built-ins were created by
+% createlists.jl, which was inspired by the following script:
 % https://github.com/isagalaev/highlight.js/blob/master/src/languages/julia.js
-% colors from:
-% https://docs.julialang.org/en/latest/assets/themes/documenter-light.css
-% https://docs.julialang.org/en/latest/assets/documenter.css
+% colors for the themes from:
+% https://docs.julialang.org/en/v1/assets/themes/documenter-light.css
+% https://github.com/dietercastel/jlcode/blob/darktheme/jlcode.sty
 % special unicode characters from:
-% https://docs.julialang.org/en/latest/manual/unicode-input/
+% https://docs.julialang.org/en/v1/manual/unicode-input/
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -38,8 +39,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % defining the jlcode package
-\def\fileversion{4.1}
-\def\filedate{2020/07/31}
+\def\fileversion{5.0}
+\def\filedate{2020/11/25}
 
 \typeout{-- Package: `jlcode' \fileversion\space <\filedate> --}
 \NeedsTeXFormat{LaTeX2e}
@@ -55,9 +56,13 @@
 \RequirePackage{textcomp}            % for upright single quotes
 \RequirePackage{amssymb}             % for the ϰ symbol
 \RequirePackage{eurosym}             % for the € symbol
+\RequirePackage{pmboxdraw}           % for the unicode box characters
 \PassOptionsToPackage{T1}{fontenc}
 \RequirePackage{fontenc}             % for the « and » symbols
+
 \RequirePackage{calc}                % for the creation of the code box
+\RequirePackage{relsize}             % for scaling the font sizes
+\RequirePackage{etoolbox}            % for \ifdefstring
 \RequirePackage{kvoptions}           % for adding options to this package
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -75,11 +80,12 @@
 % defining package options
 \DeclareBoolOption[true]{autoload}
 \DeclareBoolOption[true]{courierasttdflt}
-\DeclareBoolOption[true]{usecolors}
-\DeclareBoolOption[true]{usebox}
-\DeclareComplementaryOption{nocolors}{usecolors}
-\DeclareComplementaryOption{nobox}{usebox}
 \DeclareStringOption[80]{charsperline}
+\DeclareStringOption[dflttheme]{theme}[dflttheme]
+\DisableKeyvalOption[action=error,package=jlcode]{jlc}{usecolors}
+\DisableKeyvalOption[action=error,package=jlcode]{jlc}{usebox}
+\DisableKeyvalOption[action=error,package=jlcode]{jlc}{usecolors}
+\DisableKeyvalOption[action=error,package=jlcode]{jlc}{usebox}
 
 % default option rule
 \DeclareDefaultOption{\@unknownoptionerror}
@@ -162,12 +168,12 @@ PartialQuickSort,Period,PermutedDimsArray,PhiCNode,PhiNode,PiNode,Pipe,%
 PollingFileWatcher,PosDefException,ProcessExitedException,%
 ProcessFailedException,Ptr,QR,QRPivoted,QuoteNode,RandomDevice,%
 RankDeficientException,Rational,RawFD,ReadOnlyMemoryError,Real,ReentrantLock,%
-Ref,Regex,RegexMatch,RemoteChannel,RemoteException,RoundingMode,%
-SHA1_CTX,SHA224_CTX,SHA256_CTX,SHA2_224_CTX,SHA2_256_CTX,SHA2_384_CTX,%
-SHA2_512_CTX,SHA384_CTX,SHA3_224_CTX,SHA3_256_CTX,SHA3_384_CTX,SHA3_512_CTX,%
-SHA512_CTX,SSAValue,SVD,Schur,Second,SegmentationFault,Serializer,Set,%
-SharedArray,SharedMatrix,SharedVector,Signed,SimpleLogger,SingularException,%
-Slot,SlotNumber,Some,SparseMatrixCSC,SparseVector,SpinLock,StackFrame,%
+Ref,Regex,RegexMatch,RemoteChannel,RemoteException,RoundingMode,SHA1_CTX,%
+SHA224_CTX,SHA256_CTX,SHA2_224_CTX,SHA2_256_CTX,SHA2_384_CTX,SHA2_512_CTX,%
+SHA384_CTX,SHA3_224_CTX,SHA3_256_CTX,SHA3_384_CTX,SHA3_512_CTX,SHA512_CTX,%
+SSAValue,SVD,Schur,Second,SegmentationFault,Serializer,Set,SharedArray,%
+SharedMatrix,SharedVector,Signed,SimpleLogger,SingularException,Slot,%
+SlotNumber,Some,SparseMatrixCSC,SparseVector,SpinLock,StackFrame,%
 StackOverflowError,StackTrace,StepRange,StepRangeLen,StreamREPL,StridedArray,%
 StridedMatrix,StridedVecOrMat,StridedVector,String,StringIndexError,SubArray,%
 SubString,SubstitutionString,SymTridiagonal,Symbol,Symmetric,SystemError,%
@@ -185,26 +191,26 @@ WorkerConfig,WorkerPool,Year,ZeroPivotException%
 %
 morekeywords=[4]
 {%
-@MIME_str,@__DIR__,@__FILE__,@__LINE__,@__MODULE__,@__dot__,@allocated,@assert,%
-@async,@b_str,@big_str,@boundscheck,@cfunction,@cmd,@code_llvm,@code_lowered,%
-@code_native,@code_typed,@code_warntype,@dateformat_str,@debug,@deprecate,%
-@distributed,@doc,@doc_str,@dump,@edit,@elapsed,@enum,@error,@eval,@evalpoly,%
-@everywhere,@fastmath,@fetch,@fetchfrom,@functionloc,@generated,@gensym,@goto,%
-@html_str,@inbounds,@inferred,@info,@inline,@int128_str,@ip_str,@isdefined,%
-@label,@less,@logmsg,@macroexpand,@macroexpand1,@md_str,@noinline,%
-@nospecialize,@polly,@printf,@profile,@r_str,@raw_str,@s_str,@show,@simd,%
-@spawn,@spawnat,@specialize,@sprintf,@static,@sync,@task,@test,@test_broken,%
-@test_deprecated,@test_logs,@test_nowarn,@test_skip,@test_throws,@test_warn,%
-@testset,@text_str,@threadcall,@threads,@time,@timed,@timev,@uint128_str,%
-@v_str,@var,@view,@views,@warn,@which
+@MIME_str,@NamedTuple,@__DIR__,@__FILE__,@__LINE__,@__MODULE__,@__dot__,%
+@allocated,@assert,@async,@b_str,@big_str,@boundscheck,@ccall,@cfunction,@cmd,%
+@code_llvm,@code_lowered,@code_native,@code_typed,@code_warntype,%
+@dateformat_str,@debug,@deprecate,@distributed,@doc,@doc_str,@dump,@edit,%
+@elapsed,@enum,@error,@eval,@evalpoly,@everywhere,@fastmath,@fetch,@fetchfrom,%
+@functionloc,@generated,@gensym,@goto,@html_str,@inbounds,@inferred,@info,%
+@inline,@int128_str,@ip_str,@isdefined,@label,@less,@logmsg,@macroexpand,%
+@macroexpand1,@md_str,@noinline,@nospecialize,@polly,@printf,@profile,@r_str,%
+@raw_str,@s_str,@show,@simd,@spawn,@spawnat,@specialize,@sprintf,@static,@sync,%
+@task,@test,@test_broken,@test_deprecated,@test_logs,@test_nowarn,@test_skip,%
+@test_throws,@test_warn,@testset,@text_str,@threadcall,@threads,@time,@timed,%
+@timev,@uint128_str,@v_str,@var,@view,@views,@warn,@which%
 },%
 %
 % julia's functions:
 %
 morekeywords=[5]
 {%
-BLAS,Base,Base64,Broadcast,CRC32c,Compiler,Core,Dates,DelimitedFiles%
-Distributed,Docs,FileWatching,FormatMessage,GC,GetLastError,IR%
+BLAS,Base,Base64,Broadcast,CRC32c,Compiler,Core,Dates,DelimitedFiles,%
+Distributed,Docs,FileWatching,FormatMessage,GC,GetLastError,IR,%
 InteractiveUtils,Intrinsics,Iterators,LAPACK,LibGit2,Libc,Libdl,LinearAlgebra,%
 Logging,Main,Markdown,MathConstants,Meta,Mmap,PipeBuffer,Printf,Profile,REPL,%
 Random,SHA,Serialization,SharedArrays,Sockets,SparseArrays,StackTraces,%
@@ -216,85 +222,87 @@ argmax,argmin,arraylen,ascii,asec,asecd,asech,ashr_int,asin,asind,asinh,%
 asyncmap,asyncmap!,atan,atand,atanh,atexit,atomic_add!,atomic_and!,atomic_cas!,%
 atomic_fence,atomic_max!,atomic_min!,atomic_nand!,atomic_or!,atomic_sub!,%
 atomic_xchg!,atomic_xor!,atreplinit,axes,axpby!,axpy!,backtrace,base64decode,%
-base64encode,basename,big,bind,binomial,bitcast,bitrand,bitstring,blockdiag,%
-broadcast,broadcast!,broadcast_axes,broadcast_preserving_zero_d,broadcastable,%
-bswap,bswap_int,bunchkaufman,bunchkaufman!,bytes2hex,bytesavailable,calloc,%
-canonicalize,cat,catch_backtrace,cbrt,cd,ceil,ceil_llvm,cglobal,%
-channel_from_id,check_same_host,checkbounds,checked_sadd_int,checked_sdiv_int,%
-checked_smul_int,checked_srem_int,checked_ssub_int,checked_uadd_int,%
-checked_udiv_int,checked_umul_int,checked_urem_int,checked_usub_int,checkindex,%
-chmod,cholesky,cholesky!,chomp,chop,chown,circcopy!,circshift,circshift!,cis,%
-clamp,clamp!,cld,clear!,clipboard,close,cluster_cookie,cmp,coalesce,code_llvm,%
-code_lowered,code_native,code_typed,code_warntype,codepoint,codeunit,codeunits,%
-collect,complex,cond,condskeel,conj,conj!,connect,convert,copy,copy!,%
-copy_transpose!,copysign,copysign_float,copyto!,cos,cosc,cosd,cosh,cospi,cot,%
-cotd,coth,count,count_ones,count_zeros,countfrom,countlines,cp,cpu_info,%
-cpu_summary,crc32c,cross,csc,cscd,csch,ctime,ctlz_int,ctpop_int,cttz_int,%
-cumprod,cumprod!,cumsum,cumsum!,current_logger,current_task,cycle,%
-datetime2julian,datetime2rata,datetime2unix,day,dayabbr,dayname,dayofmonth,%
-dayofquarter,dayofweek,dayofweekofmonth,dayofyear,daysinmonth,daysinyear,%
-daysofweekinmonth,deepcopy,default_worker_pool,deg2rad,delete!,deleteat!,%
-denominator,deserialize,det,detach,detect_ambiguities,detect_unbound_args,diag,%
-diagind,diagm,diff,digest!,digits,digits!,dirname,disable_logging,%
-disable_sigint,display,displayable,displaysize,div,div_float,div_float_fast,%
-divrem,dlclose,dllist,dlopen,dlopen_e,dlpath,dlsym,dlsym_e,doc,dot,dotview,%
-download,drop,dropdims,droptol!,dropwhile,dropzeros,dropzeros!,dump,eachcol,%
-eachindex,eachline,eachmatch,eachrow,eachslice,edit,eigen,eigen!,eigmax,eigmin,%
-eigvals,eigvals!,eigvecs,eltype,empty,empty!,endswith,enumerate,eof,eps,%
-eq_float,eq_float_fast,eq_int,errno,error,esc,escape_string,eval,evalfile,%
-evalpoly,exit,exp,exp10,exp2,expanduser,expm1,exponent,extrema,factorial,%
-factorize,falses,fd,fdio,fetch,fieldcount,fieldname,fieldnames,fieldoffset,%
-fieldtype,fieldtypes,filemode,filesize,fill,fill!,filter,filter!,finalize,%
-finalizer,find_library,findall,findfirst,findlast,findmax,findmax!,findmin,%
-findmin!,findnext,findnz,findprev,first,firstdayofmonth,firstdayofquarter,%
-firstdayofweek,firstdayofyear,firstindex,flatten,fld,fld1,fldmod,fldmod1,%
-flipsign,flipsign_int,float,floatmax,floatmin,floor,floor_llvm,flush,%
-flush_cstdio,fma,fma_float,foldl,foldr,foreach,fpext,fpiseq,fpislt,fptosi,%
-fptoui,fptrunc,free,free_memory,frexp,fullname,functionloc,gcd,gcdx,gensym,get,%
-get!,get_zero_subnormals,getaddrinfo,getalladdrinfo,getfield,gethostname,%
-getindex,getipaddr,getipaddrs,getkey,getnameinfo,getpeername,getpid,%
-getproperty,getsockname,givens,global_logger,gperm,graphemes,hasfield,hash,%
-haskey,hasmethod,hasproperty,hcat,hessenberg,hessenberg!,hex2bytes,hex2bytes!,%
-hmac_sha1,hmac_sha224,hmac_sha256,hmac_sha2_224,hmac_sha2_256,hmac_sha2_384,%
-hmac_sha2_512,hmac_sha384,hmac_sha3_224,hmac_sha3_256,hmac_sha3_384,%
-hmac_sha3_512,hmac_sha512,homedir,hour,html,htol,hton,hvcat,hypot,identity,%
-ifelse,ignorestatus,imag,in,include_dependency,include_string,indexin,%
-indexpids,init_worker,insert!,instances,interrupt,intersect,intersect!,inv,%
-invmod,invoke,invperm,invpermute!,isa,isabspath,isabstracttype,isapple,%
-isapprox,isascii,isassigned,isbits,isbitstype,isblockdev,isbsd,ischardev,%
-iscntrl,isconcretetype,isconst,isdefined,isdiag,isdigit,isdir,isdirpath,%
-isdispatchtuple,isdragonfly,isempty,isequal,iseven,isexecutable,isexpr,isfifo,%
-isfile,isfinite,isfreebsd,ishermitian,isimmutable,isinf,isinteger,%
-isinteractive,isjsvm,isleapyear,isless,isletter,islink,islinux,islocked,%
-islowercase,ismarked,ismissing,ismount,isnan,isnetbsd,isnothing,isnumeric,%
-isodd,isone,isopen,isopenbsd,ispath,isperm,isposdef,isposdef!,ispow2,%
-isprimitivetype,isprint,ispunct,isqrt,isreadable,isreadonly,isready,isreal,%
-issetequal,issetgid,issetuid,issocket,issorted,isspace,issparse,issticky,%
-isstructtype,issubnormal,issubset,issuccess,issymmetric,istaskdone,%
-istaskfailed,istaskstarted,istextmime,istril,istriu,isunix,isuppercase,isvalid,%
-iswindows,iswritable,isxdigit,iszero,iterate,join,joinpath,julian2datetime,%
+base64encode,basename,big,bind,binomial,bitcast,bitrand,bitreverse,bitrotate,%
+bitstring,blockdiag,broadcast,broadcast!,broadcast_axes,%
+broadcast_preserving_zero_d,broadcastable,bswap,bswap_int,bunchkaufman,%
+bunchkaufman!,bytes2hex,bytesavailable,calloc,canonicalize,cat,catch_backtrace,%
+cbrt,cd,ceil,ceil_llvm,cglobal,channel_from_id,check_same_host,checkbounds,%
+checked_sadd_int,checked_sdiv_int,checked_smul_int,checked_srem_int,%
+checked_ssub_int,checked_uadd_int,checked_udiv_int,checked_umul_int,%
+checked_urem_int,checked_usub_int,checkindex,chmod,cholesky,cholesky!,chomp,%
+chop,chown,circcopy!,circshift,circshift!,cis,clamp,clamp!,cld,clear!,%
+clipboard,close,cluster_cookie,cmp,coalesce,code_llvm,code_lowered,code_native,%
+code_typed,code_warntype,codepoint,codeunit,codeunits,collect,complex,cond,%
+condskeel,conj,conj!,connect,contains,convert,copy,copy!,copy_transpose!,%
+copysign,copysign_float,copyto!,cos,cosc,cosd,cosh,cospi,cot,cotd,coth,count,%
+count!,count_ones,count_zeros,countfrom,countlines,cp,cpu_info,cpu_summary,%
+crc32c,cross,csc,cscd,csch,ctime,ctlz_int,ctpop_int,cttz_int,cumprod,cumprod!,%
+cumsum,cumsum!,current_logger,current_task,cycle,datetime2julian,datetime2rata,%
+datetime2unix,day,dayabbr,dayname,dayofmonth,dayofquarter,dayofweek,%
+dayofweekofmonth,dayofyear,daysinmonth,daysinyear,daysofweekinmonth,deepcopy,%
+default_worker_pool,deg2rad,delete!,deleteat!,denominator,deserialize,det,%
+detach,detect_ambiguities,detect_unbound_args,diag,diagind,diagm,diff,digest!,%
+digits,digits!,dirname,disable_logging,disable_sigint,display,displayable,%
+displaysize,div,div_float,div_float_fast,divrem,dlclose,dllist,dlopen,dlopen_e,%
+dlpath,dlsym,dlsym_e,doc,dot,dotview,download,drop,dropdims,droptol!,dropwhile,%
+dropzeros,dropzeros!,dump,eachcol,eachindex,eachline,eachmatch,eachrow,%
+eachslice,edit,eigen,eigen!,eigmax,eigmin,eigvals,eigvals!,eigvecs,eltype,%
+empty,empty!,endswith,enumerate,eof,eps,eq_float,eq_float_fast,eq_int,errno,%
+error,esc,escape_string,eval,evalfile,evalpoly,exit,exp,exp10,exp2,expanduser,%
+expm1,exponent,extrema,factorial,factorize,falses,fd,fdio,fetch,fieldcount,%
+fieldname,fieldnames,fieldoffset,fieldtype,fieldtypes,filemode,filesize,fill,%
+fill!,filter,filter!,finalize,finalizer,find_library,findall,findfirst,%
+findlast,findmax,findmax!,findmin,findmin!,findnext,findnz,findprev,first,%
+firstdayofmonth,firstdayofquarter,firstdayofweek,firstdayofyear,firstindex,%
+flatten,fld,fld1,fldmod,fldmod1,flipsign,flipsign_int,float,floatmax,floatmin,%
+floor,floor_llvm,flush,flush_cstdio,fma,fma_float,foldl,foldr,foreach,fpext,%
+fpiseq,fpislt,fptosi,fptoui,fptrunc,free,free_memory,frexp,fullname,%
+functionloc,gcd,gcdx,gensym,get,get!,get_zero_subnormals,getaddrinfo,%
+getalladdrinfo,getfield,gethostname,getindex,getipaddr,getipaddrs,getkey,%
+getnameinfo,getpeername,getpid,getproperty,getsockname,givens,global_logger,%
+gperm,graphemes,hasfield,hash,haskey,hasmethod,hasproperty,hcat,hessenberg,%
+hessenberg!,hex2bytes,hex2bytes!,hmac_sha1,hmac_sha224,hmac_sha256,%
+hmac_sha2_224,hmac_sha2_256,hmac_sha2_384,hmac_sha2_512,hmac_sha384,%
+hmac_sha3_224,hmac_sha3_256,hmac_sha3_384,hmac_sha3_512,hmac_sha512,homedir,%
+hour,html,htol,hton,hvcat,hypot,identity,ifelse,ignorestatus,imag,in,%
+include_dependency,include_string,indexin,indexpids,init_worker,insert!,%
+instances,interrupt,intersect,intersect!,inv,invmod,invoke,invperm,invpermute!,%
+isa,isabspath,isabstracttype,isapple,isapprox,isascii,isassigned,isbits,%
+isbitstype,isblockdev,isbsd,ischardev,iscntrl,isconcretetype,isconst,isdefined,%
+isdiag,isdigit,isdir,isdirpath,isdisjoint,isdispatchtuple,isdragonfly,isempty,%
+isequal,iseven,isexecutable,isexpr,isfifo,isfile,isfinite,isfreebsd,%
+ishermitian,isimmutable,isinf,isinteger,isinteractive,isjsvm,isleapyear,isless,%
+isletter,islink,islinklocaladdr,islinux,islocked,islowercase,ismarked,%
+ismissing,ismount,ismutable,isnan,isnetbsd,isnothing,isnumeric,isodd,isone,%
+isopen,isopenbsd,ispath,isperm,isposdef,isposdef!,ispow2,isprimitivetype,%
+isprint,ispunct,isqrt,isreadable,isreadonly,isready,isreal,issetequal,issetgid,%
+issetuid,issocket,issorted,isspace,issparse,issticky,isstructtype,issubnormal,%
+issubset,issuccess,issymmetric,istaskdone,istaskfailed,istaskstarted,%
+istextmime,istril,istriu,isunix,isuppercase,isvalid,iswindows,iswritable,%
+isxdigit,iszero,iterate,join,join_multicast_group,joinpath,julian2datetime,%
 keys,keytype,kill,kron,last,lastdayofmonth,lastdayofquarter,lastdayofweek,%
 lastdayofyear,lastindex,latex,launch,lcm,ldexp,ldiv!,ldlt,ldlt!,le_float,%
-le_float_fast,leading_ones,leading_zeros,length,less,listen,listenany,llvmcall,%
-lmul!,loadavg,localindices,lock,log,log10,log1p,log2,logabsdet,logdet,%
-lowercase,lowercasefirst,lowrankdowndate,lowrankdowndate!,lowrankupdate,%
-lowrankupdate!,lpad,lq,lq!,lshr_int,lstat,lstrip,lt_float,lt_float_fast,ltoh,%
-lu,lu!,lyap,macroexpand,malloc,manage,map,map!,mapfoldl,mapfoldr,mapreduce,%
-mapslices,mark,match,max,maximum,maximum!,maxintfloat,merge,merge!,methods,%
-methodswith,microsecond,millisecond,min,minimum,minimum!,minmax,minute,mkdir,%
-mkpath,mktemp,mktempdir,mod,mod1,mod2pi,modf,month,monthabbr,monthday,%
-monthname,mtime,mul!,mul_float,mul_float_fast,mul_int,muladd,muladd_float,mv,%
-myid,nameof,names,nanosecond,ncodeunits,ndigits,ndims,ne_float,ne_float_fast,%
-ne_int,neg_float,neg_float_fast,neg_int,nextfloat,nextind,nextpow,nextprod,%
-nfields,nnz,nonmissingtype,nonzeros,norm,normalize,normalize!,normpath,not_int,%
-notify,now,nprocs,nthreads,ntoh,ntuple,nullspace,numerator,nworkers,nzrange,%
-objectid,occursin,oftype,one,ones,oneunit,only,open,operm,opnorm,or_int,%
-ordschur,ordschur!,pairs,parent,parentindices,parentmodule,parse,partialsort,%
-partialsort!,partialsortperm,partialsortperm!,partition,pathof,peakflops,%
+le_float_fast,leading_ones,leading_zeros,leave_multicast_group,length,%
+less,listen,listenany,llvmcall,lmul!,loadavg,localindices,lock,log,log10,log1p,%
+log2,logabsdet,logdet,lowercase,lowercasefirst,lowrankdowndate,%
+lowrankdowndate!,lowrankupdate,lowrankupdate!,lpad,lq,lq!,lshr_int,lstat,%
+lstrip,lt_float,lt_float_fast,ltoh,lu,lu!,lyap,macroexpand,malloc,manage,map,%
+map!,mapfoldl,mapfoldr,mapreduce,mapslices,mark,match,max,maximum,maximum!,%
+maxintfloat,merge,merge!,mergewith,mergewith!,methods,methodswith,microsecond,%
+millisecond,min,minimum,minimum!,minmax,minute,mkdir,mkpath,mktemp,mktempdir,%
+mod,mod1,mod2pi,modf,month,monthabbr,monthday,monthname,mtime,mul!,mul_float,%
+mul_float_fast,mul_int,muladd,muladd_float,mv,myid,nameof,names,nanosecond,%
+ncodeunits,ndigits,ndims,ne_float,ne_float_fast,ne_int,neg_float,%
+neg_float_fast,neg_int,nextfloat,nextind,nextpow,nextprod,nfields,nnz,%
+nonmissingtype,nonzeros,norm,normalize,normalize!,normpath,not_int,notify,now,%
+nprocs,nthreads,ntoh,ntuple,nullspace,numerator,nworkers,nzrange,objectid,%
+occursin,oftype,one,ones,oneunit,only,open,operm,opnorm,or_int,ordschur,%
+ordschur!,pairs,parent,parentindices,parentmodule,parse,partialsort,%
+partialsort!,partialsortperm,partialsortperm!,partition,pathof,peakflops,peek,%
 permute,permute!,permutedims,permutedims!,pinv,pipeline,pkgdir,pmap,pointer,%
-pointer_from_objref,pointerref,pointerset,poll_fd,poll_file,pop!,popdisplay,%
-popfirst!,position,powermod,precision,precompile,prepend!,prevfloat,prevind,%
-prevpow,print,println,printstyled,process_exited,process_messages,%
+pointer_from_objref,pointerref,pointerset,poll_fd,poll_file,pop!,popat!,%
+popdisplay,popfirst!,position,powermod,precision,precompile,prepend!,prevfloat,%
+prevind,prevpow,print,println,printstyled,process_exited,process_messages,%
 process_running,procs,prod,prod!,product,promote,promote_rule,promote_shape,%
 promote_type,propertynames,push!,pushdisplay,pushfirst!,put!,pwd,qr,qr!,%
 quarterofyear,quot,rad2deg,rand,rand!,randcycle,randcycle!,randexp,randexp!,%
@@ -302,54 +310,55 @@ randn,randn!,randperm,randperm!,randstring,randsubseq,randsubseq!,range,rank,%
 rata2datetime,rationalize,rdiv!,read,read!,readavailable,readbytes!,readchomp,%
 readdir,readdlm,readline,readlines,readlink,readuntil,real,realloc,realpath,%
 recv,recvfrom,redirect_stderr,redirect_stdin,redirect_stdout,redisplay,reduce,%
-reenable_sigint,reim,reinterpret,relpath,rem,rem2pi,rem_float,rem_float_fast,%
-remote,remote_do,remotecall,remotecall_fetch,remotecall_wait,remoteref_id,%
-repeat,repeated,replace,replace!,repr,reset,reshape,resize!,rest,rethrow,retry,%
-reverse,reverse!,reverseind,rint_llvm,rm,rmprocs,rmul!,rot180,rotl90,rotr90,%
-round,rounding,rowvals,rpad,rsplit,rstrip,run,schedule,schur,schur!,sdata,%
-sdiv_int,searchsorted,searchsortedfirst,searchsortedlast,sec,secd,sech,second,%
-seek,seekend,seekstart,selectdim,send,serialize,set_zero_subnormals,setdiff,%
-setdiff!,setenv,setfield!,setindex!,setprecision,setproperty!,setrounding,%
-sext_int,sha1,sha224,sha256,sha2_224,sha2_256,sha2_384,sha2_512,sha384,%
-sha3_224,sha3_256,sha3_384,sha3_512,sha512,shl_int,show,show_sexpr,showable,%
-showerror,shuffle,shuffle!,sign,signbit,signed,significand,similar,sin,sinc,%
-sincos,sincosd,sind,sinh,sinpi,sitofp,size,sizehint!,sizeof,skip,skipchars,%
-skipmissing,sle_int,sleep,slt_int,something,sort,sort!,sortperm,sortperm!,%
-sortslices,sparse,sparsevec,spdiagm,splice!,split,splitdir,splitdrive,splitext,%
-splitpath,sprand,sprandn,sprint,spzeros,sqrt,sqrt_llvm,sqrt_llvm_fast,srem_int,%
-stacktrace,start_worker,startswith,stat,step,strerror,strftime,stride,strides,%
-string,stringmime,strip,strptime,sub_float,sub_float_fast,sub_int,sub_ptr,%
-subtypes,success,sum,sum!,summary,supertype,svd,svd!,svdvals,svdvals!,%
-sylvester,symdiff,symdiff!,symlink,systemerror,systemsleep,take,take!,%
-takewhile,tan,tand,tanh,task_local_storage,tempdir,tempname,textwidth,thisind,%
-threadid,throw,time,time_ns,timedwait,titlecase,to_indices,today,tofirst,%
-tolast,tonext,toprev,total_memory,touch,tr,trailing_ones,trailing_zeros,%
-transcode,transpose,transpose!,tril,tril!,triu,triu!,trues,trunc,trunc_int,%
-trunc_llvm,truncate,trylock,tryparse,tuple,typeassert,typeintersect,typejoin,%
-typemax,typemin,typeof,udiv_int,uitofp,ule_int,ult_int,unescape_string,union,%
-union!,unique,unique!,unix2datetime,unlock,unmark,unsafe_copyto!,unsafe_load,%
+reenable_sigint,reflect!,reim,reinterpret,relpath,rem,rem2pi,rem_float,%
+rem_float_fast,remote,remote_do,remotecall,remotecall_fetch,remotecall_wait,%
+remoteref_id,repeat,repeated,replace,replace!,repr,reset,reshape,resize!,rest,%
+rethrow,retry,reverse,reverse!,reverseind,rint_llvm,rm,rmprocs,rmul!,rot180,%
+rotate!,rotl90,rotr90,round,rounding,rowvals,rpad,rsplit,rstrip,run,schedule,%
+schur,schur!,sdata,sdiv_int,searchsorted,searchsortedfirst,searchsortedlast,%
+sec,secd,sech,second,seek,seekend,seekstart,selectdim,send,serialize,%
+set_zero_subnormals,setdiff,setdiff!,setenv,setfield!,setindex!,setprecision,%
+setproperty!,setrounding,sext_int,sha1,sha224,sha256,sha2_224,sha2_256,%
+sha2_384,sha2_512,sha384,sha3_224,sha3_256,sha3_384,sha3_512,sha512,shl_int,%
+show,show_sexpr,showable,showerror,shuffle,shuffle!,sign,signbit,signed,%
+significand,similar,sin,sinc,sincos,sincosd,sind,sinh,sinpi,sitofp,size,%
+sizehint!,sizeof,skip,skipchars,skipmissing,sle_int,sleep,slt_int,something,%
+sort,sort!,sortperm,sortperm!,sotrtslices,sparse,sparsevec,spdiagm,splice!,%
+split,splitdir,splitdrive,splitext,splitpath,sprand,sprandn,sprint,spzeros,%
+sqrt,sqrt_llvm,sqrt_llvm_fast,srem_int,stacktrace,start_worker,srtartswith,%
+stat,step,strerror,strftime,stride,strides,string,stringmime,strip,strptime,%
+sub_float,sub_float_fast,sub_int,sub_ptr,subtypes,success,sum,sum!,summary,%
+supertype,supertypesd,svd,svd!,svdvals,svdvals!,sylvester,symdiff,symdiff!,%
+symlink,systemerror,systemsleep,take,take!,takewhile,tan,tand,tanh,%
+task_local_storage,tempdir,tempname,textwidth,thisind,threadhid,throw,time,%
+time_ns,timedwait,titlecase,to_indices,today,tofirst,tolast,tonext,toprev,%
+total_memory,touch,tr,trailing_ones,trailing_zeros,transcode,transpose,%
+transpose!,tril,tril!,ttriu,triu!,trues,trunc,trunc_int,trunc_llvm,truncate,%
+trylock,tryparse,tuple,typeassert,typeintersect,typejoin,typemax,typemin,%
+typeof,udiv_int,uitofp,ule_int,ult_int,unescape_string,uunion,union!,unique,%
+unique!,unix2datetime,unlock,unmark,unsafe_copyto!,unsafe_load,%
 unsafe_pointer_to_objref,unsafe_read,unsafe_store!,unsafe_string,unsafe_trunc,%
-unsafe_wrap,unsafe_write,unsigned,unwatch_folder,update!,uperm,uppercase,%
+unsafe_wrap,unsafe_wsrite,unsigned,unwatch_folder,update!,uperm,uppercase,%
 uppercasefirst,uptime,urem_int,uuid1,uuid4,uuid5,uuid_version,valtype,values,%
-varinfo,vcat,vec,versioninfo,view,wait,walkdir,watch_file,watch_folder,week,%
+varinfo,vcat,vec,versioninfo,view,wait,walkdir,watcah_file,watch_folder,week,%
 which,widemul,widen,with,with_logger,withenv,worker_id_from_socket,workers,%
 write,writedlm,xor,xor_int,year,yearmonth,yearmonthday,yield,yieldto,zero,%
-zeros,zext_int,zip%
+zeros,ziext_int,zip%
 },%
 %
 %
 sensitive=true,%
 %
-alsoother={$},%$
-alsodigit={_},
+alsoother={$},%$%
+alsodigit={_},%
 %
 morecomment=[l]{\#},%
 morecomment=[n]{\#=}{=\#},%
 %
 morestring=[b]{"},%
 % just activate the next command if you dont use ' as the transposition
-% operator! comment out line 1161 in that case, too!
-%morestring=[m]{'},
+% operator! comment out line 1283 in that case, too!
+%morestring=[m]{'},%
 morestring=[s]{"""}{"""},%
 morestring=[s]{L"}{"},%
 morestring=[s]{MIME"}{"},%
@@ -368,6 +377,7 @@ morestring=[s]{s"}{"},%
 morestring=[s]{text"}{"},%
 morestring=[s]{uint128"}{"},%
 morestring=[s]{v"}{"},%
+morestring=[s]{var"}{"},%
 %
 }[keywords,comments,strings]
 
@@ -378,17 +388,79 @@ morestring=[s]{v"}{"},%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% command for loading colors
-\newcommand{\loadcolors}{%
-\definecolor{jlbase}{HTML}{444444}%            % julia's base color
-\definecolor{jlkeyword}{HTML}{444444}%         % julia's keywords
-\definecolor{jlliteral}{HTML}{78A960}%         % julia's literals
-\definecolor{jlbuiltin}{HTML}{397300}%         % julia's built-ins
-\definecolor{jlmacros}{HTML}{1F7199}%          % julia's macros
-\definecolor{jlfunctions}{HTML}{444444}%       % julia's functions
-\definecolor{jlcomment}{HTML}{888888}%         % julia's comments
-\definecolor{jlstring}{HTML}{880000}%          % julia's strings
+% default color theme
+\newcommand{\loaddfltcolors}{%
+\definecolor{jlbase}{HTML}{444444}%         % julia's base color
+\definecolor{jlkeyword}{HTML}{444444}%      % julia's keywords
+\definecolor{jlliteral}{HTML}{78A960}%      % julia's literals
+\definecolor{jlbuiltin}{HTML}{397300}%      % julia's built-ins
+\definecolor{jlmacros}{HTML}{1F7199}%       % julia's macros
+\definecolor{jlfunctions}{HTML}{444444}%    % julia's functions
+\definecolor{jlcomment}{HTML}{888888}%      % julia's comments
+\definecolor{jlstrnum}{HTML}{880000}%       % julia's strings or numbers
+\definecolor{jlop}{HTML}{444444}%           % julia's operators
+\definecolor{jlbackground}{HTML}{F2F2F2}%   % the background of the code block
+\definecolor{jlrule}{HTML}{DDDDDD}%         % the rule of the code block
+\definecolor{jllinenumbers}{HTML}{000000}%  % the line numbers of the code block
 }
+
+\newcommand{\loadthemecolors}{\loaddfltcolors}
+
+\ifdefstring{\jlc@theme}{dfltthemenobox}{%
+\renewcommand{\loadthemecolors}{\loaddfltcolors}}{}
+
+
+
+% black and white color theme
+\newcommand{\loadbwcolors}{%
+\definecolor{jlbase}{HTML}{000000}%         % julia's base color
+\definecolor{jlkeyword}{HTML}{000000}%      % julia's keywords
+\definecolor{jlliteral}{HTML}{000000}%      % julia's literals
+\definecolor{jlbuiltin}{HTML}{000000}%      % julia's built-ins
+\definecolor{jlmacros}{HTML}{000000}%       % julia's macros
+\definecolor{jlfunctions}{HTML}{000000}%    % julia's functions
+\definecolor{jlcomment}{HTML}{000000}%      % julia's comments
+\definecolor{jlstrnum}{HTML}{000000}%       % julia's strings or numbers
+\definecolor{jlop}{HTML}{000000}%           % julia's operators
+\definecolor{jlbackground}{HTML}{F5F5F5}%   % the background of the code block
+\definecolor{jlrule}{HTML}{DDDDDD}%         % the rule of the code block
+\definecolor{jllinenumbers}{HTML}{000000}%  % the line numbers of the code block
+}
+
+\ifdefstring{\jlc@theme}{bnwtheme}{%
+\renewcommand{\loadthemecolors}{\loadbwcolors}}{}
+\ifdefstring{\jlc@theme}{bnwthemenobox}{%
+\renewcommand{\loadthemecolors}{\loadbwcolors}}{}
+
+
+
+% dark color theme
+% big thanks to "dietercastel" who put toegther this awesome dark theme,
+% which is designed to be ideally suited for the dark-beamer-theme
+\newcommand{\loaddthcolors}{%
+\definecolor{jlbase}{HTML}{66FFCC}%         % julia's base color
+\definecolor{jlkeyword}{HTML}{F9F2D7}%      % julia's keywords
+\definecolor{jlliteral}{HTML}{9B9B9B}%      % julia's literals
+\definecolor{jlbuiltin}{HTML}{F5AB35}%      % julia's built-ins
+\definecolor{jlmacros}{HTML}{9B9B9B}%       % julia's macros
+\definecolor{jlfunctions}{HTML}{9455AD}%    % julia's functions
+\definecolor{jlcomment}{HTML}{455ED3}%      % julia's comments
+\definecolor{jlstrnum}{HTML}{6BAED6}%       % julia's strings or numbers
+\definecolor{jlop}{HTML}{FF005A}%           % julia's operators
+\definecolor{jlbackground}{HTML}{181818}%   % the background of the code block
+\definecolor{jlrule}{HTML}{DDDDDD}%         % the rule of the code block
+\definecolor{jllinenumbers}{HTML}{F5AB35}%  % the line numbers of the code block
+}
+
+\ifdefstring{\jlc@theme}{darktheme}{%
+\renewcommand{\loadthemecolors}{\loaddthcolors}}{}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % use courier as typewriter font
 \ifjlc@courierasttdflt
@@ -396,51 +468,19 @@ morestring=[s]{v"}{"},%
 \fi
 
 % basic font style
-\def\jlbasicfont{\ttfamily\scriptsize\selectfont}
+\def\jlbasicfont{\ttfamily\relsize{-2}\selectfont}
 
-
-% color style for the julia language
-\lstdefinestyle{jlcodecolorstyle}{%
-basicstyle={\loadcolors\color{jlstring}\jlbasicfont},
+% gerneral style for the code block
+\lstdefinestyle{jlcodeblockstyle}{%
+basicstyle={\loadthemecolors\color{jlstrnum}\jlbasicfont},
 keywordstyle={[1]\color{jlkeyword}\bfseries},
 keywordstyle={[2]\color{jlliteral}},
 keywordstyle={[3]\color{jlbuiltin}},
 keywordstyle={[4]\color{jlmacros}},
 keywordstyle={[5]\color{jlfunctions}},
 commentstyle={\color{jlcomment}},
-stringstyle={\color{jlstring}},
-identifierstyle={\color{jlbase}}
-}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% command for loading black and white colors
-\newcommand{\loadbwcolors}{%
-\definecolor{jlbase}{HTML}{000000}%            % julia's base color
-\definecolor{jlkeyword}{HTML}{000000}%         % julia's keywords
-\definecolor{jlliteral}{HTML}{000000}%         % julia's literals
-\definecolor{jlbuiltin}{HTML}{000000}%         % julia's built-ins
-\definecolor{jlmacros}{HTML}{000000}%          % julia's macros
-\definecolor{jlfunctions}{HTML}{000000}%       % julia's functions
-\definecolor{jlcomment}{HTML}{000000}%         % julia's comments
-\definecolor{jlstring}{HTML}{000000}%          % julia's strings
-}
-
-
-% gerneral style for the code block
-\lstdefinestyle{jlcodeblockstyle}{%
-basicstyle={\loadbwcolors\jlbasicfont},
-keywordstyle={[1]\bfseries},
-keywordstyle={[2]},
-keywordstyle={[3]},
-keywordstyle={[4]},
-keywordstyle={[5]},
-commentstyle={},
+stringstyle={\color{jlstrnum}},
+identifierstyle={\color{jlbase}},
 showstringspaces=false,
 upquote=true,
 tabsize=4,
@@ -454,15 +494,18 @@ aboveskip={1.5\baselineskip}, belowskip={1.5\baselineskip}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% style for the code box
-\definecolor{jlbackground}{HTML}{F5F5F5}      % the background of the code block
-\definecolor{jlrule}{HTML}{DDDDDD}            % the rule of the code block
+% defining required lengths for the code box
 \newlength{\bfem}
-\settowidth{\bfem}{\jlbasicfont{m}}
 \newlength{\xmrgn}
-\setlength{\xmrgn}{(\textwidth - \jlc@charsperline\bfem)*\real{0.5}}
+\newcommand{\calcboxlengths}{%
+\settowidth{\bfem}{\jlbasicfont{m}}%
+\setlength{\xmrgn}{(\textwidth - \jlc@charsperline\bfem)*\real{0.5}}%
+}
+\calcboxlengths
 
-\lstdefinestyle{jlcodeboxstyle}{%
+
+% style for the code box of the default theme
+\lstdefinestyle{jlcodeboxdfltstyle}{%
 backgroundcolor=\color{jlbackground}, rulecolor=\color{jlrule},
 frame=single, frameround=tttt,
 columns=fixed,
@@ -470,6 +513,29 @@ basewidth=\bfem,
 linewidth=\textwidth,
 xleftmargin=\xmrgn, xrightmargin=\xmrgn,
 framexleftmargin=0.5\bfem, framexrightmargin=0.5\bfem
+}
+
+
+% style for the "code box" of the default theme without code box
+\lstdefinestyle{jlcodeboxnostyle}{%
+columns=fixed,
+basewidth=\bfem,
+linewidth=\textwidth,
+xleftmargin=\xmrgn, xrightmargin=\xmrgn,
+framexleftmargin=0.5\bfem, framexrightmargin=0.5\bfem
+}
+
+
+% style for the code box of the dark theme
+\lstdefinestyle{jlcodeboxdthstyle}{%
+backgroundcolor=\color{jlbackground}, rulecolor=\color{jlrule},
+numbers=left, stepnumber=1, numberstyle=\ttfamily\color{jllinenumbers},
+numbersep = 1.5\bfem,
+columns=fixed,
+basewidth=\bfem,
+linewidth=\textwidth,
+xleftmargin=\xmrgn, xrightmargin=\xmrgn,
+framexleftmargin=3.5\bfem, framexrightmargin=0.5\bfem
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -511,9 +577,9 @@ framexleftmargin=0.5\bfem, framexrightmargin=0.5\bfem
 
 
 % defining the opc and the numc commands
-% for literating operating and numbers
-\newcommand{\opc}[1]{{\color{jlbase}#1}}
-\newcommand{\numc}[1]{{\color{jlstring}#1}}
+% for literating operators and numbers
+\newcommand{\opc}[1]{{\color{jlop}#1}}
+\newcommand{\numc}[1]{{\color{jlstrnum}#1}}
 
 
 
@@ -602,7 +668,7 @@ opliterate=*
 
 
 
-% defining the ucc and the ucclit command
+% defining the ucc, the ucclit and uccop command
 % for literating special unicode characters
 \newcommand{\ucc}[1]{%
 \ifnum\lst@mode=\lst@Pmode\relax%
@@ -615,6 +681,14 @@ opliterate=*
 \newcommand{\ucclit}[1]{%
 \ifnum\lst@mode=\lst@Pmode\relax%
 {\color{jlliteral}#1}%
+\else%
+#1%
+\fi%
+}
+
+\newcommand{\uccop}[1]{%
+\ifnum\lst@mode=\lst@Pmode\relax%
+{\color{jlop}#1}%
 \else%
 #1%
 \fi%
@@ -663,7 +737,7 @@ literate=
 {Τ}{{\ucc{T}}}{1} {Υ}{{\ucc{$\Upsilon$}}}{1} {Φ}{{\ucc{$\Phi$}}}{1}
 {Χ}{{\ucc{X}}}{1} {Ψ}{{\ucc{$\Psi$}}}{1} {Ω}{{\ucc{$\Omega$}}}{1}
 %
-% mircro sign + latin small letter open e + script small e
+% mircro sign + latin small letter open e
 %
 {µ}{{\ucc{$\mu$}}}{1} {ɛ}{{\ucc{$\varepsilon$}}}{1}
 {ℯ}{{\ucclit{$e$}}}{1}
@@ -1087,6 +1161,54 @@ literate=
 {ψ̄}{{\ucc{${\scriptstyle \bar{\psi}}$}}}{1}
 {ω̄}{{\ucc{${\scriptstyle \bar{\omega}}$}}}{1}
 %
+% latin double-struck capital letters
+%
+{𝔸}{{\ucc{$\mathbb{A}$}}}{1} {𝔹}{{\ucc{$\mathbb{B}$}}}{1}
+{ℂ}{{\ucc{$\mathbb{C}$}}}{1} {𝔻}{{\ucc{$\mathbb{D}$}}}{1}
+{𝔼}{{\ucc{$\mathbb{E}$}}}{1} {𝔽}{{\ucc{$\mathbb{F}$}}}{1}
+{𝔾}{{\ucc{$\mathbb{G}$}}}{1} {ℍ}{{\ucc{$\mathbb{H}$}}}{1}
+{𝕀}{{\ucc{$\mathbb{I}$}}}{1} {𝕁}{{\ucc{$\mathbb{J}$}}}{1}
+{𝕂}{{\ucc{$\mathbb{K}$}}}{1} {𝕃}{{\ucc{$\mathbb{L}$}}}{1}
+{𝕄}{{\ucc{$\mathbb{M}$}}}{1} {ℕ}{{\ucc{$\mathbb{N}$}}}{1}
+{𝕆}{{\ucc{$\mathbb{O}$}}}{1} {ℙ}{{\ucc{$\mathbb{P}$}}}{1}
+{ℚ}{{\ucc{$\mathbb{Q}$}}}{1} {ℝ}{{\ucc{$\mathbb{R}$}}}{1}
+{𝕊}{{\ucc{$\mathbb{S}$}}}{1} {𝕋}{{\ucc{$\mathbb{T}$}}}{1}
+{𝕌}{{\ucc{$\mathbb{U}$}}}{1} {𝕍}{{\ucc{$\mathbb{V}$}}}{1}
+{𝕎}{{\ucc{$\mathbb{W}$}}}{1} {𝕏}{{\ucc{$\mathbb{X}$}}}{1}
+{𝕐}{{\ucc{$\mathbb{Y}$}}}{1} {ℤ}{{\ucc{$\mathbb{Z}$}}}{1}
+%
+% latin script capital letters
+%
+{𝒜}{{\ucc{$\mathcal{A}$}}}{1} {ℬ}{{\ucc{$\mathcal{B}$}}}{1}
+{𝒞}{{\ucc{$\mathcal{C}$}}}{1} {𝒟}{{\ucc{$\mathcal{D}$}}}{1}
+{ℰ}{{\ucc{$\mathcal{E}$}}}{1} {ℱ}{{\ucc{$\mathcal{F}$}}}{1}
+{𝒢}{{\ucc{$\mathcal{G}$}}}{1} {ℋ}{{\ucc{$\mathcal{H}$}}}{1}
+{ℐ}{{\ucc{$\mathcal{I}$}}}{1} {𝒥}{{\ucc{$\mathcal{J}$}}}{1}
+{𝒦}{{\ucc{$\mathcal{K}$}}}{1} {ℒ}{{\ucc{$\mathcal{L}$}}}{1}
+{ℳ}{{\ucc{$\mathcal{M}$}}}{1} {𝒩}{{\ucc{$\mathcal{N}$}}}{1}
+{𝒪}{{\ucc{$\mathcal{O}$}}}{1} {𝒫}{{\ucc{$\mathcal{P}$}}}{1}
+{𝒬}{{\ucc{$\mathcal{Q}$}}}{1} {ℛ}{{\ucc{$\mathcal{R}$}}}{1}
+{𝒮}{{\ucc{$\mathcal{S}$}}}{1} {𝒯}{{\ucc{$\mathcal{T}$}}}{1}
+{𝒰}{{\ucc{$\mathcal{U}$}}}{1} {𝒱}{{\ucc{$\mathcal{V}$}}}{1}
+{𝒲}{{\ucc{$\mathcal{W}$}}}{1} {𝒳}{{\ucc{$\mathcal{X}$}}}{1}
+{𝒴}{{\ucc{$\mathcal{Y}$}}}{1} {𝒵}{{\ucc{$\mathcal{Z}$}}}{1}
+%
+% latin fraktur capital letters
+%
+{𝔄}{{\ucc{$\mathfrak{A}$}}}{1} {𝔅}{{\ucc{$\mathfrak{B}$}}}{1}
+{ℭ}{{\ucc{$\mathfrak{C}$}}}{1} {𝔇}{{\ucc{$\mathfrak{D}$}}}{1}
+{𝔈}{{\ucc{$\mathfrak{E}$}}}{1} {𝔉}{{\ucc{$\mathfrak{F}$}}}{1}
+{𝔊}{{\ucc{$\mathfrak{G}$}}}{1} {ℌ}{{\ucc{$\mathfrak{H}$}}}{1}
+{ℑ}{{\ucc{$\Im$}}}{1} {𝔍}{{\ucc{$\mathfrak{J}$}}}{1}
+{𝔎}{{\ucc{$\mathfrak{K}$}}}{1} {𝔏}{{\ucc{$\mathfrak{L}$}}}{1}
+{𝔐}{{\ucc{$\mathfrak{M}$}}}{1} {𝔑}{{\ucc{$\mathfrak{N}$}}}{1}
+{𝔒}{{\ucc{$\mathfrak{O}$}}}{1} {𝔓}{{\ucc{$\mathfrak{P}$}}}{1}
+{𝔔}{{\ucc{$\mathfrak{Q}$}}}{1} {ℜ}{{\ucc{$\Re$}}}{1}
+{𝔖}{{\ucc{$\mathfrak{S}$}}}{1} {𝔗}{{\ucc{$\mathfrak{T}$}}}{1}
+{𝔘}{{\ucc{$\mathfrak{U}$}}}{1} {𝔙}{{\ucc{$\mathfrak{V}$}}}{1}
+{𝔚}{{\ucc{$\mathfrak{W}$}}}{1} {𝔛}{{\ucc{$\mathfrak{X}$}}}{1}
+{𝔜}{{\ucc{$\mathfrak{Y}$}}}{1} {ℨ}{{\ucc{$\mathfrak{Z}$}}}{1}
+%
 % superscripts
 %
 {⁽}{{\ucc{${\scriptstyle {}^{(}}$}}}{1} {⁾}{{\ucc{${\scriptstyle {}^{)}}$}}}{1}
@@ -1157,36 +1279,62 @@ literate=
 % mathematical operators (julia functions)
 %
 % comment out the next command if you dont use ' as the transposition
-% operator! activate the command in line 352 in that case, too!
-{'}{{\ucc{\textquotesingle}}}{1}
-{×}{{\ucc{${\scriptstyle \times}$}}}{1} {÷}{{\ucc{${\scriptstyle \div}$}}}{1}
-{∈}{{\ucc{${\scriptstyle \in}$}}}{1} {∉}{{\ucc{${\scriptstyle \notin}$}}}{1}
-{∋}{{\ucc{${\scriptstyle \ni}$}}}{1} {∌}{{\ucc{${\scriptstyle \not\ni}$}}}{1}
-{∘}{{\ucc{${\scriptstyle \circ}$}}}{1}
-{√}{{\ucc{$\surd$}}}{1} {∛}{{\ucc{$\sqrt[3]{\vphantom{x}}$}}}{1}
-{∩}{{\ucc{${\scriptstyle \cap}$}}}{1} {∪}{{\ucc{${\scriptstyle \cup}$}}}{1}
-{≈}{{\ucc{${\scriptstyle \approx}$}}}{1}
-{≉}{{\ucc{${\scriptstyle \not\approx}$}}}{1}
-{≠}{{\ucc{${\scriptstyle \neq}$}}}{1} {≡}{{\ucc{${\scriptstyle \equiv}$}}}{1}
-{≢}{{\ucc{${\scriptstyle \not\equiv}$}}}{1}
-{≤}{{\ucc{${\scriptstyle \leq}$}}}{1} {≥}{{\ucc{${\scriptstyle \geq}$}}}{1}
-{⊆}{{\ucc{${\scriptstyle \subseteq}$}}}{1}
-{⊇}{{\ucc{${\scriptstyle \supseteq}$}}}{1}
-{⊈}{{\ucc{${\scriptstyle \not\subseteq}$}}}{1}
-{⊉}{{\ucc{${\scriptstyle \not\supseteq}$}}}{1}
-{⊊}{{\ucc{${\scriptstyle \subsetneq}$}}}{1}
-{⊋}{{\ucc{${\scriptstyle \supsetneq}$}}}{1}
-{⊻}{{\ucc{${\scriptstyle \veebar}$}}}{1}  {⋅}{{\ucc{${\scriptstyle \cdot}$}}}{1}
+% operator! activate the command in line 361 in that case, too!
+{'}{{\uccop{\textquotesingle}}}{1}
+{×}{{\uccop{${\scriptstyle \times}$}}}{1}
+{÷}{{\uccop{${\scriptstyle \div}$}}}{1}
+{∈}{{\uccop{${\scriptstyle \in}$}}}{1}
+{∉}{{\uccop{${\scriptstyle \notin}$}}}{1}
+{∋}{{\uccop{${\scriptstyle \ni}$}}}{1}
+{∌}{{\uccop{${\scriptstyle \not\ni}$}}}{1}
+{∘}{{\uccop{${\scriptstyle \circ}$}}}{1}
+{√}{{\uccop{$\surd$}}}{1}
+{∛}{{\uccop{$\sqrt[3]{\vphantom{x}}$}}}{1}
+{∩}{{\uccop{${\scriptstyle \cap}$}}}{1}
+{∪}{{\uccop{${\scriptstyle \cup}$}}}{1}
+{≈}{{\uccop{${\scriptstyle \approx}$}}}{1}
+{≉}{{\uccop{${\scriptstyle \not\approx}$}}}{1}
+{≠}{{\uccop{${\scriptstyle \neq}$}}}{1}
+{≡}{{\uccop{${\scriptstyle \equiv}$}}}{1}
+{≢}{{\uccop{${\scriptstyle \not\equiv}$}}}{1}
+{≤}{{\uccop{${\scriptstyle \leq}$}}}{1}
+{≥}{{\uccop{${\scriptstyle \geq}$}}}{1}
+{⊆}{{\uccop{${\scriptstyle \subseteq}$}}}{1}
+{⊇}{{\uccop{${\scriptstyle \supseteq}$}}}{1}
+{⊈}{{\uccop{${\scriptstyle \not\subseteq}$}}}{1}
+{⊉}{{\uccop{${\scriptstyle \not\supseteq}$}}}{1}
+{⊊}{{\uccop{${\scriptstyle \subsetneq}$}}}{1}
+{⊋}{{\uccop{${\scriptstyle \supsetneq}$}}}{1}
+{⊻}{{\uccop{${\scriptstyle \veebar}$}}}{1}
+{⋅}{{\uccop{${\scriptstyle \cdot}$}}}{1}
 %
 % other mathematical symbols
 %
-{∇}{{\ucc{$\nabla$}}}{1} {⊗}{{\ucc{$\otimes$}}}{1} {⊕}{{\ucc{$\oplus$}}}{1}
-{‖}{{\ucc{$\Vert$}}}{1}
-{…}{{\ucc{$\ldots$}}}{3} {⋯}{{\ucc{$\cdots$}}}{3}
+{∇}{{\ucc{${\scriptstyle \nabla}$}}}{1}
+{⊗}{{\ucc{${\scriptstyle \otimes}$}}}{1}
+{⊕}{{\ucc{${\scriptstyle \oplus}$}}}{1}
+{‖}{{\ucc{${\scriptstyle \Vert}$}}}{1}
+{⊥}{{\ucc{${\scriptstyle \bot}$}}}{1}
+{ℓ}{{\ucc{${\scriptstyle \ell}$}}}{1}
+{∃}{{\ucc{${\scriptstyle \exists}$}}}{1}
+{∀}{{\ucc{${\scriptstyle \forall}$}}}{1}
+{ħ}{{\ucc{${\scriptstyle \hbar}$}}}{1}
+{ı}{{\ucc{${\scriptstyle \imath}$}}}{1}
+{ȷ}{{\ucc{${\scriptstyle \jmath}$}}}{1}
+{∄}{{\ucc{${\scriptstyle \exists}$}}}{1}
+{∂}{{\ucc{${\scriptstyle \partial}$}}}{1}
+{⊤}{{\ucc{${\scriptstyle \top}$}}}{1}
+{℘}{{\ucc{${\scriptstyle \wp}$}}}{1}
+{…}{{\ucc{${\scriptstyle \ldots}$}}}{3}
+{⋯}{{\ucc{${\scriptstyle \cdots}$}}}{3}
 {⋮}{{\ucc{${\scriptstyle \rvdots}$}}}{1}
 {⋱}{{\ucc{${\scriptstyle \rddots}$}}}{3}
 {⋰}{{\ucc{${\scriptstyle \riddots}$}}}{3}
-{∂}{{\ucc{$\partial$}}}{1}
+%
+% unicode box characters
+%
+{┌}{{\ucc{\textSFi}}}{1} {│}{{\ucc{\textSFxi}}}{1} {└}{{\ucc{\textSFii}}}{1}
+{─}{{\ucc{\textSFx}}}{1} {┄}{{\ucc{\textSFx}}}{1}
 %
 }
 
@@ -1197,7 +1345,7 @@ literate=
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% defining the \addlitjlbase and \addlitjlstring commands,
+% defining the \addlitjlbase and \addlitjlstrnum commands,
 % which help a user to fix some of the known managable issues
 \def\addToLiterate#1{%
 \protected@edef\lst@literate{%
@@ -1210,9 +1358,9 @@ literate=
   \lstset{language=julia, style=jlcodestyle}
 \fi
 }
-\newcommand{\addlitjlstring}[3]{%
+\newcommand{\addlitjlstrnum}[3]{%
 \lstset{style=jlcodeuccstyle}
-\lstdefinestyle{jlcodeuccstyle}{expandliterate={#1}{{{\color{jlstring}#2}}}{#3}}
+\lstdefinestyle{jlcodeuccstyle}{expandliterate={#1}{{{\color{jlstrnum}#2}}}{#3}}
 \ifjlc@autoload
   \lstset{language=julia, style=jlcodestyle}
 \fi
@@ -1227,19 +1375,33 @@ literate=
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% defining the \jlinl command, which can be used for dispalying inline code
-% defining the font for inline code
+% commands for inserting code
 
-\ifjlc@usecolors
-\def\jlinlfont{\loadcolors\color{jlstring}\ttfamily\small\selectfont}
-\else
-\def\jlinlfont{\loadbwcolors\ttfamily\small\selectfont}
-\fi
+% defining the \jlinputlisting command for listing standalone files
+\newcommand{\jlinputlisting}[1]{%
+\calcboxlengths%
+\lstinputlisting[language=julia, style=jlcodestyle]{#1}}
 
+
+% defining the \jllisting for displaying code directly
+\lstnewenvironment{jllisting}[2][]{%
+  \calcboxlengths%
+  \lst@TestEOLChar{#2}%
+  \lstset{#1}%
+  \csname\@lst @SetFirstNumber\endcsname%
+}{%
+  \@nobreakfalse
+  \csname\@lst @SaveFirstNumber\endcsname%
+}
+
+
+% defining the font for the inline code
+\def\jlinlfont{\loadthemecolors\color{jlstrnum}\ttfamily\relsize{-0.5}\selectfont}
+
+% defining the \jlinl for dispalying in-line code snippets
 \newlength{\jlinlem}
-\settowidth{\jlinlem}{\jlinlfont{m}}
-
 \newcommand{\jlinl}[1]{%
+\settowidth{\jlinlem}{\jlinlfont{m}}%
 \lstinline[language=julia,style=jlcodestyle,
 basicstyle=\jlinlfont,basewidth=\jlinlem]^^a7#1^^a7}
 
@@ -1252,43 +1414,46 @@ basicstyle=\jlinlfont,basewidth=\jlinlem]^^a7#1^^a7}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\lstdefinestyle{jlcodestyle}{%
+ style=jlcodeblockstyle,
+ style=jlcodeboxdfltstyle,
+ style=jlcodeopstyle,
+ style=jlcodeuccstyle}
+
+\ifdefstring{\jlc@theme}{dfltthemenobox}{%
+  \lstdefinestyle{jlcodestyle}{%
+   style=jlcodeblockstyle,
+   style=jlcodeboxnostyle,
+   style=jlcodeopstyle,
+   style=jlcodeuccstyle}
+}{}
+
+\ifdefstring{\jlc@theme}{bnwtheme}{%
+  \lstdefinestyle{jlcodestyle}{%
+   style=jlcodeblockstyle,
+   style=jlcodeboxdfltstyle,
+   style=jlcodeopstyle,
+   style=jlcodeuccstyle}
+}{}
+
+\ifdefstring{\jlc@theme}{bnwthemenobox}{%
+  \lstdefinestyle{jlcodestyle}{%
+   style=jlcodeblockstyle,
+   style=jlcodeboxnostyle,
+   style=jlcodeopstyle,
+   style=jlcodeuccstyle}
+}{}
+
+\ifdefstring{\jlc@theme}{darktheme}{%
+  \lstdefinestyle{jlcodestyle}{%
+   style=jlcodeblockstyle,
+   style=jlcodeboxdthstyle,
+   style=jlcodeopstyle,
+   style=jlcodeuccstyle}
+}{}
+
+
 % activating the julia style
-
-\ifjlc@usecolors
-\ifjlc@usebox
-  \lstdefinestyle{jlcodestyle}{%
-   style=jlcodeblockstyle,
-   style=jlcodeboxstyle,
-   style=jlcodecolorstyle,
-   style=jlcodeopstyle,
-   style=jlcodeuccstyle
-  }
-\else
-  \lstdefinestyle{jlcodestyle}{%
-   style=jlcodeblockstyle,
-   style=jlcodecolorstyle,
-   style=jlcodeopstyle,
-   style=jlcodeuccstyle
-  }
-\fi
-\else
-\ifjlc@usebox
-  \lstdefinestyle{jlcodestyle}{%
-   style=jlcodeblockstyle,
-   style=jlcodeboxstyle,
-   style=jlcodeopstyle,
-   style=jlcodeuccstyle,
-  }
-\else
-  \lstdefinestyle{jlcodestyle}{%
-   style=jlcodeblockstyle,
-   style=jlcodeopstyle,
-   style=jlcodeuccstyle
-  }
-\fi
-\fi
-
-
 \ifjlc@autoload
   \lstset{language=julia, style=jlcodestyle}
 \fi

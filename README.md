@@ -16,49 +16,62 @@ This work has the LPPL maintenance status 'maintained'.
 The Current Maintainer of this work is GitHub user wg030.
 
 This work consists of the files
-_jlcode.sty_, _createlists.jl_, _testfile1.jl_, _testfile2.jl_, and _manual.pdf_.
+_jlcode.sty_, _createlists.jl_, _testfile1.jl_, _testfile2.jl_ and _manual.pdf_.
 
 
 ## Short Package Description
-The _jlcode.sty_ is a latex package, which contains a Julia language definition
-for the listings package as well as a style definition.  
-Check out the manual (_manual.pdf_), which explains all package options and also shows
-how the Julia code from _testfile.jl_ and _testfile2.jl_ looks when displayed.
+The _jlcode.sty_ is a latex package, which contains a Julia language definition  
+for the listings package as well as a style definitions with different themes.  
+Check out the manual (_manual.pdf_), which explains all package options and   
+also shows how the Julia code from _testfile.jl_ and _testfile2.jl_ looks when displayed.
 
 
 ## Current State
-**Current version** of the jlcode package: **4.1.1**.  
+**Current version** of the jlcode package: **5.0**.  
 Date of creation: 2018/01/25  
-Date of last modification: 2020/08/04
+Date of last modification: 2020/11/25
 
 ### Keywords
-The lists for the keywords, literals, built-ins, macros and string types for
-this language definition were created with the julia script _createlists.jl_,
-which was strongly inspired by the approach of the following script:
+The lists for the keywords, literals, built-ins, macros and string types for  
+this language definition were created with the julia script _createlists.jl_, which  
+was strongly inspired by the approach of the following script:  
 [https://github.com/isagalaev/highlight.js/blob/master/src/languages/julia.js](https://github.com/isagalaev/highlight.js/blob/master/src/languages/julia.js).
 
 ### Colors
-All colors for this language definition were taken from the files  
-[https://docs.julialang.org/en/latest/assets/themes/documenter-light.css](https://docs.julialang.org/en/latest/assets/themes/documenter-light.css) and  
-[https://docs.julialang.org/en/latest/assets/documenter.css](https://docs.julialang.org/en/latest/assets/documenter.css).  
+All colors for the default theme of this package were taken from the file  
+[https://docs.julialang.org/en/v1/assets/themes/documenter-light.css](https://docs.julialang.org/en/v1/assets/themes/documenter-light.css)  
+and  all colors for the dark theme of this package were taken from the file  
+[https://github.com/dietercastel/jlcode/blob/darktheme/jlcode.sty](https://github.com/dietercastel/jlcode/blob/darktheme/jlcode.sty), which  
+contains a contribution from "dietercastel" who put toegther this great theme,  
+which is designed to be ideally suited for the dark-beamer-theme.  
 
 ### Special Unicode Characters
 All unicode characters that are supported by Julia can be found under  
-[https://docs.julialang.org/en/latest/manual/unicode-input/](https://docs.julialang.org/en/latest/manual/unicode-input/).
+[https://docs.julialang.org/en/v1/manual/unicode-input/](https://docs.julialang.org/en/v1/manual/unicode-input/).
 
 Right now the following of them have already been added to jlcode package, too:
 * Most common special characters that appear in latin languages.
 * All greek small and capital letters.
 * All latin and greek letters with dot, double dot, tilde, hat or bar above.
+* All latin double-struck, script and fraktur capital letters.
 * All superscripts and subscripts (except for the latin small letter schwa).
 * Some mathematical operators and symbols.
+* All characters which are used for drawing unicode boxes.
 
 
-## What's New in Version 4.1.1?
-* The package option _courierasttdflt_ has been added.
-* Keywords, literals, built-ins and macros have been refreshed according to
-  Julia 1.4.2 and functions have been added.
-* The mathematical symbol for the partial derivative has been added.
+## What's New in Version 5.0?
+* The package option `theme` has been added.
+* The package options `usecolors`, `usebox`, `nocolors` and `nobox` have  
+  been removed for the benefit of the option `theme`.
+* Keywords, literals, built-ins, macros and functions have been refreshed  
+  according to Julia 1.5.3.
+* All latin double-struck, script and fraktur capital letters have
+  been added.
+* A few more mathematical symbols have been added.
+* All characters which are used for drawing unicode boxes have been added.
+* The font size now automatically scales with the size of the current
+  active font.
+* The `\addlitjlstring` command has been renamed to `\addlitjlstrnum`.
 * A few typing errors have been corrected.
 
 
@@ -66,89 +79,78 @@ Right now the following of them have already been added to jlcode package, too:
 
 ### Standard Use
 Copy the _jlcode.sty_ file to same folder of your latex file and add the  
-following line to your latex document header, which will load the package with  
-its default options:
+following line to your latex document header, which will load the  
+package with its default options:
 
     \usepackage{jlcode}
 
 Then use the package as follows:
 
     % listing of standalone files
-    \lstinputlisting{filename.jl}
+    \jlinputlisting{filename.jl}
 
     % displayed code
-    \begin{lstlisting}
+    \begin{jllisting}
     # some julia code
     println( "Here we go with Julia!")
-    \end{lstlisting}
+    \end{jllisting}
 
     % code snippets
     Julia's standard library contains some useful macros like \jlinl{@time}.
 
 ### The Option **autoload**
-If you have to display not only Julia code with the listings package, it is  
-best to not load the Julia style automatically because otherwise your are very  
-likely to get some unwanted ugly interferences.
+If you have to display not only Julia code with the listings package,  
+it is   best to not load the Julia style automatically because otherwise  
+your are very   likely to get some unwanted ugly interferences.
 
     \usepackage[autoload=false]{jlcode}
 
 With that option you can then use the style only when it is really needed:
 
     % listing of standalone files
-    \lstinputlisting[language=julia, style=jlcodestyle]{filename.jl}
+    \jlinputlisting[language=julia, style=jlcodestyle]{filename.jl}
 
     % displayed code
-    \begin{lstlisting}[language=julia, style=jlcodestyle]
+    \begin{jllisting}[language=julia, style=jlcodestyle]
     # some julia code
     println( "Here we go with Julia!")
-    \end{lstlisting}
+    \end{jllisting}
 
     % code snippets
     Julia's standard library contains some useful macros like \jlinl{@time}.
 
 The default behaviour is `autoload=true`.
 
-### The Options **usecolors** and **usebox**
-If you want to highlight your code with some nice colors use
+### The Option **theme**
+If you want to highlight your code with some nice colors and/or a nice  
+surrounding box, choose one of the following five themes:
 
-    \usepackage[usecolors=true]{jlcode}
+    \usepackage[theme=dflttheme]{jlcode}
+    %\usepackage[theme=dfltthemenobox]{jlcode}
+    %\usepackage[theme=bnwtheme]{jlcode}
+    %\usepackage[theme=bnwthemenobox]{jlcode}
+    %\usepackage[theme=darktheme]{jlcode}
 
-and if you want to have the code surrounded by a nice box, do it this way:
-
-    \usepackage[usebox=true]{jlcode}
-
-The default values are `usecolors=true` and `usebox=true`.
-
-### The Options **nocolors** and **nobox**
-If you want to print your code in black and white instead of coloured use
-
-    \usepackage[nocolors=true]{jlcode}
-
-and if you don't want to have a code box, do it this way:
-
-    \usepackage[nobox=true]{jlcode}
-
-The default values are `nocolors=false` and `nobox=false`.
+The default value is `theme=dflttheme`.
 
 ### The Option **charsperline**
-If you decide not to get rid of the code box, you can control its number of  
-characters per line with this option, i.e. influence the width of the box.  
-However make sure your code respects the limit since otherwise some of the  
-displayed code will be out of the box.
+If you decide to go with a theme that has a code box, you can control its  
+number of   characters per line with this option, i.e. influence the width of  
+the box. However make sure your code respects the limit since otherwise  
+some of the displayed code will be out of the box.
 
     \usepackage[charsperline=65]{jlcode}
 
-The default value is `charsperline=80`. Moreover note that with `nobox=true`
-or `usebox=false` this option has no effect at all.
+The default value is `charsperline=80`.
 
 ### Known Managable Issues
-Since it is rather difficult to handle special unicode characters with the
-listings package, there are some issues that can appear in special cases when
-using the jlcode package.  
-Most of them have to do with the fact that the listings package does not seem to
-offer an option, that makes it possible to force a special unicode character,
-for example a small greek beta, to be treated like a normal letter. Having said
-this the command
+Since it is rather difficult to handle special unicode characters with the  
+listings package, there are some issues that can appear in special cases  
+when using the jlcode package.  
+Most of them have to do with the fact that the listings package does not  
+seem to offer an option, that makes it possible to force a special unicode  
+character, for example a small greek beta, to be treated like a normal letter.  
+Having said this the command
 
     \lstdefinelanguage{julia}
     {
@@ -158,10 +160,10 @@ this the command
     }
 
 of the listings package unfortunately causes an error.  
-However the problems that can occur due to this circumstance can be repaired
-manually. For that purpose two commands have been implemented in the jlcode
-package. The easiest way to show how they work is giving some examples. So here
-are the known managable issues and how to fix them with the jlcode package:  
+However the problems that can occur due to this circumstance can be repaired  
+manually. For that purpose two commands have been implemented in the jlcode  
+package. The easiest way to show how they work is giving some examples. So  
+here are the known managable issues and how to fix them with the jlcode package:  
 (See the provided example files).
 * identifier name with a number that follows directly behind a special unicode
 character:
@@ -192,8 +194,8 @@ character:
 
     * latex commands for fixing it:
 
-            \addlitjlstring{e400}{e400}{4}
-            \addlitjlstring{E400}{E400}{4}
+            \addlitjlstrnum{e400}{e400}{4}
+            \addlitjlstrnum{E400}{E400}{4}
 
 * single characters:
     * example:
@@ -204,12 +206,13 @@ character:
 
     * latex commands for fixing it:
 
-            \addlitjlstring{'W'}{\textquotesingle W\textquotesingle}{3}
-            \addlitjlstring{'€'}{\textquotesingle \euro\textquotesingle}{3}
-            \addlitjlstring{'ϰ'}{\textquotesingle $\varkappa$\textquotesingle}{3}
+            \addlitjlstrnum{'W'}{\textquotesingle W\textquotesingle}{3}
+            \addlitjlstrnum{'€'}{\textquotesingle \euro\textquotesingle}{3}
+            \addlitjlstrnum{'ϰ'}{\textquotesingle $\varkappa$\textquotesingle}{3}
 
 
 ## Feel Free to Contribute
-Please feel free to contribute and report bugs!
-It would be especially appreciated if you helped me adding support for more
-special unicode characters.
+Please feel free to contribute and report bugs!  
+
+It would be especially appreciated if you helped me  
+adding support for more special unicode characters.
