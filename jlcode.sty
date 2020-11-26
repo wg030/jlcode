@@ -39,8 +39,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % defining the jlcode package
-\def\fileversion{5.0}
-\def\filedate{2020/11/25}
+\def\fileversion{5.1}
+\def\filedate{2020/11/26}
 
 \typeout{-- Package: `jlcode' \fileversion\space <\filedate> --}
 \NeedsTeXFormat{LaTeX2e}
@@ -79,9 +79,10 @@
 
 % defining package options
 \DeclareBoolOption[true]{autoload}
-\DeclareBoolOption[true]{courierasttdflt}
+\DeclareBoolOption[true]{usecourier}
 \DeclareStringOption[80]{charsperline}
-\DeclareStringOption[dflttheme]{theme}[dflttheme]
+\DeclareStringOption[default]{theme}[default]
+\DisableKeyvalOption[action=error,package=jlcode]{jlc}{courierasttdflt}
 \DisableKeyvalOption[action=error,package=jlcode]{jlc}{usecolors}
 \DisableKeyvalOption[action=error,package=jlcode]{jlc}{usebox}
 \DisableKeyvalOption[action=error,package=jlcode]{jlc}{usecolors}
@@ -389,7 +390,7 @@ morestring=[s]{var"}{"},%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % default color theme
-\newcommand{\loaddfltcolors}{%
+\newcommand{\loaddefaultcolors}{%
 \definecolor{jlbase}{HTML}{444444}%         % julia's base color
 \definecolor{jlkeyword}{HTML}{444444}%      % julia's keywords
 \definecolor{jlliteral}{HTML}{78A960}%      % julia's literals
@@ -404,15 +405,15 @@ morestring=[s]{var"}{"},%
 \definecolor{jllinenumbers}{HTML}{000000}%  % the line numbers of the code block
 }
 
-\newcommand{\loadthemecolors}{\loaddfltcolors}
+\newcommand{\loadthemecolors}{\loaddefaultcolors}
 
-\ifdefstring{\jlc@theme}{dfltthemenobox}{%
-\renewcommand{\loadthemecolors}{\loaddfltcolors}}{}
+\ifdefstring{\jlc@theme}{default-plain}{%
+\renewcommand{\loadthemecolors}{\loaddefaultcolors}}{}
 
 
 
 % black and white color theme
-\newcommand{\loadbwcolors}{%
+\newcommand{\loadgrayscalecolors}{%
 \definecolor{jlbase}{HTML}{000000}%         % julia's base color
 \definecolor{jlkeyword}{HTML}{000000}%      % julia's keywords
 \definecolor{jlliteral}{HTML}{000000}%      % julia's literals
@@ -427,17 +428,17 @@ morestring=[s]{var"}{"},%
 \definecolor{jllinenumbers}{HTML}{000000}%  % the line numbers of the code block
 }
 
-\ifdefstring{\jlc@theme}{bnwtheme}{%
-\renewcommand{\loadthemecolors}{\loadbwcolors}}{}
-\ifdefstring{\jlc@theme}{bnwthemenobox}{%
-\renewcommand{\loadthemecolors}{\loadbwcolors}}{}
+\ifdefstring{\jlc@theme}{grayscale}{%
+\renewcommand{\loadthemecolors}{\loadgrayscalecolors}}{}
+\ifdefstring{\jlc@theme}{grayscale-plain}{%
+\renewcommand{\loadthemecolors}{\loadgrayscalecolors}}{}
 
 
 
 % dark color theme
 % big thanks to "dietercastel" who put toegther this awesome dark theme,
 % which is designed to be ideally suited for the dark-beamer-theme
-\newcommand{\loaddthcolors}{%
+\newcommand{\loaddarkbeamercolors}{%
 \definecolor{jlbase}{HTML}{66FFCC}%         % julia's base color
 \definecolor{jlkeyword}{HTML}{F9F2D7}%      % julia's keywords
 \definecolor{jlliteral}{HTML}{9B9B9B}%      % julia's literals
@@ -452,8 +453,8 @@ morestring=[s]{var"}{"},%
 \definecolor{jllinenumbers}{HTML}{F5AB35}%  % the line numbers of the code block
 }
 
-\ifdefstring{\jlc@theme}{darktheme}{%
-\renewcommand{\loadthemecolors}{\loaddthcolors}}{}
+\ifdefstring{\jlc@theme}{darkbeamer}{%
+\renewcommand{\loadthemecolors}{\loaddarkbeamercolors}}{}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -463,7 +464,7 @@ morestring=[s]{var"}{"},%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % use courier as typewriter font
-\ifjlc@courierasttdflt
+\ifjlc@usecourier
   \renewcommand{\ttdefault}{pcr}
 \fi
 
@@ -1420,7 +1421,7 @@ basicstyle=\jlinlfont,basewidth=\jlinlem]^^a7#1^^a7}
  style=jlcodeopstyle,
  style=jlcodeuccstyle}
 
-\ifdefstring{\jlc@theme}{dfltthemenobox}{%
+\ifdefstring{\jlc@theme}{default-plain}{%
   \lstdefinestyle{jlcodestyle}{%
    style=jlcodeblockstyle,
    style=jlcodeboxnostyle,
@@ -1428,7 +1429,7 @@ basicstyle=\jlinlfont,basewidth=\jlinlem]^^a7#1^^a7}
    style=jlcodeuccstyle}
 }{}
 
-\ifdefstring{\jlc@theme}{bnwtheme}{%
+\ifdefstring{\jlc@theme}{grayscale}{%
   \lstdefinestyle{jlcodestyle}{%
    style=jlcodeblockstyle,
    style=jlcodeboxdfltstyle,
@@ -1436,7 +1437,7 @@ basicstyle=\jlinlfont,basewidth=\jlinlem]^^a7#1^^a7}
    style=jlcodeuccstyle}
 }{}
 
-\ifdefstring{\jlc@theme}{bnwthemenobox}{%
+\ifdefstring{\jlc@theme}{grayscale-plain}{%
   \lstdefinestyle{jlcodestyle}{%
    style=jlcodeblockstyle,
    style=jlcodeboxnostyle,
@@ -1444,7 +1445,7 @@ basicstyle=\jlinlfont,basewidth=\jlinlem]^^a7#1^^a7}
    style=jlcodeuccstyle}
 }{}
 
-\ifdefstring{\jlc@theme}{darktheme}{%
+\ifdefstring{\jlc@theme}{darkbeamer}{%
   \lstdefinestyle{jlcodestyle}{%
    style=jlcodeblockstyle,
    style=jlcodeboxdthstyle,

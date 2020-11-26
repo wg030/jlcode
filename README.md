@@ -27,9 +27,9 @@ also shows how the Julia code from _testfile.jl_ and _testfile2.jl_ looks when d
 
 
 ## Current State
-**Current version** of the jlcode package: **5.0**.  
+**Current version** of the jlcode package: **5.1**.  
 Date of creation: 2018/01/25  
-Date of last modification: 2020/11/25
+Date of last modification: 2020/11/26
 
 ### Keywords
 The lists for the keywords, literals, built-ins, macros and string types for  
@@ -40,7 +40,7 @@ was strongly inspired by the approach of the following script:
 ### Colors
 All colors for the default theme of this package were taken from the file  
 [https://docs.julialang.org/en/v1/assets/themes/documenter-light.css](https://docs.julialang.org/en/v1/assets/themes/documenter-light.css)  
-and  all colors for the dark theme of this package were taken from the file  
+and  all colors for the darkbeamer theme of this package were taken from the file  
 [https://github.com/dietercastel/jlcode/blob/darktheme/jlcode.sty](https://github.com/dietercastel/jlcode/blob/darktheme/jlcode.sty), which  
 contains a contribution from "dietercastel" who put toegther this great theme,  
 which is designed to be ideally suited for the dark-beamer-theme.  
@@ -59,8 +59,9 @@ Right now the following of them have already been added to jlcode package, too:
 * All characters which are used for drawing unicode boxes.
 
 
-## What's New in Version 5.0?
+## What's New in Version 5.1?
 * The package option `theme` has been added.
+* The package option `courierasttdflt` has been renamed to `usecourier`.
 * The package options `usecolors`, `usebox`, `nocolors` and `nobox` have  
   been removed for the benefit of the option `theme`.
 * Keywords, literals, built-ins, macros and functions have been refreshed  
@@ -125,13 +126,25 @@ The default behaviour is `autoload=true`.
 If you want to highlight your code with some nice colors and/or a nice  
 surrounding box, choose one of the following five themes:
 
-    \usepackage[theme=dflttheme]{jlcode}
-    %\usepackage[theme=dfltthemenobox]{jlcode}
-    %\usepackage[theme=bnwtheme]{jlcode}
-    %\usepackage[theme=bnwthemenobox]{jlcode}
-    %\usepackage[theme=darktheme]{jlcode}
+    \usepackage[theme=default]{jlcode}
+    %\usepackage[theme=default-plain]{jlcode}
+    %\usepackage[theme=grayscale]{jlcode}
+    %\usepackage[theme=grayscale-plain]{jlcode}
+    %\usepackage[theme=darkbeamer]{jlcode}
 
-The default value is `theme=dflttheme`.
+The default value is `theme=default`.
+
+### The Option **usecourier**
+If you want to use Courier as the default typewriter font, set this option  
+to true. Note that only the typewriter font will be affected and that this  
+is the recommended option.  
+If you want to go with another typewriter font for the code, set this option  
+to false and make sure yout load the font before loading the jlcode package.
+
+    \usepackage[usecourier=true]{jlcode}
+    %\usepackage[usecourier=false]{jlcode}
+
+The default value is `usecourier=true`.
 
 ### The Option **charsperline**
 If you decide to go with a theme that has a code box, you can control its  
