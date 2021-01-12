@@ -596,7 +596,7 @@ opliterate=*
 {=}{{\opc{=}}}{1} {>}{{\opc{>}}}{1} {?}{{\opc{?}}}{1} {[}{{\opc{[}}}{1}
 {\\}{{\opc{\lstum@backslash}}}{1} {]}{{\opc{]}}}{1} {^}{{\opc{\^{}}}}{1}
 {\{}{{\opc{\{}}}{1} {|}{{\opc{|}}}{1} {\}}{{\opc{\}}}}{1}
-{~}{{\opc{\textasciitilde{}}}}{1}
+{~}{{\opc{\raisebox{0.5ex}{\texttildelow{}}}}}{1}
 %
 % julia's numbers
 %
@@ -738,7 +738,7 @@ literate=
 {Τ}{{\ucc{T}}}{1} {Υ}{{\ucc{$\Upsilon$}}}{1} {Φ}{{\ucc{$\Phi$}}}{1}
 {Χ}{{\ucc{X}}}{1} {Ψ}{{\ucc{$\Psi$}}}{1} {Ω}{{\ucc{$\Omega$}}}{1}
 %
-% mircro sign + latin small letter open e
+% micro sign, latin small letter open e, script small e
 %
 {µ}{{\ucc{$\mu$}}}{1} {ɛ}{{\ucc{$\varepsilon$}}}{1}
 {ℯ}{{\ucclit{$e$}}}{1}
@@ -1331,12 +1331,21 @@ literate=
 {⋮}{{\ucc{${\scriptstyle \rvdots}$}}}{1}
 {⋱}{{\ucc{${\scriptstyle \rddots}$}}}{3}
 {⋰}{{\ucc{${\scriptstyle \riddots}$}}}{3}
+{§}{{\ucc{\S}}}{1}
+{⟨}{{\ucc{${\langle}$}}}{1}
+{⟩}{{\ucc{${\rangle}$}}}{1}
+{→}{{\ucc{${\rightarrow}$}}}{2}
+{←}{{\ucc{${\leftarrow}$}}}{2}
+{⤳}{{\ucc{${\leadsto}$}}}{2}
+{′}{{\ucc{${{}^\prime}$}}}{1}
 %
 % unicode box characters
 %
-{┌}{{\ucc{\textSFi}}}{1} {│}{{\ucc{\textSFxi}}}{1} {└}{{\ucc{\textSFii}}}{1}
-{─}{{\ucc{\textSFx}}}{1} {┄}{{\ucc{\textSFx}}}{1}
-%
+{┌}{{\ucc{\textSFi}}}{1}
+{│}{{\ucc{\textSFxi}}}{1}
+{└}{{\ucc{\textSFii}}}{1}
+{─}{{\ucc{\textSFx}}}{1}
+{┄}{{\ucc{\textSFx}}}{1}
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
