@@ -28,8 +28,10 @@ modulelist = [
 
 keywords, literals = SortedSet{String}(), SortedSet{String}()
 builtins, macros = SortedSet{String}(), SortedSet{String}()
-functions, vurest = SortedSet{String}(), SortedSet{String}()
-allmod, strprefixes = SortedSet{String}(), SortedSet{String}()
+functions, functions! = SortedSet{String}(), SortedSet{String}()
+vurest, allmod = SortedSet{String}(), SortedSet{String}()
+strprefixes = SortedSet{String}()
+
 
 
 
@@ -63,6 +65,9 @@ for modstr ∈ modulelist
         # functions
         elseif neval isa Function
             push!( functions, nstr)
+            if nstr[end] == '!'
+                push!( functions!, nstr)
+            end
         # very unimportant rest
         else
             push!( vurest, nstr)
@@ -84,6 +89,7 @@ oplist = ["=>", "!", "!=", "!==", "%", "&", "'", "*", "+", "-", "/", "//", ":",
 "≠", "≡", "≢", "≤", "≥", "⊆", "⊇", "⊈", "⊉", "⊊", "⊋", "⊻", "⋅"]
 setdiff!( builtins, oplist)
 setdiff!( functions, oplist)
+setdiff!( functions!, oplist)
 union!( vurest, oplist)
 
 
@@ -122,6 +128,27 @@ function PrintList( list, listname)
 
 end
 
+
+function PrintLiterates( list)
+
+    println( "julia's functions ending with '!'")
+    curlength = 0
+    for el ∈ list
+        mod_el = "{$(el)}{{\\funcc{$(el)}}}{$(length(el))}"
+        if curlength + length(mod_el) > 80
+            print("\n")
+            curlength = 0
+        end
+        print( mod_el, " ")
+        curlength = curlength + length( mod_el) + 1
+    end
+    println( "\n")
+
+end
+
+
+
+
 # printing all lists
 PrintList( keywords, "KEYWORDS")
 PrintList( literals, "LITERALS")
@@ -130,3 +157,4 @@ PrintList( macros, "MACROS")
 PrintList( functions, "FUNCTIONS")
 PrintList( strprefixes, "STRING PREFIXES")
 PrintList( vurest, "VERY UNIMPORTANT REST")
+PrintLiterates( functions!)

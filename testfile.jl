@@ -24,6 +24,7 @@ function Style_4th_Test(x, y)
     z1vec = rand(Int8, 3)
     z₂vec = Array{Int8}(undef, 3)
     z₂vec[1:2] = [x % y, y \ x]
+    reverse!(z1vec)
     t = x % 2 == 0 ? x : x + 1
     t̄ = ~(t & x | y) ⊻ y
     myτ̂var = t̄ & t $ t

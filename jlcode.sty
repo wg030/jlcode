@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%
 %%% jlcode.sty
-%%% Copyright 2018 GitHub user wg030
+%%% Copyright 2018 Willi Gerbig
 %%
 %% This work may be distributed and/or modified under the
 %% conditions of the LaTeX Project Public License, either
@@ -14,22 +14,25 @@
 %%
 %% This work has the LPPL maintenance status 'maintained'.
 %%
-%% The Current Maintainer of this work is GitHub user wg030.
+%% The Current Maintainer of this work is Willi Gerbig.
 %%
 %% This work consists of the files jlcode.sty, createkwlists.jl,
-%% testfile1.jl, testfile2.jl, example.tex and the derived file
-%% example.pdf.
+%% createucclist.jl, testfile.jl, testfile2.jl and manual.pdf.
 %%
 %%
 %%
-% keywords, literals, built-ins, macros and functions were created by
+% Keywords, literals, built-ins, macros and functions were created by
 % createkwlists.jl, which was inspired by the following script:
 % https://github.com/isagalaev/highlight.js/blob/master/src/languages/julia.js
-% colors for the themes come from:
+% Colors for the themes come from:
 % https://docs.julialang.org/en/v1/assets/themes/documenter-light.css
 % https://github.com/dietercastel/jlcode/blob/darktheme/jlcode.sty
 % special unicode characters come from:
 % https://docs.julialang.org/en/v1/manual/unicode-input/
+% The JuliaMono font approach was inspired by
+% https://github.com/mossr/julia-mono-listings
+% and the JuliaMono font files were downloaded from:
+% https://github.com/mossr/julia-mono-listings
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -39,8 +42,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % defining the jlcode package
-\def\fileversion{6.0}
-\def\filedate{2020/09/14}
+\def\fileversion{6.1}
+\def\filedate{2022/05/03}
 
 \typeout{-- Package: `jlcode' \fileversion\space <\filedate> --}
 \NeedsTeXFormat{LaTeX2e}
@@ -140,8 +143,8 @@ RTLD_DEEPBIND,RTLD_FIRST,RTLD_GLOBAL,RTLD_LAZY,RTLD_LOCAL,RTLD_NODELETE,%
 RTLD_NOLOAD,RTLD_NOW,RoundDown,RoundFromZero,RoundNearest,RoundNearestTiesAway,%
 RoundNearestTiesUp,RoundToZero,RoundUp,STDLIB,Sat,Saturday,Sep,September,Sun,%
 Sunday,Thu,Thursday,Tue,Tuesday,UPLEVEL_MAJOR,UPLEVEL_MINOR,UPLEVEL_PATCH,%
-VERSION,WORD_SIZE,Wed,Wednesday,catalan,devnull,dlext,e,eulergamma,false,%
-golden,im,missing,nothing,pi,stderr,stdin,stdout,true,undef,γ,π,φ,ℯ%
+VERSION,Vararg,WORD_SIZE,Wed,Wednesday,catalan,devnull,dlext,e,eulergamma,%
+false,golden,im,missing,nothing,pi,stderr,stdin,stdout,true,undef,γ,π,φ,ℯ%
 },%
 %
 % julia's built-ins:
@@ -159,47 +162,48 @@ BitArray,BitMatrix,BitSet,BitVector,Bool,BoundsError,BroadcastFunction,%
 BroadcastStyle,BunchKaufman,CachingPool,CapturedException,CartesianIndex,%
 CartesianIndices,Cchar,Cdouble,Cfloat,Channel,Char,Cholesky,CholeskyPivoted,%
 Cint,Cintmax_t,Clong,Clonglong,ClusterManager,Cmd,CodeInfo,CodeInstance,Colon,%
-Complex,ComplexF16,ComplexF32,ComplexF64,ComposedFunction,CompositeException,%
-Condition,ConsoleLogger,Const,Cptrdiff_t,Cshort,Csize_t,Cssize_t,Cstring,%
-Cuchar,Cuint,Cuintmax_t,Culong,Culonglong,Cushort,Cvoid,Cwchar_t,Cwstring,%
-DataType,Date,DateFormat,DatePeriod,DateTime,Day,DenseArray,DenseMatrix,%
-DenseVecOrMat,DenseVector,Diagonal,Dict,DimensionMismatch,Dims,DivideError,%
-DomainError,Downloader,EOFError,Eigen,Enum,ErrorException,Event,Exception,%
-ExponentialBackOff,Expr,FDWatcher,FILE,Factorization,FileMonitor,Float16,%
-Float32,Float64,FolderMonitor,Function,Future,GeneralizedEigen,GeneralizedSVD,%
-GeneralizedSchur,GenericArray,GenericDict,GenericOrder,GenericSet,%
-GenericString,GitConfig,GitRepo,GlobalRef,GotoIfNot,GotoNode,HMAC_CTX,HTML,%
-Hermitian,Hessenberg,Hour,IO,IOBuffer,IOContext,IOStream,IPAddr,IPv4,IPv6,%
-IdDict,IndexCartesian,IndexLinear,IndexStyle,InexactError,InitError,Int,Int128,%
-Int16,Int32,Int64,Int8,Integer,InterruptException,InvalidStateException,%
-Irrational,KeyError,LAPACKException,LDLt,LQ,LU,LinRange,LineEditREPL,%
-LineInfoNode,LineNumberNode,LinearIndices,LoadError,LogLevel,LowerTriangular,%
-MIME,Matrix,MersenneTwister,Method,MethodError,MethodInstance,Microsecond,%
-Millisecond,Minute,Missing,MissingException,Module,Month,NTuple,NamedTuple,%
-Nanosecond,NewvarNode,Nothing,NullLogger,Number,OrdinalRange,OutOfMemoryError,%
-OverflowError,PackageMode,Pair,PartialQuickSort,PartialStruct,Period,%
+ColumnNorm,Complex,ComplexF16,ComplexF32,ComplexF64,ComposedFunction,%
+CompositeException,ConcurrencyViolationError,Condition,ConsoleLogger,Const,%
+Cptrdiff_t,Cshort,Csize_t,Cssize_t,Cstring,Cuchar,Cuint,Cuintmax_t,Culong,%
+Culonglong,Cushort,Cvoid,Cwchar_t,Cwstring,DataType,Date,DateFormat,DatePeriod,%
+DateTime,Day,DenseArray,DenseMatrix,DenseVecOrMat,DenseVector,Diagonal,Dict,%
+DimensionMismatch,Dims,DivideError,DomainError,Downloader,EOFError,Eigen,Enum,%
+ErrorException,Event,Exception,ExponentialBackOff,Expr,FDWatcher,FILE,%
+Factorization,FileMonitor,Float16,Float32,Float64,FolderMonitor,Function,%
+Future,GeneralizedEigen,GeneralizedSVD,GeneralizedSchur,GenericArray,%
+GenericDict,GenericOrder,GenericSet,GenericString,GitConfig,GitRepo,GlobalRef,%
+GotoIfNot,GotoNode,HMAC_CTX,HTML,Hermitian,Hessenberg,Hour,IO,IOBuffer,%
+IOContext,IOStream,IPAddr,IPv4,IPv6,IdDict,IndexCartesian,IndexLinear,%
+IndexStyle,InexactError,InitError,Int,Int128,Int16,Int32,Int64,Int8,Integer,%
+InterruptException,InvalidStateException,Irrational,KeyError,LAPACKException,%
+LDLt,LQ,LU,LinRange,LineEditREPL,LineInfoNode,LineNumberNode,LinearIndices,%
+LoadError,LogLevel,LowerTriangular,MIME,Matrix,MersenneTwister,Method,%
+MethodError,MethodInstance,Microsecond,Millisecond,Minute,Missing,%
+MissingException,Module,Month,NTuple,NamedTuple,Nanosecond,NewvarNode,NoPivot,%
+Nothing,NullLogger,Number,OrdinalRange,OutOfMemoryError,OverflowError,%
+PackageMode,PackageSpec,Pair,PartialQuickSort,PartialStruct,Period,%
 PermutedDimsArray,PhiCNode,PhiNode,PiNode,Pipe,PollingFileWatcher,%
 PosDefException,PreserveLevel,ProcessExitedException,ProcessFailedException,%
 Ptr,QR,QRPivoted,Quarter,QuoteNode,RandomDevice,RankDeficientException,%
 Rational,RawFD,ReadOnlyMemoryError,Real,ReentrantLock,Ref,Regex,RegexMatch,%
 RegistrySpec,RemoteChannel,RemoteException,RequestError,Response,ReturnNode,%
-RoundingMode,SHA1_CTX,SHA224_CTX,SHA256_CTX,SHA2_224_CTX,SHA2_256_CTX,%
-SHA2_384_CTX,SHA2_512_CTX,SHA384_CTX,SHA3_224_CTX,SHA3_256_CTX,SHA3_384_CTX,%
-SHA3_512_CTX,SHA512_CTX,SSAValue,SVD,Schur,Second,SegmentationFault,Serializer,%
-Set,SharedArray,SharedMatrix,SharedVector,Signed,SimpleLogger,%
-SingularException,Slot,SlotNumber,Some,SparseMatrixCSC,SparseVector,SpinLock,%
-StackFrame,StackOverflowError,StackTrace,StepRange,StepRangeLen,StreamREPL,%
-StridedArray,StridedMatrix,StridedVecOrMat,StridedVector,String,%
-StringIndexError,SubArray,SubString,SubstitutionString,SymTridiagonal,Symbol,%
-Symmetric,SystemError,TCPSocket,Task,TaskFailedException,TestSetException,Text,%
-TextDisplay,Time,TimePeriod,TimeType,TimeZone,Timer,TmStruct,Transpose,%
-Tridiagonal,Tuple,Type,TypeError,TypeVar,TypedSlot,UDPSocket,UInt,UInt128,%
-UInt16,UInt32,UInt64,UInt8,UTC,UUID,UndefInitializer,UndefKeywordError,%
-UndefRefError,UndefVarError,UniformScaling,Union,UnionAll,UnitLowerTriangular,%
-UnitRange,UnitUpperTriangular,Unsigned,UpgradeLevel,UpperHessenberg,%
-UpperTriangular,UpsilonNode,Val,Vararg,VecElement,VecOrMat,Vector,%
-VersionNumber,WeakKeyDict,WeakRef,Week,WorkerConfig,WorkerPool,Year,%
-ZeroPivotException%
+Returns,RoundingMode,RowMaximum,SHA1_CTX,SHA224_CTX,SHA256_CTX,SHA2_224_CTX,%
+SHA2_256_CTX,SHA2_384_CTX,SHA2_512_CTX,SHA384_CTX,SHA3_224_CTX,SHA3_256_CTX,%
+SHA3_384_CTX,SHA3_512_CTX,SHA512_CTX,SSAValue,SVD,Schur,Second,%
+SegmentationFault,Serializer,Set,SharedArray,SharedMatrix,SharedVector,Signed,%
+SimpleLogger,SingularException,Slot,SlotNumber,Some,SparseMatrixCSC,%
+SparseVector,SpinLock,StackFrame,StackOverflowError,StackTrace,StepRange,%
+StepRangeLen,StreamREPL,StridedArray,StridedMatrix,StridedVecOrMat,%
+StridedVector,String,StringIndexError,SubArray,SubString,SubstitutionString,%
+SymTridiagonal,Symbol,Symmetric,SystemError,TCPSocket,Task,TaskFailedException,%
+TaskLocalRNG,TestSetException,Text,TextDisplay,Time,TimePeriod,TimeType,%
+TimeZone,Timer,TmStruct,Transpose,Tridiagonal,Tuple,Type,TypeError,TypeVar,%
+TypedSlot,UDPSocket,UInt,UInt128,UInt16,UInt32,UInt64,UInt8,UTC,UUID,%
+UndefInitializer,UndefKeywordError,UndefRefError,UndefVarError,UniformScaling,%
+Union,UnionAll,UnitLowerTriangular,UnitRange,UnitUpperTriangular,Unsigned,%
+UpgradeLevel,UpperHessenberg,UpperTriangular,UpsilonNode,Val,VecElement,%
+VecOrMat,Vector,VersionNumber,WeakKeyDict,WeakRef,Week,WorkerConfig,WorkerPool,%
+Xoshiro,Year,ZeroPivotException%
 },%
 %
 % julia's macros:
@@ -207,95 +211,97 @@ ZeroPivotException%
 morekeywords=[4]
 {%
 @MIME_str,@NamedTuple,@__DIR__,@__FILE__,@__LINE__,@__MODULE__,@__dot__,%
-@allocated,@artifact_str,@assert,@async,@b_str,@big_str,@boundscheck,@ccall,%
-@cfunction,@cmd,@code_llvm,@code_lowered,@code_native,@code_typed,%
-@code_warntype,@dateformat_str,@debug,@deprecate,@distributed,@doc,@doc_str,%
-@dump,@edit,@elapsed,@enum,@error,@eval,@evalpoly,@everywhere,@fastmath,@fetch,%
-@fetchfrom,@functionloc,@generated,@gensym,@goto,@html_str,@inbounds,@inferred,%
-@info,@inline,@int128_str,@ip_str,@isdefined,@label,@less,@logmsg,@macroexpand,%
-@macroexpand1,@md_str,@noinline,@nospecialize,@pkg_str,@polly,@printf,@profile,%
-@r_str,@raw_str,@s_str,@show,@simd,@spawn,@spawnat,@specialize,@sprintf,%
-@static,@sync,@task,@test,@test_broken,@test_deprecated,@test_logs,%
-@test_nowarn,@test_skip,@test_throws,@test_warn,@testset,@text_str,@threadcall,%
-@threads,@time,@timed,@timev,@uint128_str,@v_str,@var,@view,@views,@warn,%
-@which%
+@allocated,@artifact_str,@assert,@async,@atomic,@atomicreplace,@atomicswap,%
+@b_str,@big_str,@boundscheck,@ccall,@cfunction,@cmd,@coalesce,@code_llvm,%
+@code_lowered,@code_native,@code_typed,@code_warntype,@dateformat_str,@debug,%
+@deprecate,@distributed,@doc,@doc_str,@dump,@edit,@elapsed,@enum,@error,@eval,%
+@evalpoly,@everywhere,@fastmath,@fetch,@fetchfrom,@functionloc,@generated,%
+@gensym,@goto,@html_str,@inbounds,@inferred,@info,@inline,@int128_str,@ip_str,%
+@isdefined,@label,@less,@lock,@logmsg,@macroexpand,@macroexpand1,@md_str,%
+@noinline,@nospecialize,@pkg_str,@polly,@printf,@profile,@r_str,@raw_str,%
+@s_str,@show,@simd,@something,@spawn,@spawnat,@specialize,@sprintf,@static,%
+@sync,@task,@test,@test_broken,@test_deprecated,@test_logs,@test_nowarn,%
+@test_skip,@test_throws,@test_warn,@testset,@text_str,@threadcall,@threads,%
+@time,@timed,@timev,@uint128_str,@v_str,@var,@view,@views,@warn,@which%
 },%
 %
 % julia's functions:
 %
 morekeywords=[5]
 {%
-FormatMessage,GetLastError,PackageSpec,PipeBuffer,__precompile__,abs,abs2,%
-abs_float,abspath,accept,accumulate,accumulate!,acos,acosd,acosh,acot,acotd,%
-acoth,acsc,acscd,acsch,add_float,add_float_fast,add_int,add_ptr,addenv,%
-addprocs,adjoint,adjoint!,adjust,all,all!,allunique,and_int,angle,any,any!,%
-append!,applicable,apropos,argmax,argmin,arraylen,artifact_exists,%
-artifact_hash,artifact_meta,artifact_path,ascii,asec,asecd,asech,ashr_int,asin,%
-asind,asinh,asyncmap,asyncmap!,atan,atand,atanh,atexit,atomic_add!,atomic_and!,%
-atomic_cas!,atomic_fence,atomic_max!,atomic_min!,atomic_nand!,atomic_or!,%
-atomic_sub!,atomic_xchg!,atomic_xor!,atreplinit,axes,axpby!,axpy!,backtrace,%
-base64decode,base64encode,basename,big,bind,binomial,bitcast,bitrand,%
-bitreverse,bitrotate,bitstring,blockdiag,broadcast,broadcast!,broadcast_axes,%
-broadcast_preserving_zero_d,broadcastable,bswap,bswap_int,bunchkaufman,%
-bunchkaufman!,bytes2hex,bytesavailable,calloc,canonicalize,cat,catch_backtrace,%
-cbrt,cd,ceil,ceil_llvm,cglobal,channel_from_id,check_same_host,checkbounds,%
-checked_sadd_int,checked_sdiv_int,checked_smul_int,checked_srem_int,%
-checked_ssub_int,checked_uadd_int,checked_udiv_int,checked_umul_int,%
-checked_urem_int,checked_usub_int,checkindex,chmod,cholesky,cholesky!,chomp,%
-chop,chown,circcopy!,circshift,circshift!,cis,cispi,clamp,clamp!,cld,clear!,%
-clipboard,close,cluster_cookie,cmp,coalesce,code_llvm,code_lowered,code_native,%
+FormatMessage,GetLastError,PipeBuffer,__precompile__,abs,abs2,abs_float,%
+abspath,accept,accumulate,accumulate!,acos,acosd,acosh,acot,acotd,acoth,acsc,%
+acscd,acsch,add_float,add_float_fast,add_int,add_ptr,addenv,addprocs,adjoint,%
+adjoint!,adjust,all,all!,allunique,and_int,angle,any,any!,append!,applicable,%
+apropos,argmax,argmin,arraylen,artifact_exists,artifact_hash,artifact_meta,%
+artifact_path,ascii,asec,asecd,asech,ashr_int,asin,asind,asinh,asyncmap,%
+asyncmap!,atan,atand,atanh,atexit,atomic_add!,atomic_and!,atomic_cas!,%
+atomic_fence,atomic_max!,atomic_min!,atomic_nand!,atomic_or!,%
+atomic_pointermodify,atomic_pointerref,atomic_pointerreplace,atomic_pointerset,%
+atomic_pointerswap,atomic_sub!,atomic_xchg!,atomic_xor!,atreplinit,axes,axpby!,%
+axpy!,backtrace,base64decode,base64encode,basename,big,bind,binomial,bitcast,%
+bitrand,bitreverse,bitrotate,bitstring,blockdiag,broadcast,broadcast!,%
+broadcast_axes,broadcastable,bswap,bswap_int,bunchkaufman,bunchkaufman!,%
+bytes2hex,bytesavailable,calloc,canonicalize,cat,catch_backtrace,cbrt,cd,ceil,%
+ceil_llvm,cglobal,channel_from_id,check_same_host,checkbounds,checked_sadd_int,%
+checked_sdiv_int,checked_smul_int,checked_srem_int,checked_ssub_int,%
+checked_uadd_int,checked_udiv_int,checked_umul_int,checked_urem_int,%
+checked_usub_int,checkindex,chmod,cholesky,cholesky!,chomp,chop,chown,%
+circcopy!,circshift,circshift!,cis,cispi,clamp,clamp!,cld,clear!,clipboard,%
+close,cluster_cookie,cmp,coalesce,code_llvm,code_lowered,code_native,%
 code_typed,code_warntype,codepoint,codeunit,codeunits,collect,complex,cond,%
 condskeel,conj,conj!,connect,contains,convert,copy,copy!,copy_transpose!,%
 copysign,copysign_float,copyto!,cor,cos,cosc,cosd,cosh,cospi,cot,cotd,coth,%
 count,count!,count_ones,count_zeros,countfrom,countlines,cov,cp,cpu_info,%
 cpu_summary,crc32c,cross,csc,cscd,csch,ctime,ctlz_int,ctpop_int,cttz_int,%
-cumprod,cumprod!,cumsum,cumsum!,current_logger,current_task,cycle,%
-datetime2julian,datetime2rata,datetime2unix,day,dayabbr,dayname,dayofmonth,%
-dayofquarter,dayofweek,dayofweekofmonth,dayofyear,daysinmonth,daysinyear,%
-daysofweekinmonth,deepcopy,default_worker_pool,deg2rad,delete!,deleteat!,%
-denominator,deserialize,det,detach,detect_ambiguities,detect_unbound_args,diag,%
-diagind,diagm,diff,digest!,digits,digits!,dirname,disable_logging,%
-disable_sigint,display,displayable,displaysize,div,div_float,div_float_fast,%
-divrem,dlclose,dllist,dlopen,dlopen_e,dlpath,dlsym,dlsym_e,doc,dot,dotview,%
-download,drop,dropdims,droptol!,dropwhile,dropzeros,dropzeros!,dump,eachcol,%
-eachindex,eachline,eachmatch,eachrow,eachslice,edit,eigen,eigen!,eigmax,eigmin,%
-eigvals,eigvals!,eigvecs,eltype,empty,empty!,endswith,enumerate,eof,eps,%
-eq_float,eq_float_fast,eq_int,errno,error,esc,escape_string,eval,evalfile,%
-evalpoly,exit,exp,exp10,exp2,expanduser,expm1,exponent,extrema,factorial,%
-factorize,falses,fd,fdio,fetch,fieldcount,fieldname,fieldnames,fieldoffset,%
-fieldtype,fieldtypes,filemode,filesize,fill,fill!,filter,filter!,finalize,%
-finalizer,find_artifacts_toml,find_library,findall,findfirst,findlast,findmax,%
-findmax!,findmin,findmin!,findnext,findnz,findprev,first,firstdayofmonth,%
-firstdayofquarter,firstdayofweek,firstdayofyear,firstindex,flatten,fld,fld1,%
-fldmod,fldmod1,flipsign,flipsign_int,float,floatmax,floatmin,floor,floor_llvm,%
-flush,flush_cstdio,fma,fma_float,foldl,foldr,foreach,fpext,fpiseq,fpislt,%
-fptosi,fptoui,fptrunc,free,free_memory,frexp,fullname,functionloc,gcd,gcdx,%
-gensym,get,get!,get_zero_subnormals,getaddrinfo,getalladdrinfo,getfield,%
-gethostname,getindex,getipaddr,getipaddrs,getkey,getnameinfo,getpeername,%
-getpid,getproperty,getsockname,givens,global_logger,gperm,graphemes,hasfield,%
-hash,haskey,hasmethod,hasproperty,hcat,hessenberg,hessenberg!,hex2bytes,%
-hex2bytes!,hmac_sha1,hmac_sha224,hmac_sha256,hmac_sha2_224,hmac_sha2_256,%
-hmac_sha2_384,hmac_sha2_512,hmac_sha384,hmac_sha3_224,hmac_sha3_256,%
-hmac_sha3_384,hmac_sha3_512,hmac_sha512,homedir,hour,html,htol,hton,hvcat,%
-hypot,identity,ifelse,ignorestatus,imag,in,include_dependency,include_string,%
-indexin,indexpids,init_worker,insert!,insorted,instances,interrupt,intersect,%
-intersect!,inv,invmod,invoke,invperm,invpermute!,isa,isabspath,isabstracttype,%
-isapple,isapprox,isascii,isassigned,isbinaryoperator,isbits,isbitstype,%
-isblockdev,isbsd,ischardev,iscntrl,isconcretetype,isconst,isdefined,isdiag,%
-isdigit,isdir,isdirpath,isdisjoint,isdispatchtuple,isdragonfly,isempty,isequal,%
-iseven,isexecutable,isexpr,isfifo,isfile,isfinite,isfreebsd,ishermitian,%
-isidentifier,isimmutable,isinf,isinteger,isinteractive,isjsvm,isleapyear,%
-isless,isletter,islink,islinklocaladdr,islinux,islocked,islowercase,ismarked,%
-ismissing,ismount,ismutable,isnan,isnetbsd,isnothing,isnumeric,isodd,isone,%
-isopen,isopenbsd,isoperator,ispath,isperm,isposdef,isposdef!,ispostfixoperator,%
-ispow2,isprimitivetype,isprint,ispunct,isqrt,isreadable,isreadonly,isready,%
-isreal,issetequal,issetgid,issetuid,issocket,issorted,isspace,issparse,%
-issticky,isstructtype,issubnormal,issubset,issuccess,issymmetric,istaskdone,%
-istaskfailed,istaskstarted,istextmime,istril,istriu,isunaryoperator,isunix,%
-isuppercase,isvalid,iswindows,iswritable,isxdigit,iszero,iterate,join,%
-join_multicast_group,joinpath,julian2datetime,keys,keytype,kill,kron,kron!,%
-last,lastdayofmonth,lastdayofquarter,lastdayofweek,lastdayofyear,lastindex,%
-latex,launch,lcm,ldexp,ldiv!,ldlt,ldlt!,le_float,le_float_fast,leading_ones,%
+cumprod,cumprod!,cumsum,cumsum!,current_exceptions,current_logger,current_task,%
+cycle,datetime2julian,datetime2rata,datetime2unix,day,dayabbr,dayname,%
+dayofmonth,dayofquarter,dayofweek,dayofweekofmonth,dayofyear,daysinmonth,%
+daysinyear,daysofweekinmonth,deepcopy,default_worker_pool,deg2rad,delete!,%
+deleteat!,denominator,deserialize,det,detach,detect_ambiguities,%
+detect_unbound_args,diag,diagind,diagm,diff,digest!,digits,digits!,dirname,%
+disable_logging,disable_sigint,display,displayable,displaysize,div,div_float,%
+div_float_fast,divrem,dlclose,dllist,dlopen,dlopen_e,dlpath,dlsym,dlsym_e,doc,%
+dot,dotview,download,drop,dropdims,droptol!,dropwhile,dropzeros,dropzeros!,%
+dump,eachcol,eachindex,eachline,eachmatch,eachrow,eachslice,edit,eigen,eigen!,%
+eigmax,eigmin,eigvals,eigvals!,eigvecs,eltype,empty,empty!,endswith,enumerate,%
+eof,eps,eq_float,eq_float_fast,eq_int,errno,error,errormonitor,esc,%
+escape_string,eval,evalfile,evalpoly,exit,exp,exp10,exp2,expanduser,expm1,%
+exponent,extrema,factorial,factorize,falses,fd,fdio,fetch,fieldcount,fieldname,%
+fieldnames,fieldoffset,fieldtype,fieldtypes,filemode,filesize,fill,fill!,%
+filter,filter!,finalize,finalizer,find_artifacts_toml,find_library,findall,%
+findfirst,findlast,findmax,findmax!,findmin,findmin!,findnext,findnz,findprev,%
+first,firstdayofmonth,firstdayofquarter,firstdayofweek,firstdayofyear,%
+firstindex,flatten,fld,fld1,fldmod,fldmod1,flipsign,flipsign_int,float,%
+floatmax,floatmin,floor,floor_llvm,flush,flush_cstdio,fma,fma_float,foldl,%
+foldr,foreach,fpext,fpiseq,fptosi,fptoui,fptrunc,free,free_memory,frexp,%
+fullname,functionloc,gcd,gcdx,gensym,get,get!,get_zero_subnormals,getaddrinfo,%
+getalladdrinfo,getfield,gethostname,getindex,getipaddr,getipaddrs,getkey,%
+getnameinfo,getpeername,getpid,getproperty,getsockname,givens,global_logger,%
+gperm,graphemes,hasfield,hash,haskey,hasmethod,hasproperty,hcat,hessenberg,%
+hessenberg!,hex2bytes,hex2bytes!,hmac_sha1,hmac_sha224,hmac_sha256,%
+hmac_sha2_224,hmac_sha2_256,hmac_sha2_384,hmac_sha2_512,hmac_sha384,%
+hmac_sha3_224,hmac_sha3_256,hmac_sha3_384,hmac_sha3_512,hmac_sha512,homedir,%
+hour,html,htol,hton,hvcat,hvncat,hypot,identity,ifelse,ignorestatus,imag,in,%
+include_dependency,include_string,indexin,indexpids,init_worker,insert!,%
+insorted,instances,interrupt,intersect,intersect!,inv,invmod,invoke,invperm,%
+invpermute!,isa,isabspath,isabstracttype,isapple,isapprox,isascii,isassigned,%
+isbinaryoperator,isbits,isbitstype,isblockdev,isbsd,ischardev,iscntrl,%
+isconcretetype,isconst,isdefined,isdiag,isdigit,isdir,isdirpath,isdisjoint,%
+isdispatchtuple,isdragonfly,isempty,isequal,iseven,isexecutable,isexpr,isfifo,%
+isfile,isfinite,isfreebsd,ishermitian,isidentifier,isimmutable,isinf,isinteger,%
+isinteractive,isjsvm,isleapyear,isless,isletter,islink,islinklocaladdr,islinux,%
+islocked,islowercase,ismarked,ismissing,ismount,ismutable,ismutabletype,isnan,%
+isnetbsd,isnothing,isnumeric,isodd,isone,isopen,isopenbsd,isoperator,ispath,%
+isperm,isposdef,isposdef!,ispostfixoperator,ispow2,isprimitivetype,isprint,%
+ispunct,isqrt,isreadable,isreadonly,isready,isreal,issetequal,issetgid,%
+issetuid,issocket,issorted,isspace,issparse,issticky,isstructtype,issubnormal,%
+issubset,issuccess,issymmetric,istaskdone,istaskfailed,istaskstarted,%
+istextmime,istril,istriu,isunaryoperator,isunix,isunordered,isuppercase,%
+isvalid,iswindows,iswritable,isxdigit,iszero,iterate,join,join_multicast_group,%
+joinpath,julian2datetime,keepat!,keys,keytype,kill,kron,kron!,last,%
+lastdayofmonth,lastdayofquarter,lastdayofweek,lastdayofyear,lastindex,latex,%
+launch,lcm,ldexp,ldiv!,ldlt,ldlt!,le_float,le_float_fast,leading_ones,%
 leading_zeros,leave_multicast_group,length,less,listen,listenany,llvmcall,%
 lmul!,loadavg,localindices,lock,log,log10,log1p,log2,logabsdet,logdet,%
 lowercase,lowercasefirst,lowrankdowndate,lowrankdowndate!,lowrankupdate,%
@@ -304,54 +310,56 @@ lu,lu!,lyap,macroexpand,malloc,manage,map,map!,mapfoldl,mapfoldr,mapreduce,%
 mapslices,mark,match,max,maximum,maximum!,maxintfloat,mean,mean!,median,%
 median!,merge,merge!,mergewith,mergewith!,methods,methodswith,microsecond,%
 middle,millisecond,min,minimum,minimum!,minmax,minute,mkdir,mkpath,mktemp,%
-mktempdir,mod,mod1,mod2pi,modf,month,monthabbr,monthday,monthname,mtime,mul!,%
-mul_float,mul_float_fast,mul_int,muladd,muladd_float,mv,myid,nameof,names,%
-nanosecond,ncodeunits,ndigits,ndims,ne_float,ne_float_fast,ne_int,neg_float,%
-neg_float_fast,neg_int,nextfloat,nextind,nextpow,nextprod,nfields,nnz,%
-nonmissingtype,nonzeros,norm,normalize,normalize!,normpath,not_int,notify,now,%
-nprocs,nthreads,ntoh,ntuple,nullspace,numerator,nworkers,nzrange,objectid,%
-occursin,oftype,one,ones,oneunit,only,open,operm,opnorm,or_int,ordschur,%
-ordschur!,pairs,parent,parentindices,parentmodule,parse,partialsort,%
-partialsort!,partialsortperm,partialsortperm!,partition,pathof,peakflops,peek,%
-permute,permute!,permutedims,permutedims!,pinv,pipeline,pkgdir,pmap,pointer,%
-pointer_from_objref,pointerref,pointerset,poll_fd,poll_file,pop!,popat!,%
-popdisplay,popfirst!,position,powermod,precision,precompile,prepend!,prevfloat,%
-prevind,prevpow,print,println,printstyled,process_exited,process_messages,%
-process_running,procs,prod,prod!,product,promote,promote_rule,promote_shape,%
-promote_type,propertynames,push!,pushdisplay,pushfirst!,put!,pwd,qr,qr!,%
-quantile,quantile!,quarterofyear,quot,rad2deg,rand,rand!,randcycle,randcycle!,%
-randexp,randexp!,randn,randn!,randperm,randperm!,randstring,randsubseq,%
-randsubseq!,range,rank,rata2datetime,rationalize,rdiv!,read,read!,%
-readavailable,readbytes!,readchomp,readdir,readdlm,readeach,readline,readlines,%
-readlink,readuntil,real,realloc,realpath,recv,recvfrom,redirect_stderr,%
-redirect_stdin,redirect_stdout,redisplay,reduce,reenable_sigint,reflect!,reim,%
-reinterpret,relpath,rem,rem2pi,rem_float,rem_float_fast,remote,remote_do,%
-remotecall,remotecall_fetch,remotecall_wait,remoteref_id,repeat,repeated,%
-replace,replace!,replace_sourceloc!,repr,request,reset,reshape,resize!,rest,%
-rethrow,retry,reverse,reverse!,reverseind,rint_llvm,rm,rmprocs,rmul!,rot180,%
-rotate!,rotl90,rotr90,round,rounding,rowvals,rpad,rsplit,rstrip,run,schedule,%
-schur,schur!,sdata,sdiv_int,searchsorted,searchsortedfirst,searchsortedlast,%
-sec,secd,sech,second,seek,seekend,seekstart,select_downloadable_artifacts,%
-selectdim,send,serialize,set_zero_subnormals,setdiff,setdiff!,setenv,setfield!,%
-setindex!,setprecision,setproperty!,setrounding,sext_int,sha1,sha224,sha256,%
-sha2_224,sha2_256,sha2_384,sha2_512,sha384,sha3_224,sha3_256,sha3_384,sha3_512,%
-sha512,shl_int,show,show_sexpr,showable,showerror,shuffle,shuffle!,sign,%
-signbit,signed,significand,similar,sin,sinc,sincos,sincosd,sincospi,sind,sinh,%
-sinpi,sitofp,size,sizehint!,sizeof,skip,skipchars,skipmissing,sle_int,sleep,%
-slt_int,something,sort,sort!,sortperm,sortperm!,sortslices,sparse,sparsevec,%
-spdiagm,splice!,split,splitdir,splitdrive,splitext,splitpath,sprand,sprandn,%
-sprint,spzeros,sqrt,sqrt_llvm,sqrt_llvm_fast,srem_int,stacktrace,start_worker,%
-startswith,stat,std,stdm,step,strerror,strftime,stride,strides,string,%
-stringmime,strip,strptime,sub_float,sub_float_fast,sub_int,sub_ptr,subtypes,%
-success,sum,sum!,summary,supertype,supertypes,svd,svd!,svdvals,svdvals!,%
-sylvester,symdiff,symdiff!,symlink,systemerror,systemsleep,take,take!,%
-takewhile,tan,tand,tanh,task_local_storage,tempdir,tempname,textwidth,thisind,%
-threadid,throw,time,time_ns,timedwait,titlecase,to_indices,today,tofirst,%
-tolast,tonext,toprev,total_memory,touch,tr,trailing_ones,trailing_zeros,%
-transcode,transpose,transpose!,tril,tril!,triu,triu!,trues,trunc,trunc_int,%
-trunc_llvm,truncate,trylock,tryparse,tuple,typeassert,typeintersect,typejoin,%
-typemax,typemin,typeof,udiv_int,uitofp,ule_int,ult_int,unescape_string,union,%
-union!,unique,unique!,unix2datetime,unlock,unmark,unsafe_copyto!,unsafe_load,%
+mktempdir,mmap,mod,mod1,mod2pi,modf,modifyfield!,modifyproperty!,month,%
+monthabbr,monthday,monthname,mtime,mul!,mul_float,mul_float_fast,mul_int,%
+muladd,muladd_float,mv,myid,nameof,names,nand,nanosecond,ncodeunits,ndigits,%
+ndims,ne_float,ne_float_fast,ne_int,neg_float,neg_float_fast,neg_int,nextfloat,%
+nextind,nextpow,nextprod,nfields,nnz,nonmissingtype,nonzeros,nor,norm,%
+normalize,normalize!,normpath,not_int,notify,now,nprocs,nthreads,ntoh,ntuple,%
+nullspace,numerator,nworkers,nzrange,objectid,occursin,oftype,one,ones,oneunit,%
+only,open,operm,opnorm,or_int,ordschur,ordschur!,pairs,parent,parentindices,%
+parentmodule,parse,partialsort,partialsort!,partialsortperm,partialsortperm!,%
+partition,pathof,peakflops,peek,permute,permute!,permutedims,permutedims!,pinv,%
+pipeline,pkgdir,pmap,pointer,pointer_from_objref,pointerref,pointerset,poll_fd,%
+poll_file,pop!,popat!,popdisplay,popfirst!,position,powermod,precision,%
+precompile,prepend!,prevfloat,prevind,prevpow,print,println,printstyled,%
+process_exited,process_messages,process_running,procs,prod,prod!,product,%
+promote,promote_rule,promote_shape,promote_type,propertynames,push!,%
+pushdisplay,pushfirst!,put!,pwd,qr,qr!,quantile,quantile!,quarterofyear,quot,%
+rad2deg,rand,rand!,randcycle,randcycle!,randexp,randexp!,randn,randn!,randperm,%
+randperm!,randstring,randsubseq,randsubseq!,range,rank,rata2datetime,%
+rationalize,rdiv!,read,read!,readavailable,readbytes!,readchomp,readdir,%
+readdlm,readeach,readline,readlines,readlink,readuntil,real,realloc,realpath,%
+recv,recvfrom,redirect_stderr,redirect_stdin,redirect_stdio,redirect_stdout,%
+redisplay,reduce,reenable_sigint,reflect!,reim,reinterpret,relpath,rem,rem2pi,%
+rem_float,rem_float_fast,remote,remote_do,remotecall,remotecall_fetch,%
+remotecall_wait,remoteref_id,repeat,repeated,replace,replace!,%
+replace_sourceloc!,replacefield!,replaceproperty!,repr,request,reset,reshape,%
+resize!,rest,rethrow,retry,reverse,reverse!,reverseind,rint_llvm,rm,rmprocs,%
+rmul!,rot180,rotate!,rotl90,rotr90,round,rounding,rowvals,rpad,rsplit,rstrip,%
+run,schedule,schur,schur!,sdata,sdiv_int,searchsorted,searchsortedfirst,%
+searchsortedlast,sec,secd,sech,second,seek,seekend,seekstart,%
+select_downloadable_artifacts,selectdim,send,serialize,set_zero_subnormals,%
+setdiff,setdiff!,setenv,setfield!,setindex!,setprecision,setproperty!,%
+setrounding,sext_int,sha1,sha224,sha256,sha2_224,sha2_256,sha2_384,sha2_512,%
+sha384,sha3_224,sha3_256,sha3_384,sha3_512,sha512,shl_int,show,show_sexpr,%
+showable,showerror,shuffle,shuffle!,sign,signbit,signed,significand,similar,%
+sin,sinc,sincos,sincosd,sincospi,sind,sinh,sinpi,sitofp,size,sizehint!,sizeof,%
+skip,skipchars,skipmissing,sle_int,sleep,slt_int,something,sort,sort!,sortperm,%
+sortperm!,sortslices,sparse,sparsevec,spdiagm,splice!,split,splitdir,%
+splitdrive,splitext,splitpath,sprand,sprandn,sprint,spzeros,sqrt,sqrt_llvm,%
+sqrt_llvm_fast,srem_int,stacktrace,start_worker,startswith,stat,std,stdm,step,%
+strerror,strftime,stride,strides,string,stringmime,strip,strptime,sub_float,%
+sub_float_fast,sub_int,sub_ptr,subtypes,success,sum,sum!,summary,supertype,%
+supertypes,svd,svd!,svdvals,svdvals!,swapfield!,swapproperty!,sylvester,%
+symdiff,symdiff!,symlink,systemerror,systemsleep,take,take!,takewhile,tan,tand,%
+tanh,task_local_storage,tempdir,tempname,textwidth,thisind,threadid,throw,time,%
+time_ns,timedwait,titlecase,to_indices,today,tofirst,tolast,tonext,toprev,%
+total_memory,touch,tr,trailing_ones,trailing_zeros,transcode,transpose,%
+transpose!,tril,tril!,triu,triu!,trues,trunc,trunc_int,trunc_llvm,truncate,%
+trylock,tryparse,tuple,typeassert,typeintersect,typejoin,typemax,typemin,%
+typeof,udiv_int,uitofp,ule_int,ult_int,unescape_string,union,union!,unique,%
+unique!,unix2datetime,unlock,unmark,unsafe_copyto!,unsafe_load,%
 unsafe_pointer_to_objref,unsafe_read,unsafe_store!,unsafe_string,unsafe_trunc,%
 unsafe_wrap,unsafe_write,unsigned,unwatch_folder,update!,uperm,uppercase,%
 uppercasefirst,uptime,urem_int,uuid1,uuid4,uuid5,uuid_version,valtype,values,%
@@ -372,7 +380,7 @@ morecomment=[n]{\#=}{=\#},%
 %
 morestring=[b]{"},%
 % just activate the next command if you dont use ' as the transposition
-% operator! comment out the lines 1256 and 1890 in that case, too!
+% operator! comment out the lines 1338 and 1972 in that case, too!
 %morestring=[m]{'},%
 morestring=[s]{"""}{"""},%
 morestring=[s]{L"}{"},%
@@ -672,10 +680,11 @@ framexleftmargin=0.5\bfem, framexrightmargin=0.5\bfem
     \fi}
 
 
-% defining the opc and the numc commands
-% for literating operators and numbers
+% defining the opc, the numc and the funcc commands
+% for literating operators, numbers anf functions ending with '!'
 \newcommand{\opc}[1]{{\color{jlop}#1}}
 \newcommand{\numc}[1]{{\color{jlstrnum}#1}}
+\newcommand{\funcc}[1]{{\color{jlfunctions}#1}}
 
 
 
@@ -720,6 +729,82 @@ opliterate=*
 {3E-}{{\numc{3E-}}}{3} {4E-}{{\numc{4E-}}}{3} {5E-}{{\numc{5E-}}}{3}
 {6E-}{{\numc{6E-}}}{3} {7E-}{{\numc{7E-}}}{3} {8E-}{{\numc{8E-}}}{3}
 {9E-}{{\numc{9E-}}}{3}
+%
+% julia's functions ending with '!'
+%
+{accumulate!}{{\funcc{accumulate!}}}{11} {adjoint!}{{\funcc{adjoint!}}}{8}
+{all!}{{\funcc{all!}}}{4} {any!}{{\funcc{any!}}}{4}
+{append!}{{\funcc{append!}}}{7} {asyncmap!}{{\funcc{asyncmap!}}}{9}
+{atomic_add!}{{\funcc{atomic_add!}}}{11}
+{atomic_and!}{{\funcc{atomic_and!}}}{11}
+{atomic_cas!}{{\funcc{atomic_cas!}}}{11}
+{atomic_max!}{{\funcc{atomic_max!}}}{11}
+{atomic_min!}{{\funcc{atomic_min!}}}{11}
+{atomic_nand!}{{\funcc{atomic_nand!}}}{12}
+{atomic_or!}{{\funcc{atomic_or!}}}{10} {atomic_sub!}{{\funcc{atomic_sub!}}}{11}
+{atomic_xchg!}{{\funcc{atomic_xchg!}}}{12}
+{atomic_xor!}{{\funcc{atomic_xor!}}}{11} {axpby!}{{\funcc{axpby!}}}{6}
+{axpy!}{{\funcc{axpy!}}}{5} {broadcast!}{{\funcc{broadcast!}}}{10}
+{bunchkaufman!}{{\funcc{bunchkaufman!}}}{13} {cholesky!}{{\funcc{cholesky!}}}{9}
+{circcopy!}{{\funcc{circcopy!}}}{9} {circshift!}{{\funcc{circshift!}}}{10}
+{clamp!}{{\funcc{clamp!}}}{6} {clear!}{{\funcc{clear!}}}{6}
+{conj!}{{\funcc{conj!}}}{5} {copy!}{{\funcc{copy!}}}{5}
+{copy_transpose!}{{\funcc{copy_transpose!}}}{15} {copyto!}{{\funcc{copyto!}}}{7}
+{count!}{{\funcc{count!}}}{6} {cumprod!}{{\funcc{cumprod!}}}{8}
+{cumsum!}{{\funcc{cumsum!}}}{7} {delete!}{{\funcc{delete!}}}{7}
+{deleteat!}{{\funcc{deleteat!}}}{9} {digest!}{{\funcc{digest!}}}{7}
+{digits!}{{\funcc{digits!}}}{7} {droptol!}{{\funcc{droptol!}}}{8}
+{dropzeros!}{{\funcc{dropzeros!}}}{10} {eigen!}{{\funcc{eigen!}}}{6}
+{eigvals!}{{\funcc{eigvals!}}}{8} {empty!}{{\funcc{empty!}}}{6}
+{fill!}{{\funcc{fill!}}}{5} {filter!}{{\funcc{filter!}}}{7}
+{findmax!}{{\funcc{findmax!}}}{8} {findmin!}{{\funcc{findmin!}}}{8}
+{get!}{{\funcc{get!}}}{4} {hessenberg!}{{\funcc{hessenberg!}}}{11}
+{hex2bytes!}{{\funcc{hex2bytes!}}}{10} {insert!}{{\funcc{insert!}}}{7}
+{intersect!}{{\funcc{intersect!}}}{10} {invpermute!}{{\funcc{invpermute!}}}{11}
+{isposdef!}{{\funcc{isposdef!}}}{9} {keepat!}{{\funcc{keepat!}}}{7}
+{kron!}{{\funcc{kron!}}}{5} {ldiv!}{{\funcc{ldiv!}}}{5}
+{ldlt!}{{\funcc{ldlt!}}}{5} {lmul!}{{\funcc{lmul!}}}{5}
+{lowrankdowndate!}{{\funcc{lowrankdowndate!}}}{16}
+{lowrankupdate!}{{\funcc{lowrankupdate!}}}{14} {lq!}{{\funcc{lq!}}}{3}
+{lu!}{{\funcc{lu!}}}{3} {map!}{{\funcc{map!}}}{4}
+{maximum!}{{\funcc{maximum!}}}{8} {mean!}{{\funcc{mean!}}}{5}
+{median!}{{\funcc{median!}}}{7} {merge!}{{\funcc{merge!}}}{6}
+{mergewith!}{{\funcc{mergewith!}}}{10} {minimum!}{{\funcc{minimum!}}}{8}
+{modifyfield!}{{\funcc{modifyfield!}}}{12}
+{modifyproperty!}{{\funcc{modifyproperty!}}}{15} {mul!}{{\funcc{mul!}}}{4}
+{normalize!}{{\funcc{normalize!}}}{10} {ordschur!}{{\funcc{ordschur!}}}{9}
+{partialsort!}{{\funcc{partialsort!}}}{12}
+{partialsortperm!}{{\funcc{partialsortperm!}}}{16}
+{permute!}{{\funcc{permute!}}}{8} {permutedims!}{{\funcc{permutedims!}}}{12}
+{pop!}{{\funcc{pop!}}}{4} {popat!}{{\funcc{popat!}}}{6}
+{popfirst!}{{\funcc{popfirst!}}}{9} {prepend!}{{\funcc{prepend!}}}{8}
+{prod!}{{\funcc{prod!}}}{5} {push!}{{\funcc{push!}}}{5}
+{pushfirst!}{{\funcc{pushfirst!}}}{10} {put!}{{\funcc{put!}}}{4}
+{qr!}{{\funcc{qr!}}}{3} {quantile!}{{\funcc{quantile!}}}{9}
+{rand!}{{\funcc{rand!}}}{5} {randcycle!}{{\funcc{randcycle!}}}{10}
+{randexp!}{{\funcc{randexp!}}}{8} {randn!}{{\funcc{randn!}}}{6}
+{randperm!}{{\funcc{randperm!}}}{9} {randsubseq!}{{\funcc{randsubseq!}}}{11}
+{rdiv!}{{\funcc{rdiv!}}}{5} {read!}{{\funcc{read!}}}{5}
+{readbytes!}{{\funcc{readbytes!}}}{10} {reflect!}{{\funcc{reflect!}}}{8}
+{replace!}{{\funcc{replace!}}}{8}
+{replace_sourceloc!}{{\funcc{replace_sourceloc!}}}{18}
+{replacefield!}{{\funcc{replacefield!}}}{13}
+{replaceproperty!}{{\funcc{replaceproperty!}}}{16}
+{resize!}{{\funcc{resize!}}}{7} {reverse!}{{\funcc{reverse!}}}{8}
+{rmul!}{{\funcc{rmul!}}}{5} {rotate!}{{\funcc{rotate!}}}{7}
+{schur!}{{\funcc{schur!}}}{6} {setdiff!}{{\funcc{setdiff!}}}{8}
+{setfield!}{{\funcc{setfield!}}}{9} {setindex!}{{\funcc{setindex!}}}{9}
+{setproperty!}{{\funcc{setproperty!}}}{12} {shuffle!}{{\funcc{shuffle!}}}{8}
+{sizehint!}{{\funcc{sizehint!}}}{9} {sort!}{{\funcc{sort!}}}{5}
+{sortperm!}{{\funcc{sortperm!}}}{9} {splice!}{{\funcc{splice!}}}{7}
+{sum!}{{\funcc{sum!}}}{4} {svd!}{{\funcc{svd!}}}{4}
+{svdvals!}{{\funcc{svdvals!}}}{8} {swapfield!}{{\funcc{swapfield!}}}{10}
+{swapproperty!}{{\funcc{swapproperty!}}}{13} {symdiff!}{{\funcc{symdiff!}}}{8}
+{take!}{{\funcc{take!}}}{5} {transpose!}{{\funcc{transpose!}}}{10}
+{tril!}{{\funcc{tril!}}}{5} {triu!}{{\funcc{triu!}}}{5}
+{union!}{{\funcc{union!}}}{6} {unique!}{{\funcc{unique!}}}{7}
+{unsafe_copyto!}{{\funcc{unsafe_copyto!}}}{14}
+{unsafe_store!}{{\funcc{unsafe_store!}}}{13} {update!}{{\funcc{update!}}}{7}
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1252,7 +1337,7 @@ literate=
 % mathematical operators (julia functions)
 %
 % comment out the next command if you dont use ' as the transposition
-% operator! activate the command in line 376 in that case, too!
+% operator! activate the command in line 381 in that case, too!
 {'}{{\uccop{'}}}{1}
 {×}{{\uccop{×}}}{1} {÷}{{\uccop{÷}}}{1} {∈}{{\uccop{∈}}}{1} {∉}{{\uccop{∉}}}{1}
 {∋}{{\uccop{∋}}}{1} {∌}{{\uccop{∌}}}{1} {∘}{{\uccop{∘}}}{1} {√}{{\uccop{√}}}{1}
@@ -1886,7 +1971,7 @@ literate=
 % mathematical operators (julia functions)
 %
 % comment out the next command if you dont use ' as the transposition
-% operator! activate the command in line 376 in that case, too!
+% operator! activate the command in line 381 in that case, too!
 {'}{{\uccop{\textquotesingle}}}{1}
 {×}{{\uccop{${\scriptstyle \times}$}}}{1}
 {÷}{{\uccop{${\scriptstyle \div}$}}}{1}
@@ -2024,12 +2109,15 @@ literate=
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% defining the \addlitjlbase and \addlitjlstrnum commands,
-% which help a user to fix some of the known managable issues
+% defining the expandliterate key
 \def\addToLiterate#1{%
 \protected@edef\lst@literate{%
 \unexpanded\expandafter{\lst@literate}\unexpanded{#1}}}
 \lst@Key{expandliterate}{}{\addToLiterate{#1}}
+
+% defining the \addlitjlbase, \addlitjlstrnum, \addlitjlmacros and
+% \addlitjlfunctions commands, which help a user to fix some of the known
+% managable issues
 \newcommand{\addlitjlbase}[3]{%
 \lstset{style=jlcodeuccstyle}
 \lstdefinestyle{jlcodeuccstyle}{expandliterate={#1}{{{\color{jlbase}#2}}}{#3}}
@@ -2040,6 +2128,20 @@ literate=
 \newcommand{\addlitjlstrnum}[3]{%
 \lstset{style=jlcodeuccstyle}
 \lstdefinestyle{jlcodeuccstyle}{expandliterate={#1}{{{\color{jlstrnum}#2}}}{#3}}
+\ifjlc@autoload
+  \lstset{language=julia, style=jlcodestyle}
+\fi
+}
+\newcommand{\addlitjlmacros}[3]{%
+\lstset{style=jlcodeuccstyle}
+\lstdefinestyle{jlcodeuccstyle}{expandliterate={#1}{{{\color{jlmacros}#2}}}{#3}}
+\ifjlc@autoload
+  \lstset{language=julia, style=jlcodestyle}
+\fi
+}
+\newcommand{\addlitjlfunctions}[3]{%
+\lstset{style=jlcodeuccstyle}
+\lstdefinestyle{jlcodeuccstyle}{expandliterate={#1}{{{\color{jlfunctions}#2}}}{#3}}
 \ifjlc@autoload
   \lstset{language=julia, style=jlcodestyle}
 \fi
@@ -2059,14 +2161,14 @@ literate=
 % defining the \jlinputlisting command for listing standalone files
 \newcommand{\jlinputlisting}[2][]{%
 \calcboxlengths%
-\lstinputlisting[language=julia, style=jlcodestyle, #1]{#2}}
+\lstinputlisting[language=julia, style=jlcodestyle, breaklines=true, #1]{#2}}
 
 
 % defining the \jllisting for displaying code directly
 \lstnewenvironment{jllisting}[2][]{%
   \calcboxlengths%
   \lst@TestEOLChar{#2}%
-  \lstset{#1}%
+  \lstset{breaklines=true, #1}%
   \csname\@lst @SetFirstNumber\endcsname%
 }{%
   \@nobreakfalse
@@ -2081,8 +2183,8 @@ literate=
 \newlength{\jlinlem}
 \newcommand{\jlinl}[1]{%
 \settowidth{\jlinlem}{\jlinlfont{m}}%
-\lstinline[language=julia,style=jlcodestyle,
-basicstyle=\jlinlfont,basewidth=\jlinlem]^^a7#1^^a7}
+\lstinline[language=julia, style=jlcodestyle ,breaklines=true,
+basicstyle=\jlinlfont, basewidth=\jlinlem]^^a7#1^^a7}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
