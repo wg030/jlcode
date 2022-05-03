@@ -4,7 +4,7 @@
 
 ## License
 _jlcode.sty_
-Copyright 2018 GitHub user wg030
+Copyright 2018 Willi Gerbig
 
 This work may be distributed and/or modified under the conditions of the LaTeX Project  
 Public License, either version 1.3 of this license or (at your option) any later version.  
@@ -13,10 +13,11 @@ and version 1.3 or later is part of all distributions of LaTeX version 2005/12/0
 
 This work has the LPPL maintenance status 'maintained'.
 
-The Current Maintainer of this work is GitHub user wg030.
+The Current Maintainer of this work is Willi Gerbig.
 
-This work consists of the files
-_jlcode.sty_, _createkwlists.jl_, _createucclist.jl_, _testfile.jl_, _testfile2.jl_ and _manual.pdf_.
+This work consists of the files  
+_jlcode.sty_, _createkwlists.jl_, _createucclist.jl_, _testfile.jl_,  
+_testfile2.jl_ and _manual.pdf_.
 
 
 ## Short Package Description
@@ -28,9 +29,9 @@ also shows how the Julia code from _testfile.jl_ and _testfile2.jl_ looks when d
 
 
 ## Current State
-**Current version** of the jlcode package: **6.0**.  
+**Current version** of the jlcode package: **6.1**.  
 Date of creation: 2018/01/25  
-Date of last modification: 2021/09/14
+Date of last modification: 2022/05/03
 
 ### Keywords
 The lists for the keywords, literals, built-ins, macros, functions and string types for  
@@ -47,18 +48,18 @@ contains a contribution from "dietercastel" who put toegther this great theme,
 which is designed to be ideally suited for the dark-beamer-theme.  
 
 ### Special Unicode Characters
-All tab completion Unicode characters that are supported by Julia can be found under  
-[https://docs.julialang.org/en/v1/manual/unicode-input/](https://docs.julialang.org/en/v1/manual/unicode-input/).  
+All tab completion Unicode characters supported by Julia can be found under  
+[https://docs.julialang.org/en/v1.7/manual/unicode-input/](https://docs.julialang.org/en/v1.7/manual/unicode-input/).  
 When dealing with the luatex or xetex engine the jlcode package will by default  
 work with the JuliaMono font, whose latest version can be found under  
 [https://github.com/cormullion/juliamono](https://github.com/cormullion/juliamono).  
-The JuliaMono font approach was inspired by the following repository:  
+This JuliaMono font approach was inspired by the following repository:  
 [https://github.com/mossr/julia-mono-listings](https://github.com/mossr/julia-mono-listings).
 
 At the moment the jlcode package supports the follwoing Unicode characters,  
 when you compile your document with luatex or xetex:
 * Most common special characters that appear in latin languages.
-* All tab completion Unicode characters that the Julia Mono font supports.
+* All tab completion Unicode characters that the JuliaMono font supports.
 * Most of the characters which are used for drawing unicode boxes.
 
 At the moment the jlcode package supports the follwoing Unicode characters,  
@@ -72,46 +73,50 @@ when you compile your document with pdftex:
 * Most of the characters which are used for drawing unicode boxes.
 
 
-## What's New in Version 6.0?
-* The package option `usecourier` has been renamed to `defaultmonofont`.
-* The package option `linenumbers` has been added.
-* There is now support for LuaTeX as well as XeTeX.
-* The package can now deal with two column documents.
-* A lot more unicode box characters have been added.
+## What's New in Version 6.1?
+* A separate license file has been added.
+* All standard functions ending with `!` are now colored correctly.
+* The commands `\addlitjlmacros` and `\addlitjlfunctions` for manual  
+  fixing manageable issues with macros and functions have been added.
+* The listings key `breaklines=true` is now used automatically by default.
 * Keywords, literals, built-ins, macros, functions and string-prefixes  
-  have been refreshed according to Julia 1.6.2.
+  have been refreshed according to Julia 1.7.2.
 * A few typing errors have been corrected.
 
 
 ## How to Use the Package:
 
 ### Standard Use
-Copy the _jlcode.sty_ file to the same folder of your latex file.  
+Copy the _jlcode.sty_ file to the same folder like your latex file.  
 Addionally, if you want to use luatex or xetex for compiling your  
-document, also put all MonoJulia-*.ttf files to the same folder  
-of your latex file.  
-Then add the following line to your latex document header, which will  
-load the package with its default options:
+document, also put all _JuliaMono-*.ttf_ files to the same folder  
+like your latex file.  
+Then add the following line to your latex document header,
+which will load the package with its default options:
 
-    \usepackage{jlcode}
+```latex
+\usepackage{jlcode}
+```
 
-After that you can use the package as follows:
+After doing so you can use the package as follows:
 
-    % listing of standalone files
-    \jlinputlisting{filename.jl}
+```latex
+% listing of standalone files
+\jlinputlisting{filename.jl}
 
-    % displayed code
-    \begin{jllisting}
-    # some julia code
-    println( "Here we go with Julia!")
-    \end{jllisting}
+% displayed code
+\begin{jllisting}
+# some julia code
+println( "Here we go with Julia!")
+\end{jllisting}
 
-    % code snippets
-    Julia's standard library contains some useful macros like \jlinl{@time}.
+% code snippets
+Julia's standard library contains some useful macros like \jlinl{@time}.
+```
 
 ### Advanced Use
 Check out the manual to learn more about the package options and  
-some advanced techniques like handling managable issues.
+some advanced techniques like handling manageable issues.
 
 
 ## Feel Free to Contribute
