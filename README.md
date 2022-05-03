@@ -91,7 +91,7 @@ Copy the _jlcode.sty_ file to the same folder like your latex file.
 Addionally, if you want to use luatex or xetex for compiling your  
 document, also put all _JuliaMono-*.ttf_ files to the same folder  
 like your latex file.  
-Then add the following line to your latex document header,
+Then add the following line to your latex document header,  
 which will load the package with its default options:
 
 ```latex
