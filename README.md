@@ -29,9 +29,9 @@ also shows how the Julia code from _testfile.jl_ and _testfile2.jl_ looks when d
 
 
 ## Current State
-**Current version** of the jlcode package: **6.1**.  
+**Current version** of the jlcode package: **6.1.4**.  
 Date of creation: 2018/01/25  
-Date of last modification: 2022/05/03
+Date of last modification: 2023/07/20
 
 ### Keywords
 The lists for the keywords, literals, built-ins, macros, functions and string types for  
