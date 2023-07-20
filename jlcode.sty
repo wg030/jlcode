@@ -42,8 +42,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % defining the jlcode package
-\def\fileversion{6.1.3}
-\def\filedate{2023/06/05}
+\def\fileversion{6.1.4}
+\def\filedate{2023/07/20}
 
 \typeout{-- Package: `jlcode' \fileversion\space <\filedate> --}
 \NeedsTeXFormat{LaTeX2e}
@@ -380,7 +380,7 @@ morecomment=[n]{\#=}{=\#},%
 %
 morestring=[b]{"},%
 % just activate the next command if you dont use ' as the transposition
-% operator! comment out the lines 1341 and 1975 in that case, too!
+% operator! comment out the lines 1350 and 1984 in that case, too!
 %morestring=[m]{'},%
 morestring=[s]{"""}{"""},%
 morestring=[s]{L"}{"},%
@@ -423,6 +423,7 @@ morestring=[s]{var"}{"},%
 \definecolor{jlcomment}{HTML}{888888}%      % julia's comments
 \definecolor{jlstrnum}{HTML}{880000}%       % julia's strings or numbers
 \definecolor{jlop}{HTML}{444444}%           % julia's operators
+\definecolor{jreplprompt}{HTML}{066F00}%    % for "julia>"
 \definecolor{jlbackground}{HTML}{F2F2F2}%   % the background of the code block
 \definecolor{jlrule}{HTML}{DDDDDD}%         % the rule of the code block
 \definecolor{jllinenumbers}{HTML}{000000}%  % the line numbers of the code block
@@ -446,6 +447,7 @@ morestring=[s]{var"}{"},%
 \definecolor{jlcomment}{HTML}{000000}%      % julia's comments
 \definecolor{jlstrnum}{HTML}{000000}%       % julia's strings or numbers
 \definecolor{jlop}{HTML}{000000}%           % julia's operators
+\definecolor{jreplprompt}{HTML}{000000}%    % for "julia>"
 \definecolor{jlbackground}{HTML}{F5F5F5}%   % the background of the code block
 \definecolor{jlrule}{HTML}{DDDDDD}%         % the rule of the code block
 \definecolor{jllinenumbers}{HTML}{000000}%  % the line numbers of the code block
@@ -471,6 +473,7 @@ morestring=[s]{var"}{"},%
 \definecolor{jlcomment}{HTML}{455ED3}%      % julia's comments
 \definecolor{jlstrnum}{HTML}{6BAED6}%       % julia's strings or numbers
 \definecolor{jlop}{HTML}{FF005A}%           % julia's operators
+\definecolor{jreplprompt}{HTML}{EAF531}%    % for "julia>"
 \definecolor{jlbackground}{HTML}{181818}%   % the background of the code block
 \definecolor{jlrule}{HTML}{DDDDDD}%         % the rule of the code block
 \definecolor{jllinenumbers}{HTML}{F5AB35}%  % the line numbers of the code block
@@ -680,11 +683,13 @@ framexleftmargin=0.5\bfem, framexrightmargin=0.5\bfem
     \fi}
 
 
-% defining the opc, the numc and the funcc commands
-% for literating operators, numbers anf functions ending with '!'
+% defining the opc, the numc, the funcc and the jlrpc commands
+% for literating operators, numbers, functions ending with '!'
+% and the julia REPL prompt
 \newcommand{\opc}[1]{{\color{jlop}#1}}
 \newcommand{\numc}[1]{{\color{jlstrnum}#1}}
 \newcommand{\funcc}[1]{{\color{jlfunctions}#1}}
+\newcommand{\jlrpc}[1]{{\color{jreplprompt}#1}}
 
 
 
@@ -805,6 +810,10 @@ opliterate=*
 {union!}{{\funcc{union!}}}{6} {unique!}{{\funcc{unique!}}}{7}
 {unsafe_copyto!}{{\funcc{unsafe_copyto!}}}{14}
 {unsafe_store!}{{\funcc{unsafe_store!}}}{13} {update!}{{\funcc{update!}}}{7}
+%
+% julia's REPL prompt
+%
+{julia>}{{\bfseries \jlrpc{julia>}}}{6}
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
